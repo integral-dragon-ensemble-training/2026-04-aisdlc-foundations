@@ -18,7 +18,8 @@ This module builds on Module 2 by moving from constrained single-agent work into
 - `Session 09` drafted
 - `Session 10` drafted
 - `Session 11` drafted
+- `Session 12` drafted
 
 ## Planned follow-through
 
-- `Session 12: OWASP Top 10 for Agentic Apps`
+- Module 3 source sequence is complete

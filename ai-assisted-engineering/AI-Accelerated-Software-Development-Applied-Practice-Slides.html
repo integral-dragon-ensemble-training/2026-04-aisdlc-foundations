@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Accelerated Software Development: Applied Practice</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-light: #00E5FF;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --light-gray: #F0F0F0;
+    --off-white: #F8F9FA;
+    --med-gray: #666666;
+    --dark-gray: #333333;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+    --green: #00C853;
+    --amber: #FFB300;
+    --purple: #7C4DFF;
+  }
+
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; font-size: 0.9em; }
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+
+  .slide {
+    width: 100vw; height: 100vh; scroll-snap-align: start;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+
+  .section-label {
+    font-size: clamp(10px, 0.85vw, 13px); font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh;
+  }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+  .section-label.navy { color: var(--navy); opacity: 0.5; }
+
+  .action-title {
+    font-size: clamp(18px, 2vw, 28px); font-weight: 700;
+    line-height: 1.25; margin-bottom: 1.5vh; max-width: 92%;
+  }
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+
+  .slide-footer {
+    position: absolute; bottom: 1.5vh; right: 6vw;
+    font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray);
+  }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+  .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 0 2.5vw; flex: 1; align-content: start; }
+  .four-col { display: grid; grid-template-columns: repeat(4,1fr); gap: 0 2vw; flex: 1; align-content: start; }
+
+  .concept-card {
+    background: var(--off-white); border-radius: 10px; padding: 2vh 2vw;
+    border-left: 4px solid var(--cyan); margin-bottom: 1.5vh;
+  }
+  .concept-card.green { border-left-color: var(--green); }
+  .concept-card.amber { border-left-color: var(--amber); }
+  .concept-card.warn  { border-left-color: var(--warn); }
+  .concept-card.purple{ border-left-color: var(--purple); }
+  .concept-card h4 { font-size: clamp(13px,1.1vw,16px); font-weight:700; color:var(--navy); margin-bottom:0.4em; }
+  .concept-card p  { font-size: clamp(11px,0.98vw,14px); color:var(--dark-gray); line-height:1.5; }
+
+  .list-item {
+    display: flex; gap: 1vw; align-items: flex-start; margin-bottom: 1.2vh;
+    font-size: clamp(12px,1.05vw,16px); color: var(--dark-gray); line-height: 1.5;
+  }
+  .list-item .bullet { color: var(--cyan); font-weight:700; flex-shrink:0; }
+  .list-item.dark-text { color: rgba(255,255,255,0.85); }
+  .list-item.dark-text .bullet { color: var(--cyan-muted); }
+
+  /* STAT CARDS */
+  .stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 2vh 2vw; margin-bottom: 2.5vh; }
+  .stat-card {
+    background: rgba(0,184,212,0.08); border: 1px solid rgba(0,184,212,0.2);
+    border-radius: 12px; padding: 2vh 1.5vw; text-align: center;
+  }
+  .stat-val { font-size: clamp(20px,2.2vw,32px); font-weight:800; color:var(--cyan); font-family:'JetBrains Mono',monospace; }
+  .stat-label { font-size: clamp(10px,0.85vw,13px); color: rgba(255,255,255,0.65); margin-top:0.4vh; line-height:1.3; }
+
+  /* DELIVERY CHARACTERISTIC CARDS */
+  .dc-card {
+    border-radius: 12px; padding: 2vh 2vw; background: var(--off-white);
+    border-top: 4px solid var(--cyan); display:flex; flex-direction:column; gap:0.7vh;
+  }
+  .dc-card.c1 { border-top-color: var(--cyan); }
+  .dc-card.c2 { border-top-color: var(--green); }
+  .dc-card.c3 { border-top-color: var(--amber); }
+  .dc-card.c4 { border-top-color: var(--purple); }
+  .dc-label { font-size:clamp(9px,0.78vw,12px); font-weight:700; letter-spacing:0.2em; text-transform:uppercase; }
+  .dc-card.c1 .dc-label { color:var(--cyan); }
+  .dc-card.c2 .dc-label { color:var(--green); }
+  .dc-card.c3 .dc-label { color:var(--amber); }
+  .dc-card.c4 .dc-label { color:var(--purple); }
+  .dc-title { font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy); line-height:1.3; }
+  .dc-item { font-size:clamp(10px,0.88vw,13px); color:var(--dark-gray); line-height:1.5; display:flex; gap:0.5vw; }
+  .dc-item::before { content:"·"; color:var(--med-gray); flex-shrink:0; }
+
+  /* WORKSTREAM CARD */
+  .ws-header { display:flex; align-items:baseline; gap:1vw; margin-bottom:0.8vh; }
+  .ws-num { font-size:clamp(28px,2.8vw,42px); font-weight:800; line-height:1; }
+  .ws-title { font-size:clamp(16px,1.6vw,24px); font-weight:700; color:var(--navy); line-height:1.2; }
+  .ws-timing { display:flex; gap:1.5vw; margin-bottom:1.5vh; flex-wrap:wrap; }
+  .ws-tag {
+    font-family:'JetBrains Mono',monospace; font-size:clamp(10px,0.85vw,13px); font-weight:600;
+    padding:0.3vh 0.8vw; border-radius:6px; background:var(--off-white); color:var(--navy);
+  }
+  .deliverable-list { display:flex; flex-direction:column; gap:0.5vh; }
+  .deliverable-item { display:flex; gap:0.8vw; align-items:flex-start; font-size:clamp(11px,0.95vw,14px); color:var(--dark-gray); line-height:1.45; }
+  .deliverable-item .d-check { flex-shrink:0; font-weight:700; }
+
+  /* WEEK-BY-WEEK */
+  .week-arc { display:grid; grid-template-columns:repeat(4,1fr); gap:2vw; flex:1; align-content:start; margin-top:0.5vh; }
+  .week-card {
+    border-radius: 12px; overflow:hidden; display:flex; flex-direction:column;
+  }
+  .week-card-head { padding:1.5vh 1.5vw; font-size:clamp(12px,1.05vw,15px); font-weight:800; color:white; }
+  .wc1 .week-card-head { background:var(--teal-dark); }
+  .wc2 .week-card-head { background: #2E7D32; }
+  .wc3 .week-card-head { background: #B84A00; }
+  .wc4 .week-card-head { background: #5033AA; }
+  .week-card-body { background:var(--off-white); padding:1.5vh 1.5vw; flex:1; display:flex; flex-direction:column; gap:0.6vh; }
+  .week-tag-label { font-size:clamp(9px,0.78vw,12px); font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.3vh; }
+  .wc1 .week-tag-label { color:var(--cyan); }
+  .wc2 .week-tag-label { color:var(--green); }
+  .wc3 .week-tag-label { color:var(--warn); }
+  .wc4 .week-tag-label { color:var(--purple); }
+  .week-bullet { font-size:clamp(10px,0.88vw,13px); color:var(--dark-gray); line-height:1.5; display:flex; gap:0.5vw; }
+  .week-bullet::before { content:"→"; color:var(--med-gray); flex-shrink:0; font-size:0.9em; }
+
+  /* ARTIFACT GRID */
+  .artifact-group { margin-bottom:1.8vh; }
+  .artifact-group-title { font-size:clamp(11px,0.92vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.5vh; }
+  .artifact-pill-row { display:flex; flex-wrap:wrap; gap:0.5vh 0.6vw; }
+  .artifact-pill {
+    font-size:clamp(9px,0.8vw,12px); font-weight:500; padding:0.3vh 0.8vw;
+    border-radius:20px; border:1px solid;
+  }
+  .ap-code   { background:rgba(0,184,212,0.08); border-color:rgba(0,184,212,0.3); color:var(--teal-dark); }
+  .ap-doc    { background:rgba(0,200,83,0.08);  border-color:rgba(0,200,83,0.3);  color:#1B5E20; }
+  .ap-proc   { background:rgba(255,179,0,0.10); border-color:rgba(255,179,0,0.35); color:#6D4C00; }
+  .ap-sec    { background:rgba(255,107,53,0.08); border-color:rgba(255,107,53,0.3); color:#8B2500; }
+  .ap-obs    { background:rgba(124,77,255,0.08); border-color:rgba(124,77,255,0.3); color:#4A148C; }
+
+  /* RUBRIC TABLE */
+  .rubric-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5vh 4vw; flex:1; align-content:start; }
+  .rubric-block { }
+  .rubric-title { font-size:clamp(12px,1.0vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.6vh; padding-bottom:0.4vh; border-bottom:2px solid var(--cyan); }
+  .rubric-item { font-size:clamp(10px,0.88vw,13px); color:var(--dark-gray); line-height:1.5; display:flex; gap:0.5vw; margin-bottom:0.3vh; }
+  .rubric-item::before { content:"✓"; color:var(--green); flex-shrink:0; font-weight:700; }
+
+  /* OUTCOMES GRID */
+  .outcomes-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2vh 3vw; margin-top:0.5vh; }
+  .outcome-item { display:flex; gap:1vw; align-items:flex-start; }
+  .outcome-check { color:var(--green); font-weight:700; font-size:clamp(14px,1.2vw,18px); flex-shrink:0; }
+  .outcome-text { font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray); line-height:1.5; }
+
+  /* TITLE SLIDE */
+  .slide-title { background:var(--navy); color:var(--white); justify-content:center; padding:5vh 6vw; }
+  .slide-title .brand {
+    position:absolute; top:4vh; left:6vw;
+    font-size:clamp(11px,1.1vw,16px); font-weight:500;
+    letter-spacing:0.35em; text-transform:uppercase; color:var(--white); opacity:0.9;
+  }
+  .slide-title .phase-badge {
+    position:absolute; top:4vh; right:6vw;
+    font-family:'JetBrains Mono',monospace; font-size:clamp(10px,0.9vw,14px); font-weight:600;
+    background:rgba(0,184,212,0.15); border:1px solid rgba(0,184,212,0.4);
+    color:var(--cyan); padding:0.5vh 1.2vw; border-radius:20px; letter-spacing:0.1em;
+  }
+  .slide-title .content { max-width:58%; z-index:2; }
+  .slide-title .session-tag {
+    font-size:clamp(11px,1.0vw,15px); font-weight:600;
+    letter-spacing:0.25em; text-transform:uppercase; color:var(--cyan); margin-bottom:1.2vh;
+  }
+  .slide-title h1 { font-size:clamp(26px,3.2vw,48px); font-weight:700; line-height:1.1; margin-bottom:0.5em; }
+  .slide-title .accent-line { width:100px; height:3px; background:var(--cyan); margin-bottom:0.8em; }
+  .slide-title .subtitle { font-size:clamp(14px,1.3vw,19px); font-weight:400; color:var(--cyan-muted); line-height:1.5; }
+  .slide-title .meta { font-size:clamp(11px,1.0vw,15px); color:#AABBCC; margin-top:1.5em; }
+  .slide-title .footer { position:absolute; bottom:3vh; left:6vw; font-size:clamp(8px,0.7vw,11px); color:var(--footer-gray); }
+
+  .geo { position:absolute; border-radius:20px; }
+  .geo-1 { right:2vw; top:8vh; width:35vw; height:55vh; background:var(--teal-dark); opacity:0.5; border-radius:24px; }
+  .geo-2 { right:-2vw; top:15vh; width:28vw; height:50vh; background:var(--teal-mid); opacity:0.45; border-radius:20px; }
+  .geo-3 { right:5vw; top:22vh; width:22vw; height:22vw; background:var(--cyan); opacity:0.55; border-radius:50%; }
+  .geo-4 { right:12vw; top:30vh; width:10vw; height:10vw; background:var(--navy); opacity:0.7; border-radius:50%; }
+  .geo-5 { right:0; bottom:0; width:18vw; height:28vh; background:var(--teal-dark); opacity:0.35; border-radius:16px 0 0 0; }
+
+  .slide-divider {
+    background:var(--navy); color:var(--white);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:5vh 10vw;
+  }
+  .divider-content { z-index:2; }
+  .divider-content .label { font-size:clamp(12px,1.1vw,16px); font-weight:700; letter-spacing:0.3em; text-transform:uppercase; color:var(--cyan); margin-bottom:1.5vh; }
+  .divider-content h2 { font-size:clamp(24px,3vw,44px); font-weight:700; line-height:1.2; margin-bottom:0.6em; }
+  .divider-content .sub { font-size:clamp(14px,1.3vw,20px); color:var(--cyan-muted); line-height:1.5; }
+
+  .kb-hint {
+    position:fixed; bottom:12px; right:12px;
+    background:rgba(0,0,0,0.6); color:#aaa; font-size:11px;
+    padding:4px 10px; border-radius:4px; z-index:100; opacity:0.7; pointer-events:none;
+  }
+</style>
+</head>
+<body>
+
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="phase-badge">Phase 2 of 3</div>
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="content">
+    <div class="session-tag">AI-Accelerated Software Development</div>
+    <h1>Applied<br>Practice</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">Guided artifact delivery using AI-assisted workflows in sandbox and approved enterprise repositories.</div>
+    <div class="meta">4 weeks &nbsp;·&nbsp; 4 workstreams &nbsp;·&nbsp; 8–10 hours per week</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<!-- SLIDE 2: PROGRAM OVERVIEW (dark) -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Applied Practice &nbsp;|&nbsp; Overview</div>
+  <div class="action-title" style="color:var(--white)">The bridge between Foundations and real-project coaching</div>
+  <div class="title-rule dark"></div>
+  <div class="stat-row">
+    <div class="stat-card"><div class="stat-val">4</div><div class="stat-label">Weeks of Applied Work</div></div>
+    <div class="stat-card"><div class="stat-val">4</div><div class="stat-label">Core Workstreams</div></div>
+    <div class="stat-card"><div class="stat-val">8–10</div><div class="stat-label">Hours Per Week</div></div>
+    <div class="stat-card"><div class="stat-val">2h</div><div class="stat-label">Guidance Content / Week</div></div>
+  </div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Participants stop working at the concept level and begin producing reviewable engineering artifacts</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Work happens inside sandbox or approved enterprise repositories — no unapproved external SaaS</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Outputs are judged on engineering quality, not prompt cleverness</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Participants build a usable portfolio: architecture docs, test suites, security artifacts, runbooks</span></div>
+  <div style="margin-top:2.5vh; padding:2vh 2.5vw; background:rgba(0,184,212,0.1); border-left:3px solid var(--cyan); border-radius:8px;">
+    <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--cyan); margin-bottom:0.4vh;">Not abstract exposure to AI tools.</div>
+    <div style="font-size:clamp(12px,1.05vw,15px); color:rgba(255,255,255,0.85); line-height:1.5;">Repeatable delivery under enterprise constraints — the same conditions real engineering teams operate under.</div>
+  </div>
+  <div class="slide-footer on-dark">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 3: DELIVERY CHARACTERISTICS -->
+<div class="slide slide-content">
+  <div class="section-label navy">Applied Practice &nbsp;|&nbsp; How It Works</div>
+  <div class="action-title">Four delivery characteristics that distinguish applied work from a lab</div>
+  <div class="title-rule"></div>
+  <div class="four-col">
+    <div class="dc-card c1">
+      <div class="dc-label">Enterprise-Safe</div>
+      <div class="dc-title">No unapproved workflows or casual data handling</div>
+      <div style="margin-top:0.8vh; border-top:1px solid var(--light-gray); padding-top:0.8vh;">
+        <div class="dc-item">No unapproved external SaaS</div>
+        <div class="dc-item">No casual code upload patterns</div>
+        <div class="dc-item">Approved models and bounded execution only</div>
+        <div class="dc-item">Work inside sandbox or approved repos</div>
+      </div>
+    </div>
+    <div class="dc-card c2">
+      <div class="dc-label">Real Deliverables</div>
+      <div class="dc-title">Every week produces reviewable artifacts</div>
+      <div style="margin-top:0.8vh; border-top:1px solid var(--light-gray); padding-top:0.8vh;">
+        <div class="dc-item">Artifacts reviewed each week</div>
+        <div class="dc-item">Quality judged, not prompt cleverness</div>
+        <div class="dc-item">Portfolio of process and code artifacts</div>
+        <div class="dc-item">Outputs usable in real delivery</div>
+      </div>
+    </div>
+    <div class="dc-card c3">
+      <div class="dc-label">Production-Oriented</div>
+      <div class="dc-title">Mirrors enterprise software team conditions</div>
+      <div style="margin-top:0.8vh; border-top:1px solid var(--light-gray); padding-top:0.8vh;">
+        <div class="dc-item">Exercises mirror enterprise team reality</div>
+        <div class="dc-item">Maintainability and reviewability required</div>
+        <div class="dc-item">Operational readiness emphasized</div>
+        <div class="dc-item">Real team delivery, not isolated labs</div>
+      </div>
+    </div>
+    <div class="dc-card c4">
+      <div class="dc-label">Coach-Supported</div>
+      <div class="dc-title">Guidance on method and quality, not code</div>
+      <div style="margin-top:0.8vh; border-top:1px solid var(--light-gray); padding-top:0.8vh;">
+        <div class="dc-item">Off-network or approved review channels</div>
+        <div class="dc-item">Coaches guide method, not execution</div>
+        <div class="dc-item">Participants own execution in their env</div>
+        <div class="dc-item">No sensitive code handled by coaches</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:2vh">
+    <div class="list-item"><span class="bullet">→</span><span>This is not a second pass through Foundations. It is delivery practice under the same constraints that govern production engineering.</span></div>
+  </div>
+  <div class="slide-footer">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 4: PREREQUISITES -->
+<div class="slide slide-content">
+  <div class="section-label navy">Applied Practice &nbsp;|&nbsp; Entry Requirements</div>
+  <div class="action-title">Prerequisites — what participants must already be able to do</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div style="padding:1.5vh 2vw; background:rgba(0,184,212,0.06); border-radius:10px; border-left:4px solid var(--cyan); margin-bottom:2vh;">
+        <div style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy); margin-bottom:0.5vh;">Completion of Foundations required</div>
+        <div style="font-size:clamp(11px,0.95vw,14px); color:var(--dark-gray); line-height:1.5;">Foundations is the safety and operating-model gate. It is not a suggested prerequisite — it is the precondition for safe participation in applied work.</div>
+      </div>
+      <div class="list-item"><span class="bullet">✓</span><span>Work in the Claude Code CLI confidently without setup guidance</span></div>
+      <div class="list-item"><span class="bullet">✓</span><span>Scope context intentionally — choose the minimum working set</span></div>
+      <div class="list-item"><span class="bullet">✓</span><span>Produce reviewed plans in Plan Mode before any mutation</span></div>
+      <div class="list-item"><span class="bullet">✓</span><span>Treat AI output as untrusted until verified by tests or review</span></div>
+      <div class="list-item"><span class="bullet">✓</span><span>Narrate changes with clear risk and testing notes</span></div>
+    </div>
+    <div>
+      <div style="font-size:clamp(13px,1.1vw,16px); font-weight:700; color:var(--navy); margin-bottom:1vh;">What Applied Practice adds</div>
+      <div class="concept-card">
+        <h4>From posture to output</h4>
+        <p>Foundations instills the operating model. Applied Practice turns that model into concrete, reviewable artifacts inside real repositories.</p>
+      </div>
+      <div class="concept-card green">
+        <h4>From exercises to deliverables</h4>
+        <p>Exercises disappear. Deliverables remain. Every week ends with an artifact that can be reviewed, inherited, and defended to engineering or security stakeholders.</p>
+      </div>
+      <div class="concept-card amber">
+        <h4>From individual to team-scale</h4>
+        <p>Cohort review, coaching, and artifact submission mirror the review loops of real engineering teams — not solo learning environments.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 5: APPLIED 01 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Workstream 01 &nbsp;|&nbsp; Week 3</div>
+  <div class="ws-header">
+    <div class="ws-num" style="color:var(--cyan)">01</div>
+    <div class="ws-title">Codebase Analysis and Documentation</div>
+  </div>
+  <div class="ws-timing">
+    <span class="ws-tag">Week 3</span>
+    <span class="ws-tag">~4 hours</span>
+    <span class="ws-tag">Read-only first</span>
+  </div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(12px,1.0vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.8vh;">You'll learn</div>
+      <div class="list-item"><span class="bullet">→</span><span>Safe repo inspection with read-only first-pass discipline</span></div>
+      <div class="list-item"><span class="bullet">→</span><span>Dependency and boundary mapping across system components</span></div>
+      <div class="list-item"><span class="bullet">→</span><span>Hotspot identification using churn, complexity, and low-test areas</span></div>
+      <div class="list-item"><span class="bullet">→</span><span>Documentation that is actionable for new engineers — not generic summary text</span></div>
+      <div style="margin-top:1.5vh; padding:1.5vh 2vw; background:rgba(0,184,212,0.06); border-radius:8px; border-left:3px solid var(--cyan);">
+        <span style="font-size:clamp(11px,0.95vw,14px); color:var(--dark-gray);">Inspect a production-style repository safely. Identify system boundaries. Create a risk-ranked backlog of safe improvements.</span>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:clamp(12px,1.0vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.8vh;">Deliverables</div>
+      <div class="deliverable-list">
+        <div class="deliverable-item"><span class="d-check" style="color:var(--cyan)">→</span><span>Architecture README covering purpose, runtime model, risks, and key boundaries</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--cyan)">→</span><span><code>ADR v1</code> documenting one significant decision with trade-offs</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--cyan)">→</span><span>Dependency and boundary map notes</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--cyan)">→</span><span>Risk-ranked backlog with the top safe PR candidates</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--cyan)">→</span><span>One selected safe change with plan and acceptance criteria</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 6: APPLIED 02 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Workstream 02 &nbsp;|&nbsp; Week 4</div>
+  <div class="ws-header">
+    <div class="ws-num" style="color:var(--green)">02</div>
+    <div class="ws-title">Testing and Coverage Acceleration</div>
+  </div>
+  <div class="ws-timing">
+    <span class="ws-tag">Week 4</span>
+    <span class="ws-tag">~4 hours</span>
+    <span class="ws-tag">Unit tests · Deterministic patterns only</span>
+  </div>
+  <div class="title-rule" style="background:var(--green)"></div>
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(12px,1.0vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.8vh;">You'll learn</div>
+      <div class="list-item"><span class="bullet" style="color:var(--green)">→</span><span>Baseline coverage measurement and interpretation before adding tests</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--green)">→</span><span>High-ROI target selection based on risk and change frequency</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--green)">→</span><span>Human review loops for AI-generated tests — no blind trust</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--green)">→</span><span>Coverage delta reporting that communicates value clearly to stakeholders</span></div>
+      <div style="margin-top:1.5vh; padding:1.5vh 2vw; background:rgba(0,200,83,0.06); border-radius:8px; border-left:3px solid var(--green);">
+        <span style="font-size:clamp(11px,0.95vw,14px); color:var(--dark-gray);">Use AI where it improves confidence — not where it creates unmaintainable test debt. Readable tests survive future maintenance; generated noise does not.</span>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:clamp(12px,1.0vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.8vh;">Deliverables</div>
+      <div class="deliverable-list">
+        <div class="deliverable-item"><span class="d-check" style="color:var(--green)">→</span><span>Coverage baseline before any changes are made</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--green)">→</span><span>Test plan defining what to test and why — not just what AI generated</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--green)">→</span><span>New tests with edge cases and readable, maintainable naming</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--green)">→</span><span>Coverage delta report after changes with clear before/after framing</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--green)">→</span><span>Refactoring notes where testability required code improvements</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 7: APPLIED 03 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Workstream 03 &nbsp;|&nbsp; Week 5</div>
+  <div class="ws-header">
+    <div class="ws-num" style="color:var(--warn)">03</div>
+    <div class="ws-title">Security and Compliance</div>
+  </div>
+  <div class="ws-timing">
+    <span class="ws-tag">Week 5</span>
+    <span class="ws-tag">~4 hours</span>
+    <span class="ws-tag">Security review discipline · Compliance-ready evidence</span>
+  </div>
+  <div class="title-rule" style="background:var(--warn)"></div>
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(12px,1.0vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.8vh;">You'll learn</div>
+      <div class="list-item"><span class="bullet" style="color:var(--warn)">→</span><span>Prompt redaction and safe-data handling patterns for enterprise workflows</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--warn)">→</span><span>Prompt injection attack and defense in practical delivery scenarios</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--warn)">→</span><span>Permission-boundary reasoning for agentic execution environments</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--warn)">→</span><span>Minimum viable compliance documentation for AI-assisted work</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--warn)">→</span><span>Converting abstract policy into reviewable execution controls</span></div>
+    </div>
+    <div>
+      <div style="font-size:clamp(12px,1.0vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.8vh;">Deliverables</div>
+      <div class="deliverable-list">
+        <div class="deliverable-item"><span class="d-check" style="color:var(--warn)">→</span><span>Prompt policy or working policy addendum for the chosen workflow</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--warn)">→</span><span>Redaction checklist tied to actual delivery scenarios</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--warn)">→</span><span>Prompt-review workflow showing who checks what before submission</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--warn)">→</span><span>Injection drill findings with concrete, reviewable mitigations</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--warn)">→</span><span>Permissions and data-handling notes for the repo or workflow</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--warn)">→</span><span>Compliance rationale — why the workflow is acceptable, or what blocks it</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 8: APPLIED 04 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Workstream 04 &nbsp;|&nbsp; Week 6</div>
+  <div class="ws-header">
+    <div class="ws-num" style="color:var(--purple)">04</div>
+    <div class="ws-title">Observability</div>
+  </div>
+  <div class="ws-timing">
+    <span class="ws-tag">Week 6</span>
+    <span class="ws-tag">~4 hours</span>
+    <span class="ws-tag">Operational readiness · Reconstructable system behavior</span>
+  </div>
+  <div class="title-rule" style="background:var(--purple)"></div>
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(12px,1.0vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.8vh;">You'll learn</div>
+      <div class="list-item"><span class="bullet" style="color:var(--purple)">→</span><span>Structured logging with defined fields and stable, documented schemas</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--purple)">→</span><span>Correlation or trace ID propagation across requests and components</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--purple)">→</span><span>Minimum viable operational instrumentation that actually helps on-call</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--purple)">→</span><span>Runbook authoring for local run, failure triage, and log interpretation</span></div>
+      <div class="list-item"><span class="bullet" style="color:var(--purple)">→</span><span>How observability reduces ambiguity during AI-assisted delivery and later debugging</span></div>
+    </div>
+    <div>
+      <div style="font-size:clamp(12px,1.0vw,14px); font-weight:700; color:var(--navy); margin-bottom:0.8vh;">Deliverables</div>
+      <div class="deliverable-list">
+        <div class="deliverable-item"><span class="d-check" style="color:var(--purple)">→</span><span>Structured logging implementation or logging retrofit with defined fields</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--purple)">→</span><span>Correlation ID propagation across the relevant request path</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--purple)">→</span><span>Log field reference or schema note for the team</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--purple)">→</span><span>Operational runbook covering startup, normal flow, and failure diagnosis</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--purple)">→</span><span>Troubleshooting examples tied to actual log output</span></div>
+        <div class="deliverable-item"><span class="d-check" style="color:var(--purple)">→</span><span>Observability gap note — what still is not instrumented well enough</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 9: WEEK-BY-WEEK ARC -->
+<div class="slide slide-content">
+  <div class="section-label navy">Applied Practice &nbsp;|&nbsp; Delivery Calendar</div>
+  <div class="action-title">Four weeks · one workstream per week · every week ends with reviewable artifacts</div>
+  <div class="title-rule"></div>
+  <div class="week-arc">
+    <div class="week-card wc1">
+      <div class="week-card-head">Week 3</div>
+      <div class="week-card-body">
+        <div class="week-tag-label">Workstream 01 — Analysis</div>
+        <div class="week-bullet">Inspect production-style repo safely — read-only first</div>
+        <div class="week-bullet">Produce architecture notes and an ADR</div>
+        <div class="week-bullet">Create safe-change backlog with explicit reasoning</div>
+        <div class="week-bullet">Select one safe PR candidate with acceptance criteria</div>
+        <div style="margin-top:auto; padding-top:1.5vh; border-top:1px solid var(--light-gray); font-size:clamp(10px,0.85vw,12px); color:var(--med-gray); font-style:italic;">~4 hours applied work</div>
+      </div>
+    </div>
+    <div class="week-card wc2">
+      <div class="week-card-head">Week 4</div>
+      <div class="week-card-body">
+        <div class="week-tag-label">Workstream 02 — Testing</div>
+        <div class="week-bullet">Measure coverage baseline before touching anything</div>
+        <div class="week-bullet">Choose highest-value test targets by risk and churn</div>
+        <div class="week-bullet">Generate and review maintainable, readable tests</div>
+        <div class="week-bullet">Report coverage delta with clear before/after framing</div>
+        <div style="margin-top:auto; padding-top:1.5vh; border-top:1px solid var(--light-gray); font-size:clamp(10px,0.85vw,12px); color:var(--med-gray); font-style:italic;">~4 hours applied work</div>
+      </div>
+    </div>
+    <div class="week-card wc3">
+      <div class="week-card-head">Week 5</div>
+      <div class="week-card-body">
+        <div class="week-tag-label">Workstream 03 — Security</div>
+        <div class="week-bullet">Practice prompt redaction and workflow review</div>
+        <div class="week-bullet">Run an injection-defense drill with findings</div>
+        <div class="week-bullet">Produce evidence the workflow survives security review</div>
+        <div class="week-bullet">Document permissions and data-handling boundaries</div>
+        <div style="margin-top:auto; padding-top:1.5vh; border-top:1px solid var(--light-gray); font-size:clamp(10px,0.85vw,12px); color:var(--med-gray); font-style:italic;">~4 hours applied work</div>
+      </div>
+    </div>
+    <div class="week-card wc4">
+      <div class="week-card-head">Week 6</div>
+      <div class="week-card-body">
+        <div class="week-tag-label">Workstream 04 — Observability</div>
+        <div class="week-bullet">Add structured logging and correlation propagation</div>
+        <div class="week-bullet">Produce an operational runbook with real log examples</div>
+        <div class="week-bullet">Document instrumentation gaps honestly</div>
+        <div class="week-bullet">Make the artifact easier to diagnose and hand off</div>
+        <div style="margin-top:auto; padding-top:1.5vh; border-top:1px solid var(--light-gray); font-size:clamp(10px,0.85vw,12px); color:var(--med-gray); font-style:italic;">~4 hours applied work</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:2vh">
+    <div class="list-item"><span class="bullet">→</span><span>Each week: <strong>2 hours</strong> guidance content &nbsp;+&nbsp; <strong>5–6 hours</strong> applied artifact work &nbsp;+&nbsp; <strong>1–2 hours</strong> review, submission, and cohort discussion.</span></div>
+  </div>
+  <div class="slide-footer">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 10: WHAT PARTICIPANTS BUILD -->
+<div class="slide slide-content">
+  <div class="section-label navy">Applied Practice &nbsp;|&nbsp; Output Portfolio</div>
+  <div class="action-title">What participants build across four weeks</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="artifact-group">
+        <div class="artifact-group-title">Code Artifacts</div>
+        <div class="artifact-pill-row">
+          <span class="artifact-pill ap-code">Targeted test suites</span>
+          <span class="artifact-pill ap-code">Structured logging improvements</span>
+          <span class="artifact-pill ap-code">Safe bounded implementation changes</span>
+          <span class="artifact-pill ap-code">Low-risk PR candidates</span>
+        </div>
+      </div>
+      <div class="artifact-group">
+        <div class="artifact-group-title">Documentation</div>
+        <div class="artifact-pill-row">
+          <span class="artifact-pill ap-doc">Architecture READMEs</span>
+          <span class="artifact-pill ap-doc">Architecture Decision Records</span>
+          <span class="artifact-pill ap-doc">Runbooks</span>
+          <span class="artifact-pill ap-doc">Dependency and boundary notes</span>
+        </div>
+      </div>
+      <div class="artifact-group">
+        <div class="artifact-group-title">Process Artifacts</div>
+        <div class="artifact-pill-row">
+          <span class="artifact-pill ap-proc">PR narrations</span>
+          <span class="artifact-pill ap-proc">Plan-mode outputs with acceptance criteria</span>
+          <span class="artifact-pill ap-proc">Coverage delta reports</span>
+          <span class="artifact-pill ap-proc">Risk-ranked backlogs</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="artifact-group">
+        <div class="artifact-group-title">Security and Compliance Artifacts</div>
+        <div class="artifact-pill-row">
+          <span class="artifact-pill ap-sec">Prompt policy notes</span>
+          <span class="artifact-pill ap-sec">Redaction checklists</span>
+          <span class="artifact-pill ap-sec">Injection drill findings</span>
+          <span class="artifact-pill ap-sec">Permissions and data-handling notes</span>
+          <span class="artifact-pill ap-sec">Workflow acceptability rationale</span>
+        </div>
+      </div>
+      <div class="artifact-group">
+        <div class="artifact-group-title">Observability Artifacts</div>
+        <div class="artifact-pill-row">
+          <span class="artifact-pill ap-obs">Logging field definitions</span>
+          <span class="artifact-pill ap-obs">Correlation propagation notes</span>
+          <span class="artifact-pill ap-obs">Troubleshooting guides</span>
+          <span class="artifact-pill ap-obs">Instrumentation gap assessments</span>
+        </div>
+      </div>
+      <div style="margin-top:1.5vh; padding:1.5vh 2vw; background:rgba(0,184,212,0.06); border-radius:8px; border-left:3px solid var(--cyan);">
+        <span style="font-size:clamp(11px,0.95vw,14px); color:var(--dark-gray);">All artifacts must be reviewable by engineering, security, and delivery stakeholders — not just functional for the participant.</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 11: ASSESSMENT RUBRICS -->
+<div class="slide slide-content">
+  <div class="section-label navy">Applied Practice &nbsp;|&nbsp; Quality Standards</div>
+  <div class="action-title">Assessment rubrics — what good looks like</div>
+  <div class="title-rule"></div>
+  <div class="rubric-grid">
+    <div class="rubric-block">
+      <div class="rubric-title">PR Rubric</div>
+      <div class="rubric-item">Clear statement of what changed</div>
+      <div class="rubric-item">Clear explanation of why it changed</div>
+      <div class="rubric-item">Risk assessment included</div>
+      <div class="rubric-item">Testing approach documented</div>
+      <div class="rubric-item">Follow-up items identified</div>
+    </div>
+    <div class="rubric-block">
+      <div class="rubric-title" style="border-color:var(--green)">Tests Rubric</div>
+      <div class="rubric-item">Readable and well named — purpose is obvious</div>
+      <div class="rubric-item">Deterministic and non-flaky</div>
+      <div class="rubric-item">Edge cases included where appropriate</div>
+      <div class="rubric-item">Maintainable structure that survives future changes</div>
+      <div class="rubric-item">Meaningful confidence improvement shown</div>
+    </div>
+    <div class="rubric-block">
+      <div class="rubric-title" style="border-color:var(--amber)">Documentation Rubric</div>
+      <div class="rubric-item">Actionable for another engineer, not just the author</div>
+      <div class="rubric-item">Accurate to current system state</div>
+      <div class="rubric-item">Risks clearly identified — not hidden or minimized</div>
+      <div class="rubric-item">Run and build steps verified where relevant</div>
+      <div class="rubric-item">Trade-offs explained rather than concealed</div>
+    </div>
+    <div class="rubric-block">
+      <div class="rubric-title" style="border-color:var(--warn)">Security Rubric</div>
+      <div class="rubric-item">Sensitive-data boundaries are explicit</div>
+      <div class="rubric-item">No unsafe prompt content normalized</div>
+      <div class="rubric-item">Mitigation steps are concrete and reviewable</div>
+      <div class="rubric-item">Approvals and ownership are visible</div>
+      <div class="rubric-item">Evidence is sufficient for later audit</div>
+    </div>
+  </div>
+  <div style="margin-top:1.5vh; padding:1.2vh 2vw; background:rgba(124,77,255,0.05); border-radius:8px; border-left:3px solid var(--purple);">
+    <span style="font-size:clamp(11px,0.9vw,13px); font-weight:700; color:var(--navy);">Observability rubric: </span>
+    <span style="font-size:clamp(11px,0.9vw,13px); color:var(--dark-gray);">Logs structured and purposeful · Correlation usable end-to-end · Runbook steps practical · Troubleshooting maps to real signals · Blind spots acknowledged explicitly</span>
+  </div>
+  <div class="slide-footer">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 12: EXIT STATE + WHAT COMES NEXT (dark) -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Applied Practice &nbsp;|&nbsp; Exit State</div>
+  <div class="action-title" style="color:var(--white)">By the end of Applied Practice, participants can do</div>
+  <div class="title-rule dark"></div>
+  <div class="outcomes-grid" style="margin-bottom:2.5vh;">
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text" style="color:rgba(255,255,255,0.85)">Inspect an enterprise codebase safely and extract usable architectural understanding</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text" style="color:rgba(255,255,255,0.85)">Improve confidence through targeted testing — not indiscriminate AI generation</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text" style="color:rgba(255,255,255,0.85)">Demonstrate secure and compliant AI-assisted workflow behavior with evidence</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text" style="color:rgba(255,255,255,0.85)">Make system behavior more observable and easier to support and hand off</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text" style="color:rgba(255,255,255,0.85)">Submit artifacts reviewable by engineering, security, and delivery stakeholders</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text" style="color:rgba(255,255,255,0.85)">Operate at a level that mirrors real team delivery — not isolated training exercises</span></div>
+  </div>
+  <div style="padding:2vh 2.5vw; background:rgba(0,184,212,0.1); border-left:3px solid var(--cyan); border-radius:8px;">
+    <div style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--cyan); margin-bottom:0.5vh;">What comes next</div>
+    <div style="font-size:clamp(12px,1.05vw,15px); color:rgba(255,255,255,0.85); line-height:1.6;">Embedded Project Coaching or Applied Delivery on Real Repositories — real repo outcomes, team-specific rollout decisions, and measurable operational impact at production scale.</div>
+  </div>
+  <div class="slide-footer on-dark">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 13: CLOSING -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="label">Applied Practice</div>
+    <h2>Artifacts over exercises.<br>Delivery over exposure.</h2>
+    <div class="sub">Applied Practice is where Foundations habits become engineering outputs.<br>Every week ends with something a real team can review, inherit, and build on.</div>
+  </div>
+  <div class="slide-footer on-dark">Applied Practice &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<script>
+document.addEventListener('keydown', e => {
+  const vh = window.innerHeight;
+  const cur = Math.round(window.scrollY / vh);
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    window.scrollTo({ top: (cur + 1) * vh, behavior: 'smooth' });
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    window.scrollTo({ top: (cur - 1) * vh, behavior: 'smooth' });
+  }
+});
+</script>
+</body>
+</html>
