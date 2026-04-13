@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundations Overview v2.0: Modules 1–4</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-light: #00E5FF;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --light-gray: #F0F0F0;
+    --off-white: #F8F9FA;
+    --med-gray: #666666;
+    --dark-gray: #333333;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+    --green: #00C853;
+    --amber: #FFB300;
+    --red-soft: #E53935;
+  }
+
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+
+  .slide {
+    width: 100vw; height: 100vh; scroll-snap-align: start;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+
+  .section-label {
+    font-size: clamp(10px, 0.85vw, 13px); font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh;
+  }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+  .section-label.navy { color: var(--navy); opacity: 0.5; }
+
+  .action-title {
+    font-size: clamp(18px, 2vw, 28px); font-weight: 700;
+    line-height: 1.25; margin-bottom: 1.5vh; max-width: 92%;
+  }
+
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+
+  .slide-footer {
+    position: absolute; bottom: 1.5vh; right: 6vw;
+    font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray);
+  }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+  .four-col { display: grid; grid-template-columns: repeat(4,1fr); gap: 0 2vw; flex: 1; align-content: start; }
+
+  .concept-card {
+    background: var(--off-white); border-radius: 10px; padding: 2vh 2vw;
+    border-left: 4px solid var(--cyan); margin-bottom: 1.5vh;
+  }
+  .concept-card.warn { border-left-color: var(--warn); }
+  .concept-card.green { border-left-color: var(--green); }
+  .concept-card.amber { border-left-color: var(--amber); }
+  .concept-card h4 {
+    font-size: clamp(13px, 1.15vw, 17px); font-weight: 700; color: var(--navy); margin-bottom: 0.4em;
+  }
+  .concept-card p { font-size: clamp(11px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.5; }
+
+  .list-item {
+    display: flex; gap: 1vw; align-items: flex-start; margin-bottom: 1.2vh;
+    font-size: clamp(12px, 1.05vw, 16px); color: var(--dark-gray); line-height: 1.5;
+  }
+  .list-item .bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+  .list-item.dark-text { color: rgba(255,255,255,0.85); }
+  .list-item.dark-text .bullet { color: var(--cyan-muted); }
+
+  /* MODULE CARDS */
+  .module-card {
+    border-radius: 12px; padding: 1.8vh 1.6vw; border-top: 4px solid var(--cyan);
+    background: var(--off-white); display: flex; flex-direction: column; gap: 0.6vh;
+  }
+  .module-card.m1 { border-top-color: var(--cyan); }
+  .module-card.m2 { border-top-color: var(--green); }
+  .module-card.m3 { border-top-color: var(--amber); }
+  .module-card.m4 { border-top-color: var(--warn); }
+  .module-num {
+    font-size: clamp(9px, 0.78vw, 12px); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+  .module-card.m1 .module-num { color: var(--cyan); }
+  .module-card.m2 .module-num { color: var(--green); }
+  .module-card.m3 .module-num { color: var(--amber); }
+  .module-card.m4 .module-num { color: var(--warn); }
+  .module-title { font-size: clamp(12px, 1.0vw, 14px); font-weight: 700; color: var(--navy); line-height: 1.3; }
+  .module-sessions { font-size: clamp(10px, 0.82vw, 12px); color: var(--med-gray); }
+  .module-message { font-size: clamp(10px, 0.85vw, 12px); color: var(--dark-gray); line-height: 1.4; font-style: italic; border-top: 1px solid var(--light-gray); padding-top: 0.6vh; margin-top: 0.3vh; }
+  .module-session-list { margin-top: 0.5vh; border-top: 1px solid var(--light-gray); padding-top: 0.6vh; }
+  .module-session-item { font-size: clamp(9px, 0.8vw, 12px); color: var(--dark-gray); line-height: 1.55; display: flex; gap: 0.4vw; }
+  .module-session-item .snum { font-weight: 700; flex-shrink: 0; }
+  .module-card.m1 .snum { color: var(--cyan); }
+  .module-card.m2 .snum { color: var(--green); }
+  .module-card.m3 .snum { color: var(--amber); }
+  .module-card.m4 .snum { color: var(--warn); }
+
+  /* PROGRESSION TABLE */
+  .prog-grid { display: grid; grid-template-columns: auto 1fr; gap: 1.2vh 2vw; align-items: start; margin-top: 0.5vh; }
+  .prog-range {
+    font-size: clamp(12px, 1.0vw, 14px); font-weight: 700; color: var(--navy);
+    font-family: 'JetBrains Mono', monospace; white-space: nowrap;
+    padding: 0.8vh 1vw; background: var(--off-white); border-radius: 6px; text-align: center;
+  }
+  .prog-desc { font-size: clamp(12px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.5; padding: 0.8vh 0; border-bottom: 1px solid var(--light-gray); }
+
+  /* STACK STEPS */
+  .stack-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5vh 1.5vw; margin-top: 1vh; }
+  .stack-step {
+    background: var(--navy); border-radius: 10px; padding: 2vh 1.5vw; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 0.8vh;
+  }
+  .stack-num { font-size: clamp(20px, 2.2vw, 32px); font-weight: 800; color: var(--cyan); }
+  .stack-label { font-size: clamp(11px, 0.95vw, 14px); font-weight: 700; color: var(--white); line-height: 1.3; }
+  .stack-detail { font-size: clamp(10px, 0.85vw, 13px); color: var(--cyan-muted); line-height: 1.4; }
+
+  /* OUTCOMES GRID */
+  .outcomes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2vh 3vw; margin-top: 0.5vh; }
+  .outcome-item { display: flex; gap: 1vw; align-items: flex-start; }
+  .outcome-check { color: var(--green); font-weight: 700; font-size: clamp(14px, 1.2vw, 18px); flex-shrink: 0; }
+  .outcome-text { font-size: clamp(12px, 1.05vw, 15px); color: var(--dark-gray); line-height: 1.5; }
+
+  /* TITLE SLIDE */
+  .slide-title { background: var(--navy); color: var(--white); justify-content: center; padding: 5vh 6vw; }
+  .slide-title .brand {
+    position: absolute; top: 4vh; left: 6vw;
+    font-size: clamp(11px, 1.1vw, 16px); font-weight: 500;
+    letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); opacity: 0.9;
+  }
+  .slide-title .content { max-width: 55%; z-index: 2; }
+  .slide-title .session-tag {
+    font-size: clamp(11px, 1.0vw, 15px); font-weight: 600;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.2vh;
+  }
+  .slide-title h1 { font-size: clamp(26px, 3.4vw, 50px); font-weight: 700; line-height: 1.1; margin-bottom: 0.5em; }
+  .slide-title .accent-line { width: 100px; height: 3px; background: var(--cyan); margin-bottom: 0.8em; }
+  .slide-title .subtitle { font-size: clamp(14px, 1.4vw, 20px); font-weight: 400; color: var(--cyan-muted); line-height: 1.4; }
+  .slide-title .meta { font-size: clamp(11px, 1.0vw, 15px); color: #AABBCC; margin-top: 1.5em; }
+  .slide-title .footer { position: absolute; bottom: 3vh; left: 6vw; font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray); }
+
+  .geo { position: absolute; border-radius: 20px; }
+  .geo-1 { right: 2vw; top: 8vh; width: 35vw; height: 55vh; background: var(--teal-dark); opacity: 0.5; border-radius: 24px; }
+  .geo-2 { right: -2vw; top: 15vh; width: 28vw; height: 50vh; background: var(--teal-mid); opacity: 0.45; border-radius: 20px; }
+  .geo-3 { right: 5vw; top: 22vh; width: 22vw; height: 22vw; background: var(--cyan); opacity: 0.55; border-radius: 50%; }
+  .geo-4 { right: 12vw; top: 30vh; width: 10vw; height: 10vw; background: var(--navy); opacity: 0.7; border-radius: 50%; }
+  .geo-5 { right: 0; bottom: 0; width: 18vw; height: 28vh; background: var(--teal-dark); opacity: 0.35; border-radius: 16px 0 0 0; }
+
+  .slide-divider {
+    background: var(--navy); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 5vh 10vw;
+  }
+  .divider-content { z-index: 2; }
+  .divider-content .module-num-label {
+    font-size: clamp(12px, 1.1vw, 16px); font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.5vh;
+  }
+  .divider-content h2 { font-size: clamp(24px, 3vw, 44px); font-weight: 700; line-height: 1.2; margin-bottom: 0.6em; }
+  .divider-content .sub { font-size: clamp(14px, 1.3vw, 20px); color: var(--cyan-muted); line-height: 1.5; }
+
+  /* PARADIGM SHIFT TABLE */
+  .shift-table { width: 100%; border-collapse: separate; border-spacing: 0; flex: 1; }
+  .shift-table th {
+    padding: 1vh 1.5vw; font-size: clamp(12px, 1.0vw, 15px); font-weight: 700;
+    text-align: left; border-bottom: 2px solid var(--light-gray);
+  }
+  .shift-table th.legacy { color: var(--med-gray); background: #FFF5F2; border-radius: 8px 8px 0 0; }
+  .shift-table th.target { color: var(--navy); background: rgba(0,184,212,0.08); border-radius: 8px 8px 0 0; }
+  .shift-table th.cat { color: var(--med-gray); font-weight: 600; background: transparent; width: 14%; }
+  .shift-table td {
+    padding: 1vh 1.5vw; font-size: clamp(11px, 0.92vw, 13px); color: var(--dark-gray);
+    vertical-align: top; line-height: 1.5; border-bottom: 1px solid var(--light-gray);
+  }
+  .shift-table td.cat { font-weight: 700; color: var(--navy); font-size: clamp(11px, 0.9vw, 13px); }
+  .shift-table td.legacy { background: #FAFAFA; }
+  .shift-table td.target { background: rgba(0,184,212,0.04); }
+  .shift-check { color: var(--cyan); font-weight: 700; margin-right: 0.3em; }
+  .shift-x { color: #bbb; font-weight: 700; margin-right: 0.3em; }
+
+  /* WEEK SCHEDULE */
+  .week-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; }
+  .week-panel { border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .week-header {
+    padding: 1.8vh 2vw; font-size: clamp(14px, 1.3vw, 20px); font-weight: 800;
+    letter-spacing: 0.05em; display: flex; justify-content: space-between; align-items: center;
+  }
+  .week-header.w1 { background: var(--navy); color: var(--white); }
+  .week-header.w2 { background: var(--teal-dark); color: var(--white); }
+  .week-header .week-tag { font-size: clamp(10px, 0.85vw, 13px); font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.7; }
+  .week-module { padding: 1.8vh 2vw; border-bottom: 1px solid var(--light-gray); background: var(--off-white); }
+  .week-module:last-child { border-bottom: none; flex: 1; }
+  .wm-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.8vh; }
+  .wm-title { font-size: clamp(12px, 1.05vw, 15px); font-weight: 700; color: var(--navy); }
+  .wm-sessions { font-size: clamp(10px, 0.85vw, 12px); font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+  .wm-sessions.c1 { color: var(--cyan); }
+  .wm-sessions.c2 { color: var(--green); }
+  .wm-sessions.c3 { color: var(--amber); }
+  .wm-sessions.c4 { color: var(--warn); }
+  .wm-row { display: flex; gap: 0.5vw; flex-wrap: wrap; margin-top: 0.5vh; }
+  .session-pill {
+    font-size: clamp(9px, 0.78vw, 11px); font-weight: 600; padding: 0.25vh 0.7vw;
+    border-radius: 20px; white-space: nowrap;
+  }
+  .session-pill.c1 { background: rgba(0,184,212,0.12); color: var(--teal-dark); }
+  .session-pill.c2 { background: rgba(0,200,83,0.12); color: #007A33; }
+  .session-pill.c3 { background: rgba(255,179,0,0.15); color: #8C6200; }
+  .session-pill.c4 { background: rgba(255,107,53,0.12); color: #C0400A; }
+  .wm-message { font-size: clamp(10px, 0.88vw, 13px); color: var(--med-gray); line-height: 1.4; font-style: italic; margin-top: 0.6vh; }
+
+  .kb-hint {
+    position: fixed; bottom: 12px; right: 12px;
+    background: rgba(0,0,0,0.6); color: #aaa; font-size: 11px;
+    padding: 4px 10px; border-radius: 4px; z-index: 100; opacity: 0.7; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="content">
+    <div class="session-tag">AI-Accelerated Software Development &nbsp;&bull;&nbsp; Foundations</div>
+    <h1>Foundations<br>Overview</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">Modules 1 through 4 — the operating baseline for trustworthy AI-accelerated delivery.</div>
+    <div class="meta">AI-Accelerated Software Development &nbsp;|&nbsp; Foundations Program &nbsp;|&nbsp; v2.0</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<!-- SLIDE 2: WHAT FOUNDATIONS IS FOR (dark) -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Foundations &nbsp;|&nbsp; Purpose</div>
+  <div class="action-title" style="color:var(--white)">Foundations is not a theory block — it is the operating baseline</div>
+  <div class="title-rule dark"></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Replace ad hoc AI usage with a disciplined engineering operating model</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Establish the CLI-native working environment before acceleration features are added</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Teach control surfaces — specs, plans, rules, permissions, review — before scope expands</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Prepare learners to enter Labs with repeatable habits, not one-off prompt tricks</span></div>
+  <div style="margin-top:3vh; padding: 2vh 2.5vw; background: rgba(0,184,212,0.1); border-left: 3px solid var(--cyan); border-radius: 8px;">
+    <div style="font-size:clamp(13px,1.15vw,18px); font-weight:700; color:var(--cyan); margin-bottom:0.5vh;">The goal is not faster prompts.</div>
+    <div style="font-size:clamp(12px,1.05vw,16px); color:rgba(255,255,255,0.85); line-height:1.5;">The goal is controlled, reviewable, enterprise-ready engineering work.</div>
+  </div>
+  <div class="slide-footer on-dark">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 3 (NEW): THE PARADIGM SHIFT -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; Why We Redesigned This</div>
+  <div class="action-title">The shift: from vibe coding to structured agentic engineering</div>
+  <div class="title-rule"></div>
+  <table class="shift-table">
+    <thead>
+      <tr>
+        <th class="cat"></th>
+        <th class="legacy">Vibe Coding &nbsp;<span style="font-weight:400;font-size:0.9em;color:#999">(Legacy approach)</span></th>
+        <th class="target" style="color:var(--cyan)">Agentic Engineering &nbsp;<span style="font-weight:400;font-size:0.9em;color:var(--teal-mid)">( This program's target)</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cat">Interface</td>
+        <td class="legacy"><span class="shift-x">—</span>Conversational prompting via external chatbots. Heavy copy-paste, no codebase awareness.</td>
+        <td class="target"><span class="shift-check">✓</span>CLI-native orchestration. Agent reads the codebase, executes shell commands, and loops on failure.</td>
+      </tr>
+      <tr>
+        <td class="cat">Workflow Trigger</td>
+        <td class="legacy"><span class="shift-x">—</span>High-level, unconstrained prompts driving a "creative flow." Ideas prioritized over structure.</td>
+        <td class="target"><span class="shift-check">✓</span>Spec-Driven Development: intent → constraints → acceptance criteria. Small, verifiable prompts.</td>
+      </tr>
+      <tr>
+        <td class="cat">Constraint Mechanism</td>
+        <td class="legacy"><span class="shift-x">—</span>Model generates without limits. Arbitrary network calls, unchecked mutations, architectural drift.</td>
+        <td class="target"><span class="shift-check">✓</span>Explicit functional boundaries. CLAUDE.md rules, Plan Mode gating, and hook enforcement.</td>
+      </tr>
+      <tr>
+        <td class="cat">Quality &amp; Review</td>
+        <td class="legacy"><span class="shift-x">—</span>Minimal oversight. "Trust debt" accumulates as engineers can't reconstruct why code exists.</td>
+        <td class="target"><span class="shift-check">✓</span>Structured review discipline. AI output treated as untrusted until verified by tests or human review.</td>
+      </tr>
+      <tr>
+        <td class="cat">Security Posture</td>
+        <td class="legacy"><span class="shift-x">—</span>Brittle, opaque codebases. High risk of OWASP vulnerabilities, no audit trail for agent actions.</td>
+        <td class="target"><span class="shift-check">✓</span>Zero Trust execution. Least-privilege permissions, immutable audit logs, OWASP-aware threat model.</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:1.5vh; padding: 1.2vh 2vw; background: rgba(0,184,212,0.06); border-radius: 8px; border-left: 3px solid var(--cyan);">
+    <span style="font-size:clamp(11px,0.95vw,14px); color:var(--dark-gray);">Enterprise environments cannot tolerate vibe coding at scale. This curriculum instills the discipline that makes AI-accelerated delivery safe to ship.</span>
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 4 (ENHANCED): THE FOUR-MODULE ARC -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; Structure</div>
+  <div class="action-title">The four-module arc: each layer adds control before adding power</div>
+  <div class="title-rule"></div>
+  <div class="four-col">
+    <div class="module-card m1">
+      <div class="module-num">Module 1 &nbsp;·&nbsp; Week 1</div>
+      <div class="module-title">The Agentic Paradigm and CLI Environment</div>
+      <div class="module-sessions">Sessions 1–4 &nbsp;·&nbsp; ~92 min</div>
+      <div class="module-session-list">
+        <div class="module-session-item"><span class="snum">S01</span><span>The Agentic Engineering Shift</span></div>
+        <div class="module-session-item"><span class="snum">S02</span><span>LLM Internals for Orchestrators</span></div>
+        <div class="module-session-item"><span class="snum">S03</span><span>Context Boundaries and Rot</span></div>
+        <div class="module-session-item"><span class="snum">S04</span><span>CLI Architecture and Setup</span></div>
+      </div>
+      <div class="module-message">Adopt the agentic posture and understand the tool. Mental model before execution.</div>
+    </div>
+    <div class="module-card m2">
+      <div class="module-num">Module 2 &nbsp;·&nbsp; Week 1</div>
+      <div class="module-title">Spec-Driven Development and Context Control</div>
+      <div class="module-sessions">Sessions 5–8 &nbsp;·&nbsp; ~92 min</div>
+      <div class="module-session-list">
+        <div class="module-session-item"><span class="snum">S05</span><span>Spec-Driven Development</span></div>
+        <div class="module-session-item"><span class="snum">S06</span><span>Plan Mode vs. Act Mode</span></div>
+        <div class="module-session-item"><span class="snum">S07</span><span>Context Control via CLAUDE.md</span></div>
+        <div class="module-session-item"><span class="snum">S08</span><span>Extending Capabilities with MCP</span></div>
+      </div>
+      <div class="module-message">Constrain intent, execution, and context. Explicit intent before generation.</div>
+    </div>
+    <div class="module-card m3">
+      <div class="module-num">Module 3 &nbsp;·&nbsp; Week 2</div>
+      <div class="module-title">Tooling, MCP, and Agentic Orchestration</div>
+      <div class="module-sessions">Sessions 9–12 &nbsp;·&nbsp; ~92 min</div>
+      <div class="module-session-list">
+        <div class="module-session-item"><span class="snum">S09</span><span>Skills and Deterministic Hooks</span></div>
+        <div class="module-session-item"><span class="snum">S10</span><span>Task Decomposition and Subagents</span></div>
+        <div class="module-session-item"><span class="snum">S11</span><span>Parallel Orchestration: Agent Teams</span></div>
+        <div class="module-session-item"><span class="snum">S12</span><span>OWASP Top 10 for Agentic Apps</span></div>
+      </div>
+      <div class="module-message">Extend capability and delegate work safely inside established constraints.</div>
+    </div>
+    <div class="module-card m4">
+      <div class="module-num">Module 4 &nbsp;·&nbsp; Week 2</div>
+      <div class="module-title">Enterprise Security, Governance, and Auditability</div>
+      <div class="module-sessions">Sessions 13–16 &nbsp;·&nbsp; ~92 min</div>
+      <div class="module-session-list">
+        <div class="module-session-item"><span class="snum">S13</span><span>Zero Trust and Permission Boundaries</span></div>
+        <div class="module-session-item"><span class="snum">S14</span><span>Secure MCP Governance</span></div>
+        <div class="module-session-item"><span class="snum">S15</span><span>Code Review and Cognitive Debt</span></div>
+        <div class="module-session-item"><span class="snum">S16</span><span>Auditability and Workflow Narration</span></div>
+      </div>
+      <div class="module-message">Secure, govern, and produce auditable evidence. Enterprise use requires all four layers.</div>
+    </div>
+  </div>
+  <div style="margin-top:2vh">
+    <div class="list-item"><span class="bullet">→</span><span>Each module assumes the previous one is in place. Control before capability is the sequence.</span></div>
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 5 (NEW): WEEK 1 / WEEK 2 SCHEDULE -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; Delivery Schedule</div>
+  <div class="action-title">Two weeks · four modules · sixteen sessions · ~23 minutes each</div>
+  <div class="title-rule"></div>
+  <div class="week-grid">
+
+    <!-- WEEK 1 -->
+    <div class="week-panel">
+      <div class="week-header w1">
+        <span>Week 1</span>
+        <span class="week-tag">Mental Model &nbsp;·&nbsp; Workflow</span>
+      </div>
+      <div class="week-module">
+        <div class="wm-header">
+          <div class="wm-title">Module 1 — The Agentic Paradigm and CLI Environment</div>
+          <div class="wm-sessions c1">S01–S04</div>
+        </div>
+        <div class="wm-row">
+          <span class="session-pill c1">S01 · Agentic Engineering Shift</span>
+          <span class="session-pill c1">S02 · LLM Internals</span>
+          <span class="session-pill c1">S03 · Context Boundaries &amp; Rot</span>
+          <span class="session-pill c1">S04 · CLI Architecture &amp; Setup</span>
+        </div>
+        <div class="wm-message">Dismantle the vibe coding mindset. Establish the CLI harness and shared vocabulary for agentic orchestration.</div>
+      </div>
+      <div class="week-module">
+        <div class="wm-header">
+          <div class="wm-title">Module 2 — Spec-Driven Development and Context Control</div>
+          <div class="wm-sessions c2">S05–S08</div>
+        </div>
+        <div class="wm-row">
+          <span class="session-pill c2">S05 · Spec-Driven Development</span>
+          <span class="session-pill c2">S06 · Plan Mode vs. Act Mode</span>
+          <span class="session-pill c2">S07 · Context via CLAUDE.md</span>
+          <span class="session-pill c2">S08 · MCP Capabilities</span>
+        </div>
+        <div class="wm-message">Never let an agent write code without a spec. Separate planning from mutation. Persist project rules across all sessions.</div>
+      </div>
+      <div style="padding:1.2vh 2vw; background:rgba(0,184,212,0.06); border-top:1px solid var(--light-gray);">
+        <span style="font-size:clamp(11px,0.9vw,13px); font-weight:700; color:var(--navy);">Week 1 exit state: </span>
+        <span style="font-size:clamp(11px,0.9vw,13px); color:var(--dark-gray);">Learners operate in the CLI with bounded context, written specs, and reviewed plans.</span>
+      </div>
+    </div>
+
+    <!-- WEEK 2 -->
+    <div class="week-panel">
+      <div class="week-header w2">
+        <span>Week 2</span>
+        <span class="week-tag">Tooling &nbsp;·&nbsp; Security &amp; Governance</span>
+      </div>
+      <div class="week-module">
+        <div class="wm-header">
+          <div class="wm-title">Module 3 — Tooling, MCP, and Agentic Orchestration</div>
+          <div class="wm-sessions c3">S09–S12</div>
+        </div>
+        <div class="wm-row">
+          <span class="session-pill c3">S09 · Skills &amp; Hooks</span>
+          <span class="session-pill c3">S10 · Task Decomposition</span>
+          <span class="session-pill c3">S11 · Parallel Agent Teams</span>
+          <span class="session-pill c3">S12 · OWASP Top 10</span>
+        </div>
+        <div class="wm-message">Extend the harness with deterministic enforcement, delegated subagents, and parallel coordination. Secure the expanded surface.</div>
+      </div>
+      <div class="week-module">
+        <div class="wm-header">
+          <div class="wm-title">Module 4 — Enterprise Security, Governance, and Auditability</div>
+          <div class="wm-sessions c4">S13–S16</div>
+        </div>
+        <div class="wm-row">
+          <span class="session-pill c4">S13 · Zero Trust Permissions</span>
+          <span class="session-pill c4">S14 · Secure MCP Governance</span>
+          <span class="session-pill c4">S15 · Code Review &amp; Debt</span>
+          <span class="session-pill c4">S16 · Auditability &amp; Narration</span>
+        </div>
+        <div class="wm-message">Apply least privilege, govern tool boundaries, review AI diffs for structural risk, and build evidence trails that survive audit.</div>
+      </div>
+      <div style="padding:1.2vh 2vw; background:rgba(255,107,53,0.05); border-top:1px solid var(--light-gray);">
+        <span style="font-size:clamp(11px,0.9vw,13px); font-weight:700; color:var(--navy);">Week 2 exit state: </span>
+        <span style="font-size:clamp(11px,0.9vw,13px); color:var(--dark-gray);">Learners can orchestrate, secure, and narrate agentic work. Ready for Labs.</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 6: MODULE 1 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Module 1 &nbsp;|&nbsp; Sessions 1–4 &nbsp;·&nbsp; Week 1</div>
+  <div class="action-title">The Agentic Paradigm and CLI Environment</div>
+  <div class="title-rule" style="border-top: 2px solid var(--cyan);"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>Session 1: The Agentic Engineering Shift</h4>
+        <p>Replace casual AI usage with a structured model: output, reviewability, and ownership all matter simultaneously. Comprehension debt is introduced as the first enterprise risk.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Session 2: LLM Internals for Orchestrators</h4>
+        <p>Build mechanical sympathy — tokens, inference, variance, context windows — to make better workflow decisions. Only the theory that directly impacts engineering choices.</p>
+      </div>
+    </div>
+    <div>
+      <div class="concept-card">
+        <h4>Session 3: Context Boundaries and Rot</h4>
+        <p>Understand why context quality matters more than context volume. The minimum working set principle, the N-tool problem, and how overloaded agents lose focus and coherence.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Session 4: Claude Code CLI Architecture and Setup</h4>
+        <p>Install and correctly bound the harness — context init, tool injection, trust boundary, and approval mode. The CLI becomes the primary engineering environment, not a supplementary tool.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:1.5vh; padding: 1.5vh 2vw; background: rgba(0,184,212,0.06); border-radius: 8px; border-left: 3px solid var(--cyan);">
+    <span style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy);">Core message: </span>
+    <span style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray);">AI writes syntax; engineers still own architecture, judgment, and liability.</span>
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 7: MODULE 2 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Module 2 &nbsp;|&nbsp; Sessions 5–8 &nbsp;·&nbsp; Week 1</div>
+  <div class="action-title">Spec-Driven Development and Context Control</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card" style="border-left-color:var(--green)">
+        <h4>Session 5: Spec-Driven Development</h4>
+        <p>Define machine-readable intent — goal, constraints, acceptance criteria, non-goals — before generation begins. Code without a preceding spec is a policy violation, not a shortcut.</p>
+      </div>
+      <div class="concept-card" style="border-left-color:var(--green)">
+        <h4>Session 6: Plan Mode vs. Act Mode</h4>
+        <p>Separate codebase analysis from mutation. Generate a plan in read-only mode, reject it, refine it, then approve before any file is touched. Prevents rogue agents from rewriting architecture.</p>
+      </div>
+    </div>
+    <div>
+      <div class="concept-card" style="border-left-color:var(--green)">
+        <h4>Session 7: Context Control via CLAUDE.md</h4>
+        <p>Persist project rules so constraints survive across sessions, engineers, and agents without re-prompting. Standardizes AI behavior across teams. Scoped: user, project, local, and managed.</p>
+      </div>
+      <div class="concept-card" style="border-left-color:var(--green)">
+        <h4>Session 8: Extending Capabilities with MCP</h4>
+        <p>Connect external systems through governed tool boundaries — client/server architecture, payload inspection, authorization, and blast-radius control. MCP is the 2026 enterprise standard.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:1.5vh; padding: 1.5vh 2vw; background: rgba(0,200,83,0.06); border-radius: 8px; border-left: 3px solid var(--green);">
+    <span style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy);">Core message: </span>
+    <span style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray);">Reliable agentic engineering starts with explicit intent and governed context.</span>
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 8: MODULE 3 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Module 3 &nbsp;|&nbsp; Sessions 9–12 &nbsp;·&nbsp; Week 2</div>
+  <div class="action-title">Tooling, MCP, and Agentic Orchestration</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card amber">
+        <h4>Session 9: Skills and Deterministic Hooks</h4>
+        <p>Decide what remains flexible (skills that scale team expertise) versus what becomes automatic enforcement (hooks that fire deterministically before every commit or file write).</p>
+      </div>
+      <div class="concept-card amber">
+        <h4>Session 10: Task Decomposition and Subagents</h4>
+        <p>Break large work into bounded delegated units. Give each subagent a clear contract, scope limit, and output interface. Prevent context collapse through atomic task design.</p>
+      </div>
+    </div>
+    <div>
+      <div class="concept-card amber">
+        <h4>Session 11: Parallel Orchestration: Agent Teams</h4>
+        <p>Coordinate multiple agents simultaneously without losing state discipline, collision control, or merge coherence. The N×M orchestration problem becomes manageable with explicit boundaries.</p>
+      </div>
+      <div class="concept-card amber">
+        <h4>Session 12: OWASP Top 10 for Agentic Apps</h4>
+        <p>Secure the broader execution surface created by tooling, teams, and expanded capability. Prompt injection, indirect tool calls, unauthorized escalation, and MCP server compromise.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:1.5vh; padding: 1.5vh 2vw; background: rgba(255,179,0,0.06); border-radius: 8px; border-left: 3px solid var(--amber);">
+    <span style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy);">Core message: </span>
+    <span style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray);">Once the workflow is constrained, capability can expand safely.</span>
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 9: MODULE 4 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Module 4 &nbsp;|&nbsp; Sessions 13–16 &nbsp;·&nbsp; Week 2</div>
+  <div class="action-title">Enterprise Security, Governance, and Auditability</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card warn">
+        <h4>Session 13: Zero Trust and Permission Boundaries</h4>
+        <p>Apply least privilege to agent execution — trust no implicit scope, verify all access. Configure role-based boundaries so subagents cannot escalate beyond their defined mission.</p>
+      </div>
+      <div class="concept-card warn">
+        <h4>Session 14: Secure MCP Governance</h4>
+        <p>Govern external tool and MCP trust boundaries — authorization tokens, payload inspection, blast radius containment, and server compromise detection.</p>
+      </div>
+    </div>
+    <div>
+      <div class="concept-card warn">
+        <h4>Session 15: Code Review and Cognitive Debt Mitigation</h4>
+        <p>Review AI-generated diffs for structural risk and comprehension debt, not just surface correctness. A passing test is not a substitute for a reviewable change.</p>
+      </div>
+      <div class="concept-card warn">
+        <h4>Session 16: Auditability and Workflow Narration</h4>
+        <p>Preserve enough evidence to reconstruct why a change happened — narration discipline, commit traceability, and the compliance record that enterprise delivery requires.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:1.5vh; padding: 1.5vh 2vw; background: rgba(255,107,53,0.06); border-radius: 8px; border-left: 3px solid var(--warn);">
+    <span style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy);">Core message: </span>
+    <span style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray);">Enterprise use is not real until permissions, review, and traceability hold under scrutiny.</span>
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 10: THE CONTROL STACK -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; What Learners Build</div>
+  <div class="action-title">The control stack — from posture to auditable evidence</div>
+  <div class="title-rule"></div>
+  <div class="stack-row">
+    <div class="stack-step">
+      <div class="stack-num">1</div>
+      <div class="stack-label">Posture &amp; Mental Model</div>
+      <div class="stack-detail">Output · Reviewability · Ownership · Mechanical sympathy · Vibe coding vs. engineering</div>
+    </div>
+    <div class="stack-step">
+      <div class="stack-num">2</div>
+      <div class="stack-label">Bounded Context &amp; Explicit Intent</div>
+      <div class="stack-detail">Specs · Plan Mode · CLAUDE.md rules · Minimum working set · Governed MCP</div>
+    </div>
+    <div class="stack-step">
+      <div class="stack-num">3</div>
+      <div class="stack-label">Deterministic Enforcement &amp; Decomposition</div>
+      <div class="stack-detail">Hooks · Subagents · Agent teams · OWASP threat model · Atomic scoping</div>
+    </div>
+    <div class="stack-step">
+      <div class="stack-num">4</div>
+      <div class="stack-label">Permissions, Review &amp; Auditable Evidence</div>
+      <div class="stack-detail">Zero trust · MCP governance · Cognitive debt review · Narration &amp; traceability</div>
+    </div>
+  </div>
+  <div style="margin-top:2.5vh">
+    <div class="list-item"><span class="bullet">→</span><span>Each layer depends on the previous. Skipping the posture layer makes the permission layer theater.</span></div>
+    <div class="list-item"><span class="bullet">→</span><span>This is the path from AI assistance to enterprise-grade agentic engineering.</span></div>
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 11: SESSION PROGRESSION -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; Session Map</div>
+  <div class="action-title">Session progression at a glance</div>
+  <div class="title-rule"></div>
+  <div class="prog-grid">
+    <div class="prog-range" style="color:var(--cyan)">S01–S04<br><span style="font-size:0.8em;color:var(--med-gray)">Week 1 · M1</span></div>
+    <div class="prog-desc">Posture, mechanics, context quality, and CLI harness setup. The mental model and the environment — before any tooling is layered on.</div>
+    <div class="prog-range" style="color:var(--green)">S05–S08<br><span style="font-size:0.8em;color:var(--med-gray)">Week 1 · M2</span></div>
+    <div class="prog-desc">Specs, plans, persistent project rules, and governed external tools. Intent becomes explicit; context becomes bounded; project standards get versioned.</div>
+    <div class="prog-range" style="color:var(--amber)">S09–S12<br><span style="font-size:0.8em;color:var(--med-gray)">Week 2 · M3</span></div>
+    <div class="prog-desc">Hooks, subagents, parallel agent teams, and the OWASP threat surface. Capability expands deliberately inside the constraints already in place.</div>
+    <div class="prog-range" style="color:var(--warn)">S13–S16<br><span style="font-size:0.8em;color:var(--med-gray)">Week 2 · M4</span></div>
+    <div class="prog-desc">Zero trust permissions, MCP governance, cognitive debt review, and auditable narration. Enterprise-grade delivery requires all four layers simultaneously.</div>
+  </div>
+  <div style="margin-top:2vh">
+    <div class="list-item"><span class="bullet">→</span><span><strong>Each module adds control before adding more power.</strong> The sequence is intentional and non-negotiable.</span></div>
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 12: LEARNING OUTCOMES -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; Outcomes</div>
+  <div class="action-title">What learners can do by the end of Foundations</div>
+  <div class="title-rule"></div>
+  <div class="outcomes-grid">
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Explain the difference between vibe coding and structured agentic engineering — and why it matters for enterprise delivery</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Choose the smallest useful context for a task and defend that choice to a reviewer</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Drive work from specs and reviewed plans rather than open-ended prompts</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Operate Claude Code inside explicit permission and context boundaries configured by the team</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Decompose work across tools and agents with clear delegation contracts and scope limits</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Review and narrate AI-assisted changes in terms a team can inherit, audit, and trace back to intent</span></div>
+  </div>
+  <div style="margin-top:2.5vh; padding: 1.5vh 2vw; background: var(--off-white); border-radius: 8px; border-left: 3px solid var(--navy);">
+    <div style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray); line-height:1.5;">Labs assume these capabilities are already in place. Learners who enter Labs without this foundation will be working at a disadvantage from the first exercise.</div>
+  </div>
+  <div class="slide-footer">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 13: BRIDGE TO LABS -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Foundations &nbsp;|&nbsp; What Comes Next</div>
+  <div class="action-title" style="color:var(--white)">Labs assume Foundations is already in practice — not just understood</div>
+  <div class="title-rule dark"></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Labs assume the learner can already work in the CLI without guidance on setup or basics</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Labs assume bounded scope and review discipline are the learner's default posture</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Labs assume AI output is treated as untrusted until verified by tests or review</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Labs build on this foundation with codebase reconnaissance, test generation, and CI loops</span></div>
+  <div style="margin-top:3vh; padding: 2vh 2.5vw; background: rgba(0,184,212,0.1); border-left: 3px solid var(--cyan); border-radius: 8px;">
+    <div style="font-size:clamp(12px,1.05vw,16px); color:rgba(255,255,255,0.9); line-height:1.6;">The difference between a learner who struggled through Foundations and one who internalized it will be visible in the first lab exercise.</div>
+  </div>
+  <div class="slide-footer on-dark">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 14: KEY TAKEAWAY -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num-label">Key Takeaway</div>
+    <h2>Control before capability.<br>Structure before speed.</h2>
+    <div class="sub">Foundations is the operating baseline for trustworthy AI-accelerated delivery.<br>Every session that follows builds on what this two-week program establishes.</div>
+  </div>
+  <div class="slide-footer on-dark">Foundations Overview v2.0 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<script>
+document.addEventListener('keydown', e => {
+  const vh = window.innerHeight;
+  const cur = Math.round(window.scrollY / vh);
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    window.scrollTo({ top: (cur + 1) * vh, behavior: 'smooth' });
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    window.scrollTo({ top: (cur - 1) * vh, behavior: 'smooth' });
+  }
+});
+</script>
+</body>
+</html>
