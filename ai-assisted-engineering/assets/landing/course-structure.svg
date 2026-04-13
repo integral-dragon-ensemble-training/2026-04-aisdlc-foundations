@@ -46,7 +46,7 @@
   <rect x="60" y="194" width="580" height="20" fill="url(#m1grad)"/>
   <circle cx="96" cy="187" r="18" fill="white" fill-opacity="0.15"/>
   <text x="96" y="193" text-anchor="middle" font-size="16" font-weight="800" fill="white">1</text>
-  <text x="650" y="193" text-anchor="end" font-size="12" fill="white" fill-opacity="0.75">Sessions 1–4</text>
+  <text x="625" y="193" text-anchor="end" font-size="12" fill="white" fill-opacity="0.95">Sessions 1-4</text>
   <text x="122" y="190" font-size="15" font-weight="700" fill="white">The Agentic Paradigm and CLI Environment</text>
 
   <text x="90" y="242" font-size="12" fill="#667A9A" font-weight="600">S01</text>
@@ -68,7 +68,7 @@
   <rect x="760" y="404" width="580" height="20" fill="url(#m2grad)"/>
   <circle cx="796" cy="397" r="18" fill="white" fill-opacity="0.15"/>
   <text x="796" y="403" text-anchor="middle" font-size="16" font-weight="800" fill="white">2</text>
-  <text x="1350" y="403" text-anchor="end" font-size="12" fill="white" fill-opacity="0.75">Sessions 5–8</text>
+  <text x="1325" y="403" text-anchor="end" font-size="12" fill="white" fill-opacity="0.95">Sessions 5-8</text>
   <text x="822" y="400" font-size="15" font-weight="700" fill="white">Spec-Driven Development and Context Control</text>
 
   <text x="790" y="452" font-size="12" fill="#667A9A" font-weight="600">S05</text>
@@ -89,7 +89,7 @@
   <rect x="60" y="614" width="580" height="20" fill="url(#m3grad)"/>
   <circle cx="96" cy="607" r="18" fill="white" fill-opacity="0.15"/>
   <text x="96" y="613" text-anchor="middle" font-size="16" font-weight="800" fill="white">3</text>
-  <text x="650" y="613" text-anchor="end" font-size="12" fill="white" fill-opacity="0.75">Sessions 9–12</text>
+  <text x="625" y="613" text-anchor="end" font-size="12" fill="white" fill-opacity="0.95">Sessions 9-12</text>
   <text x="122" y="610" font-size="15" font-weight="700" fill="white">Tooling, MCP, and Agentic Orchestration</text>
 
   <text x="90" y="662" font-size="12" fill="#667A9A" font-weight="600">S09</text>
@@ -110,7 +110,7 @@
   <rect x="760" y="824" width="580" height="20" fill="url(#m4grad)"/>
   <circle cx="796" cy="817" r="18" fill="white" fill-opacity="0.15"/>
   <text x="796" y="823" text-anchor="middle" font-size="16" font-weight="800" fill="white">4</text>
-  <text x="1350" y="823" text-anchor="end" font-size="12" fill="white" fill-opacity="0.75">Sessions 13–16</text>
+  <text x="1325" y="823" text-anchor="end" font-size="12" fill="white" fill-opacity="0.95">Sessions 13-16</text>
   <text x="822" y="820" font-size="15" font-weight="700" fill="white">Enterprise Security, Governance, and Auditability</text>
 
   <text x="790" y="872" font-size="12" fill="#667A9A" font-weight="600">S13</text>
