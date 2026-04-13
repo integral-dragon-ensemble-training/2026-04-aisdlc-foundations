@@ -98,31 +98,31 @@ Every session follows a consistent pattern:
 
 ### Module 1 — The Agentic Paradigm and CLI Environment
 
-- [Session 01: The Agentic Engineering Shift](1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-1-The-Agentic-Engineering-Shift/Artifacts/)
-- [Session 02: LLM Internals for Orchestrators](1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-2-LLM-Internals-for-Orchestrators/Artifacts/)
-- [Session 03: Context Boundaries and Rot](1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-3-Context-Boundaries-and-Rot/Artifacts/)
-- [Session 04: Claude Code CLI Architecture and Setup](1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-4-Claude-Code-CLI-Architecture-and-Setup/Artifacts/)
+- [Session 01: The Agentic Engineering Shift](1-Foundations/Module-1-The-Agentic-Paradigm-and-CLI-Environment/Session-1-The-Agentic-Engineering-Shift/)
+- [Session 02: LLM Internals for Orchestrators](1-Foundations/Module-1-The-Agentic-Paradigm-and-CLI-Environment/Session-2-LLM-Internals-for-Orchestrators/)
+- [Session 03: Context Boundaries and Rot](1-Foundations/Module-1-The-Agentic-Paradigm-and-CLI-Environment/Session-3-Context-Boundaries-and-Rot/)
+- [Session 04: Claude Code CLI Architecture and Setup](1-Foundations/Module-1-The-Agentic-Paradigm-and-CLI-Environment/Session-4-Claude-Code-CLI-Architecture-and-Setup/)
 
 ### Module 2 — Spec-Driven Development and Context Control
 
-- [Session 05: Spec-Driven Development](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-5-Spec-Driven-Development/Artifacts/)
-- [Session 06: Plan Mode vs. Act Mode](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-6-Plan-Mode-vs-Act-Mode/Artifacts/)
-- [Session 07: Context Control via CLAUDE.md](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-7-Context-Control-via-CLAUDE-md/Artifacts/)
-- [Session 08: Extending Capabilities with MCP](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-8-Extending-Capabilities-with-MCP/Artifacts/)
+- [Session 05: Spec-Driven Development](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-5-Spec-Driven-Development/)
+- [Session 06: Plan Mode vs. Act Mode](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-6-Plan-Mode-vs-Act-Mode/)
+- [Session 07: Context Control via CLAUDE.md](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-7-Context-Control-via-CLAUDE-md/)
+- [Session 08: Extending Capabilities with MCP](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-8-Extending-Capabilities-with-MCP/)
 
 ### Module 3 — Tooling, MCP, and Agentic Orchestration
 
-- [Session 09: Skills and Deterministic Hooks](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-9-Skills-and-Deterministic-Hooks/Artifacts/)
-- [Session 10: Task Decomposition and Subagents](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-10-Task-Decomposition-and-Subagents/Artifacts/)
-- [Session 11: Parallel Orchestration: Agent Teams](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-11-Parallel-Orchestration-Agent-Teams/Artifacts/)
-- [Session 12: OWASP Top 10 for Agentic Apps](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-12-OWASP-Top-10-for-Agentic-Apps/Artifacts/)
+- [Session 09: Skills and Deterministic Hooks](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-9-Skills-and-Deterministic-Hooks/)
+- [Session 10: Task Decomposition and Subagents](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-10-Task-Decomposition-and-Subagents/)
+- [Session 11: Parallel Orchestration: Agent Teams](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-11-Parallel-Orchestration-Agent-Teams/)
+- [Session 12: OWASP Top 10 for Agentic Apps](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-12-OWASP-Top-10-for-Agentic-Apps/)
 
 ### Module 4 — Enterprise Security, Governance, and Auditability
 
-- [Session 13: Zero Trust and Permission Boundaries](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-13-Zero-Trust-and-Permission-Boundaries/Artifacts/)
-- [Session 14: Secure MCP Governance](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-14-Secure-MCP-Governance/Artifacts/)
-- [Session 15: Code Review and Cognitive Debt Mitigation](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-15-Code-Review-and-Cognitive-Debt-Mitigation/Artifacts/)
-- [Session 16: Auditability and Workflow Narration](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-16-Auditability-and-Workflow-Narration/Artifacts/)
+- [Session 13: Zero Trust and Permission Boundaries](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-13-Zero-Trust-and-Permission-Boundaries/)
+- [Session 14: Secure MCP Governance](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-14-Secure-MCP-Governance/)
+- [Session 15: Code Review and Cognitive Debt Mitigation](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-15-Code-Review-and-Cognitive-Debt-Mitigation/)
+- [Session 16: Auditability and Workflow Narration](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-16-Auditability-and-Workflow-Narration/)
 
 ### Overview and Supplemental
 

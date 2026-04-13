@@ -1,17 +1,10 @@
-# Session 10
+# Artifacts
 
-## Task Decomposition and Subagents
+This folder is reserved for rendered or packaged outputs created from the session source material.
 
-Large work gets safer when it is sliced, isolated, and delegated on purpose.
+Examples:
 
-## Structure
-
-- `Source/` contains the authored source material for this session:
-  - session overview
-  - markdown slides
-  - practice and feedback prompts
-  - demo blueprints
-  - reading and resources
-- `Artifacts/` is reserved for rendered or packaged deliverables derived from the source material.
-- `Supplemental/` is optional pull-in material for live presentation use and does not need to be packaged by default.
-- `Packaging-Instructions.md` tells the packaging step how to convert source material into final artifacts.
+- rendered slide decks
+- client-facing handouts
+- export bundles
+- presentation-ready assets
