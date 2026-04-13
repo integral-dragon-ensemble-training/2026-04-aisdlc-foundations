@@ -2,7 +2,7 @@
 
 **Integral Dragon** · Delivered for Ensemble Health Partners · April 2026
 
-![Program Overview](assets/landing/program-value-proposition.png)
+![Program Overview](https://dev.azure.com/EnsembleHealth/AISDLC-Foundations-April-2026/_apis/git/repositories/Course-Guide/items?path=/assets/landing/program-value-proposition.png&api-version=6.0&download=false)
 
 ---
 
@@ -30,7 +30,7 @@ Foundations is not a theory block. It is the operating baseline for trustworthy,
 
 16 sessions across 4 modules — approximately 23 minutes per session.
 
-![Course Structure](assets/landing/course-structure.png)
+![Course Structure](https://dev.azure.com/EnsembleHealth/AISDLC-Foundations-April-2026/_apis/git/repositories/Course-Guide/items?path=/assets/landing/course-structure.png&api-version=6.0&download=false)
 
 | Module | Sessions | Title | Core Message |
 |---|---|---|---|
@@ -54,7 +54,7 @@ Foundations is not a theory block. It is the operating baseline for trustworthy,
 
 ## Where Foundations Fits
 
-![Maturity Model](assets/landing/maturity-model.png)
+![Maturity Model](https://dev.azure.com/EnsembleHealth/AISDLC-Foundations-April-2026/_apis/git/repositories/Course-Guide/items?path=/assets/landing/maturity-model.png&api-version=6.0&download=false)
 
 Foundations covers Levels 1 and 2 of the agentic engineering maturity model — transforming ad hoc AI usage into controlled, reviewable, enterprise-ready delivery. The exit state is readiness to enter applied lab tracks.
 
@@ -127,7 +127,7 @@ Every session follows a consistent pattern:
 ### Overview and Supplemental
 
 - [Foundations Overview Slides](1-Foundations/overview/)
-- [Supplemental: Coding Harness Example](1-Foundations/Supplemental-Coding-Harness-Example/)
+- [Supplemental: Coding Harness Example](1-Foundations/supplemental/Coding-Harness-Example/)
 
 ---
 
