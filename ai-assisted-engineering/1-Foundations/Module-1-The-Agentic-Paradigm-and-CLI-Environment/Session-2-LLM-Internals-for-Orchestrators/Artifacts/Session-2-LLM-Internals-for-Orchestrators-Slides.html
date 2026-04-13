@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Session 02 | LLM Internals for Orchestrators</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css"
+            id="theme"
+        />
+        <style>
+            .reveal {
+                font-size: 30px;
+            }
+
+            .reveal .slides {
+                text-align: left;
+            }
+
+            .reveal h1,
+            .reveal h2,
+            .reveal h3 {
+                text-transform: none;
+            }
+
+            .reveal h1 {
+                font-size: 2.2em;
+                margin-bottom: 0.2em;
+            }
+
+            .reveal h2 {
+                font-size: 1.5em;
+                margin-bottom: 0.35em;
+            }
+
+            .reveal h3 {
+                font-size: 0.9em;
+                margin-bottom: 0.5em;
+                color: #666;
+            }
+
+            .eyebrow {
+                display: inline-block;
+                padding: 0.2em 0.55em;
+                margin-bottom: 0.8em;
+                border: 1px solid #d9d9d9;
+                border-radius: 999px;
+                font-size: 0.42em;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: #666;
+            }
+
+            .lead {
+                max-width: 18em;
+                font-size: 1em;
+            }
+
+            .panel,
+            .stat,
+            .token-step {
+                padding: 0.75em 0.9em;
+                border: 1px solid #dddddd;
+                border-radius: 16px;
+                background: #fafafa;
+                box-shadow: none;
+            }
+
+            .two-col,
+            .three-col,
+            .metric-row,
+            .token-flow {
+                display: grid;
+                gap: 0.7em;
+                align-items: start;
+            }
+
+            .two-col {
+                grid-template-columns: 1.15fr 0.85fr;
+            }
+
+            .three-col,
+            .metric-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .token-flow {
+                grid-template-columns: repeat(4, 1fr);
+                margin-top: 0.8em;
+            }
+
+            .stat h4,
+            .token-step .label {
+                margin: 0 0 0.35em;
+                font-size: 0.5em;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: #666;
+            }
+
+            .stat p,
+            .token-step .value,
+            .small,
+            .footer-note {
+                font-size: 0.72em;
+            }
+
+            .big-number {
+                font-size: 2em;
+                font-weight: 700;
+                line-height: 1;
+                margin-bottom: 0.12em;
+            }
+
+            .quote {
+                font-size: 1em;
+                line-height: 1.3;
+            }
+
+            .code-chip {
+                display: inline-block;
+                padding: 0.22em 0.5em;
+                margin: 0.12em 0.12em 0 0;
+                border-radius: 999px;
+                background: #f2f2f2;
+                border: 1px solid #ddd;
+                font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+                font-size: 0.5em;
+            }
+
+            .reveal ul {
+                margin-left: 1em;
+            }
+
+            .reveal li {
+                margin-bottom: 0.32em;
+            }
+
+            .callout {
+                padding: 0.6em 0.8em;
+                border-left: 4px solid #999;
+                background: #f7f7f7;
+                margin-top: 0.8em;
+                font-size: 0.72em;
+            }
+
+            .mini-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.7em;
+                margin-top: 0.7em;
+            }
+
+            .mini-grid .panel {
+                font-size: 0.8em;
+            }
+
+            .compare-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 0.8em;
+                font-size: 0.65em;
+            }
+
+            .compare-table th,
+            .compare-table td {
+                border: 1px solid #ddd;
+                padding: 0.45em 0.55em;
+                vertical-align: top;
+            }
+
+            .compare-table th {
+                background: #f4f4f4;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <div class="eyebrow">Foundations · Session 02</div>
+                    <h1>LLM Internals for Orchestrators</h1>
+                    <p class="lead">
+                        Minimum viable model theory for engineers who need better judgment about
+                        context, cost, latency, and reliability.
+                    </p>
+                    <div class="token-flow">
+                        <div class="token-step">
+                            <span class="label">Input</span>
+                            <span class="value">Text becomes token IDs</span>
+                        </div>
+                        <div class="token-step">
+                            <span class="label">Meaning</span>
+                            <span class="value">Tokens become vectors</span>
+                        </div>
+                        <div class="token-step">
+                            <span class="label">Processing</span>
+                            <span class="value">Attention weighs sequence context</span>
+                        </div>
+                        <div class="token-step">
+                            <span class="label">Output</span>
+                            <span class="value">Next token is selected by probability</span>
+                        </div>
+                    </div>
+                    <div class="callout">
+                        This session is not about becoming an ML specialist. It is about building
+                        enough mechanical sympathy to make better workflow and architecture
+                        decisions.
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Why This Matters</div>
+                    <div class="two-col">
+                        <div>
+                            <h2>Mechanical sympathy beats AI mysticism</h2>
+                            <ul>
+                                <li>Orchestrators do not need deep machine learning theory.</li>
+                                <li>They do need a working model of how failure happens.</li>
+                                <li>Good workflow decisions start with understanding limits.</li>
+                                <li>Bad assumptions show up later as cost, drift, and rework.</li>
+                            </ul>
+                        </div>
+                        <div class="panel">
+                            <p class="quote">
+                                The goal is not to explain the whole transformer stack. The goal is
+                                to stop treating the model like magic.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mini-grid">
+                        <div class="panel">
+                            <strong>Without this model:</strong>
+                            <p class="small">Teams overstuff prompts and overtrust outputs.</p>
+                        </div>
+                        <div class="panel">
+                            <strong>With this model:</strong>
+                            <p class="small">Teams scope context, budget tokens, and review better.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Tokens</div>
+                    <h2>Text is not what the model sees</h2>
+                    <div class="three-col">
+                        <div class="stat">
+                            <h4>Human View</h4>
+                            <p>Words, sentences, paragraphs, meaning.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>Model View</h4>
+                            <p>Integer IDs representing token chunks.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>Engineering Impact</h4>
+                            <p>Formatting choices change cost and behavior.</p>
+                        </div>
+                    </div>
+                    <div class="footer-note">
+                        Tokenization is why whitespace, punctuation, markdown, and JSON all matter.
+                    </div>
+                    <div class="callout">
+                        Character counting and string reversal are awkward because the model does
+                        not naturally operate over letters. It operates over token chunks.
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Cost</div>
+                    <div class="two-col">
+                        <div>
+                            <h2>Syntax tax is real</h2>
+                            <ul>
+                                <li>JSON, markdown, wrappers, and boilerplate all consume tokens.</li>
+                                <li>Long prompts increase cost before they increase quality.</li>
+                                <li>Not every extra line is useful context.</li>
+                            </ul>
+                        </div>
+                        <div class="panel">
+                            <div class="big-number">Tokens ≠ pages</div>
+                            <p class="small">
+                                A prompt can look short to a person and still be expensive because
+                                structure, delimiters, and repetition all count.
+                            </p>
+                            <div>
+                                <span class="code-chip">plain text</span>
+                                <span class="code-chip">markdown</span>
+                                <span class="code-chip">json</span>
+                                <span class="code-chip">logs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>Input shape</th>
+                                <th>Typical outcome</th>
+                                <th>Tradeoff</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Short plain-language prompt</td>
+                                <td>Low token cost, fast iteration</td>
+                                <td>May need stronger constraints</td>
+                            </tr>
+                            <tr>
+                                <td>Verbose structured payload</td>
+                                <td>More explicit machine-readable context</td>
+                                <td>Higher syntax overhead and latency</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Embeddings</div>
+                    <h2>Meaning becomes geometry</h2>
+                    <div class="metric-row">
+                        <div class="stat">
+                            <h4>Near</h4>
+                            <p>Related concepts cluster in vector space.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>Far</h4>
+                            <p>Unrelated ideas drift apart.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>Useful For</h4>
+                            <p>Retrieval, search, semantic ranking, similarity checks.</p>
+                        </div>
+                    </div>
+                    <div class="panel" style="margin-top: 0.8em;">
+                        <p class="small">
+                            This is why embeddings are useful without “understanding” in the human
+                            sense. Similarity is computed, not intuited.
+                        </p>
+                    </div>
+                    <div class="mini-grid">
+                        <div class="panel">
+                            <strong>Near each other:</strong>
+                            <p class="small">“software architecture” and “enterprise systems design”</p>
+                        </div>
+                        <div class="panel">
+                            <strong>Far apart:</strong>
+                            <p class="small">“deployment pipeline” and “peanut butter sandwich”</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Inference</div>
+                    <h2>The transformer pass is sequence processing, not thought</h2>
+                    <div class="token-flow">
+                        <div class="token-step">
+                            <span class="label">1</span>
+                            <span class="value">Read current token sequence</span>
+                        </div>
+                        <div class="token-step">
+                            <span class="label">2</span>
+                            <span class="value">Use attention to weigh relationships</span>
+                        </div>
+                        <div class="token-step">
+                            <span class="label">3</span>
+                            <span class="value">Compute next-token scores</span>
+                        </div>
+                        <div class="token-step">
+                            <span class="label">4</span>
+                            <span class="value">Select or sample the next token</span>
+                        </div>
+                    </div>
+                    <div class="footer-note">
+                        Every new token extends the sequence and adds more work.
+                    </div>
+                    <div class="callout">
+                        This is the practical reason context windows and prompt length are
+                        engineering concerns rather than trivia.
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Latency</div>
+                    <h2>Longer context changes speed, cost, and failure surface</h2>
+                    <div class="three-col">
+                        <div class="stat">
+                            <h4>Time-to-first-token</h4>
+                            <p>More input usually means more waiting before any answer appears.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>Cost</h4>
+                            <p>Every extra token is billable and competes for attention.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>Risk</h4>
+                            <p>Oversized prompts make it easier for the wrong signals to dominate.</p>
+                        </div>
+                    </div>
+                    <div class="callout">
+                        Bigger prompts are not free insurance. They often widen the error surface.
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Variance</div>
+                    <div class="two-col">
+                        <div>
+                            <h2>Probabilities, not certainty</h2>
+                            <ul>
+                                <li>Logits become probabilities.</li>
+                                <li>Sampling choices change output shape.</li>
+                                <li>Different runs can yield different valid-looking answers.</li>
+                                <li>Consistency must be engineered, not assumed.</li>
+                            </ul>
+                        </div>
+                        <div class="panel">
+                            <p class="quote">
+                                A fluent answer can still be the wrong answer. Probability is not
+                                proof.
+                            </p>
+                            <p class="small">
+                                Temperature, top-p, and prompting discipline all influence how much
+                                variation you see.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Scale</div>
+                    <h2>Parameters are capacity, not understanding</h2>
+                    <div class="three-col">
+                        <div class="stat">
+                            <h4>What they are</h4>
+                            <p>Learned weights inside the network.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>What bigger helps with</h4>
+                            <p>Broader capability and pattern compression.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>What bigger does not remove</h4>
+                            <p>Need for tests, review, and scoped context.</p>
+                        </div>
+                    </div>
+                    <div class="mini-grid">
+                        <div class="panel">
+                            <strong>Training</strong>
+                            <p class="small">Changes the weights.</p>
+                        </div>
+                        <div class="panel">
+                            <strong>Inference</strong>
+                            <p class="small">Applies the existing weights to new input.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Engineering</div>
+                    <h2>What this changes in practice</h2>
+                    <div class="panel">
+                        <ul>
+                            <li>Prompt length changes price, latency, and failure surface.</li>
+                            <li>Output variance means review is mandatory.</li>
+                            <li>Context windows are a real design constraint.</li>
+                            <li>Workflow structure usually matters more than clever phrasing.</li>
+                            <li>Token budgeting should be treated as part of architecture.</li>
+                        </ul>
+                    </div>
+                    <div class="mini-grid">
+                        <div class="panel">
+                            <strong>Bad habit</strong>
+                            <p class="small">“Give it everything and hope for the best.”</p>
+                        </div>
+                        <div class="panel">
+                            <strong>Better habit</strong>
+                            <p class="small">“Give it only what the task requires.”</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Demo</div>
+                    <h2>Three live demonstrations</h2>
+                    <div class="three-col">
+                        <div class="stat">
+                            <h4>Token Cost</h4>
+                            <p>Plain text vs verbose JSON.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>Similarity</h4>
+                            <p>Embeddings for related vs unrelated statements.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>Prediction</h4>
+                            <p>Next-token probabilities instead of “thinking.”</p>
+                        </div>
+                    </div>
+                    <div class="callout">
+                        The purpose of the demos is to make cost, geometry, and probability visible
+                        enough that students stop treating the model as a black box. A runnable
+                        local demo kit lives in <code>demo-kit/</code> beside this deck.
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Reflection</div>
+                    <div class="two-col">
+                        <div>
+                            <h2>Questions for students</h2>
+                            <ul>
+                                <li>Where are you overpaying in tokens right now?</li>
+                                <li>Where are you trusting output too quickly?</li>
+                                <li>What would you simplify after this session?</li>
+                            </ul>
+                        </div>
+                        <div class="panel">
+                            <p class="small">
+                                The point is not to admire the model. The point is to operate it
+                                more deliberately.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Transition</div>
+                    <h2>Bridge to Session 03</h2>
+                    <p class="lead">
+                        Session 02 explains the model’s constraints. Session 03 shows how those
+                        constraints break down when context gets noisy, oversized, or poorly scoped.
+                    </p>
+                    <div class="panel" style="margin-top: 0.8em;">
+                        <p class="small">Next: Context Boundaries and Rot</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+        <script>
+            Reveal.initialize({
+                hash: true,
+                slideNumber: true,
+                controls: true,
+                progress: true,
+                transition: 'slide',
+                backgroundTransition: 'fade',
+                margin: 0.06,
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 13: Zero Trust and Permission Boundaries</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --off-white: #F8F9FA;
+    --dark-gray: #333333;
+    --med-gray: #666666;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+    --green: #00C853;
+    --gold: #FFB300;
+  }
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+  .slide { width: 100vw; height: 100vh; scroll-snap-align: start; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+  .section-label { font-size: clamp(10px,0.85vw,13px); font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh; }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+  .action-title { font-size: clamp(18px,2vw,28px); font-weight: 700; line-height: 1.25; margin-bottom: 1.5vh; max-width: 92%; }
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+  .slide-footer { position: absolute; bottom: 1.5vh; right: 6vw; font-size: clamp(8px,0.7vw,11px); color: var(--footer-gray); }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+  .list-item { display: flex; gap: 1vw; align-items: flex-start; margin-bottom: 1.15vh; font-size: clamp(12px,1.05vw,16px); color: var(--dark-gray); line-height: 1.5; }
+  .list-item .bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+  .list-item.dark-text { color: rgba(255,255,255,0.88); }
+  .list-item.dark-text .bullet { color: var(--cyan-muted); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+  .concept-card { background: var(--off-white); border-radius: 10px; padding: 2vh 2vw; border-left: 4px solid var(--cyan); margin-bottom: 1.5vh; }
+  .concept-card.warn { border-left-color: var(--warn); }
+  .concept-card.green { border-left-color: var(--green); }
+  .concept-card.gold { border-left-color: var(--gold); }
+  .concept-card h4 { font-size: clamp(13px,1.15vw,17px); font-weight: 700; color: var(--navy); margin-bottom: 0.4em; }
+  .concept-card p { font-size: clamp(11px,1vw,15px); color: var(--dark-gray); line-height: 1.5; }
+  .matrix { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5vh 2vw; flex: 1; align-content: start; }
+  .code-block { background: var(--navy); border-radius: 8px; padding: 1.5vh 2vw; margin-top: 1vh; color: var(--cyan-muted); font-family: 'JetBrains Mono', monospace; font-size: clamp(11px,0.95vw,14px); line-height: 1.6; white-space: pre-wrap; }
+  .slide-title { background: var(--navy); color: var(--white); justify-content: center; padding: 5vh 6vw; }
+  .slide-title .brand { position: absolute; top: 4vh; left: 6vw; font-size: clamp(11px,1.1vw,16px); font-weight: 500; letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); opacity: 0.9; }
+  .slide-title .content { max-width: 56%; z-index: 2; }
+  .slide-title .session-tag { font-size: clamp(11px,1vw,15px); font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.2vh; }
+  .slide-title h1 { font-size: clamp(26px,3.35vw,50px); font-weight: 700; line-height: 1.08; margin-bottom: 0.5em; }
+  .slide-title .accent-line { width: 100px; height: 3px; background: var(--cyan); margin-bottom: 0.8em; }
+  .slide-title .subtitle { font-size: clamp(14px,1.4vw,20px); font-weight: 400; color: var(--cyan-muted); line-height: 1.4; }
+  .slide-title .meta { font-size: clamp(11px,1vw,15px); color: #AABBCC; margin-top: 1.5em; }
+  .slide-title .footer { position: absolute; bottom: 3vh; left: 6vw; font-size: clamp(8px,0.7vw,11px); color: var(--footer-gray); }
+  .geo { position: absolute; border-radius: 20px; }
+  .geo-1 { right: 2vw; top: 8vh; width: 35vw; height: 55vh; background: var(--teal-dark); opacity: 0.5; border-radius: 24px; }
+  .geo-2 { right: -2vw; top: 15vh; width: 28vw; height: 50vh; background: var(--teal-mid); opacity: 0.45; border-radius: 20px; }
+  .geo-3 { right: 5vw; top: 22vh; width: 22vw; height: 22vw; background: var(--cyan); opacity: 0.55; border-radius: 50%; }
+  .geo-4 { right: 12vw; top: 30vh; width: 10vw; height: 10vw; background: var(--navy); opacity: 0.7; border-radius: 50%; }
+  .geo-5 { right: 0; bottom: 0; width: 18vw; height: 28vh; background: var(--teal-dark); opacity: 0.35; border-radius: 16px 0 0 0; }
+  .kb-hint { position: fixed; bottom: 12px; right: 12px; background: rgba(0,0,0,0.6); color: #aaa; font-size: 11px; padding: 4px 10px; border-radius: 4px; z-index: 100; opacity: 0.7; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="geo geo-1"></div><div class="geo geo-2"></div><div class="geo geo-3"></div><div class="geo geo-4"></div><div class="geo geo-5"></div>
+  <div class="content">
+    <div class="session-tag">Module 4 | Session 13</div>
+    <h1>Zero Trust and<br>Permission Boundaries</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">Deny by default, approve by policy, and audit the rest.</div>
+    <div class="meta">AI-Accelerated Software Development | Foundations Program</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 13 | Core Mental Model</div>
+  <div class="action-title" style="color:var(--white)">The agent is useful, not trusted.</div>
+  <div class="title-rule dark"></div>
+  <div class="two-col">
+    <div>
+      <div class="list-item dark-text"><span class="bullet">></span> It may need meaningful access to do useful work.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> That does not make it a trusted actor.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Local execution is not an argument for implicit trust.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Zero Trust is the right mental model for agentic workflows.</div>
+      <div style="margin-top:2.6vh; padding:2vh 2vw; background:rgba(0,184,212,0.12); border:1px solid rgba(0,184,212,0.24); border-radius:10px;">
+        <div style="font-size:clamp(12px,1.02vw,16px); color:rgba(255,255,255,0.92); line-height:1.6;">Permissioning is not friction. It is the control plane.</div>
+      </div>
+    </div>
+    <div>
+      <div class="concept-card warn" style="background:rgba(255,107,53,0.14); border-left-color:var(--warn);">
+        <h4 style="color:var(--white)">The dangerous habit to kill</h4>
+        <p style="color:rgba(255,255,255,0.86)"><span class="mono">--dangerously-skip-permissions</span> is not a shortcut. It is a direct bypass of the control boundary.</p>
+      </div>
+      <div class="concept-card gold" style="background:rgba(255,179,0,0.14); border-left-color:var(--gold);">
+        <h4 style="color:var(--white)">What this session reframes</h4>
+        <p style="color:rgba(255,255,255,0.86)">The modern question is not “can the agent do it?” The modern question is “why is the agent allowed to do it at all?”</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer on-dark">2</div>
+</div>
+
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 13 | Control Stack</div>
+  <div class="action-title">Permissioning is the control plane for agentic execution.</div>
+  <div class="title-rule"></div>
+  <div class="matrix">
+    <div class="concept-card"><h4>Tool whitelists</h4><p>Allow only the minimum tool surface needed for the task. If a tool is not justified, it should not be available.</p></div>
+    <div class="concept-card green"><h4>Read and write boundaries</h4><p>Read-only analysis is a safer default. Write-capable actions should require stronger review and narrower scope.</p></div>
+    <div class="concept-card gold"><h4>Approval modes</h4><p>Approval is not ceremony. It is the explicit checkpoint before mutation, side effects, or downstream impact.</p></div>
+    <div class="concept-card warn"><h4>AI identity scope</h4><p>The agent should have an identity, ownership boundary, and role definition just like any other privileged actor.</p></div>
+  </div>
+  <div class="slide-footer">3</div>
+</div>
+
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 13 | Zero Trust Applied</div>
+  <div class="action-title">Least privilege should apply to AI identities the same way it applies to humans and services.</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="list-item"><span class="bullet">></span> Give the agent only the access needed for the task.</div>
+      <div class="list-item"><span class="bullet">></span> Scope credentials to the narrowest useful boundary.</div>
+      <div class="list-item"><span class="bullet">></span> Separate read-only from write-capable roles.</div>
+      <div class="list-item"><span class="bullet">></span> Make approval an intentional event, not a habit of clicking through prompts.</div>
+    </div>
+    <div class="code-block">Control layers to name explicitly
+
+- identity
+- permissions
+- approvals
+- tools
+- filesystem
+- connectors
+- audit logs</div>
+  </div>
+  <div class="slide-footer">4</div>
+</div>
+
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 13 | Safe Baseline</div>
+  <div class="action-title" style="color:var(--white)">Read-only is the safe starting point. Broad trust is not.</div>
+  <div class="title-rule dark"></div>
+  <div class="two-col">
+    <div>
+      <div class="list-item dark-text"><span class="bullet">></span> Read-only analysis can happen with narrower risk.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Write access should require explicit justification.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Destructive actions should be rare and deliberate.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> The safest default is deny first, then allow only when justified.</div>
+    </div>
+    <div>
+      <div class="concept-card green" style="background:rgba(0,200,83,0.14); border-left-color:var(--green);">
+        <h4 style="color:var(--white)">Expected blocked execution</h4>
+        <p style="color:rgba(255,255,255,0.86)">The blocked action is not a product failure. The blocked action is proof that policy is actually doing its job.</p>
+      </div>
+      <div class="concept-card warn" style="background:rgba(255,107,53,0.14); border-left-color:var(--warn);">
+        <h4 style="color:var(--white)">Common mistake</h4>
+        <p style="color:rgba(255,255,255,0.86)">Making the agent broadly privileged because setup is easier is operational debt disguised as convenience.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer on-dark">5</div>
+</div>
+
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 13 | Live Demo Pattern</div>
+  <div class="action-title">The blocked-execution demo should prove that policy is real.</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card"><h4>Step 1</h4><p>Put the session in a narrow permission mode with a strict tool boundary.</p></div>
+      <div class="concept-card gold"><h4>Step 2</h4><p>Ask the agent to do something outside the allowed scope.</p></div>
+      <div class="concept-card warn"><h4>Step 3</h4><p>Show the denial and explain why that denial is the intended system behavior.</p></div>
+    </div>
+    <div class="code-block">Teaching message
+
+- the system denies it
+- the denial is expected
+- the policy is working
+- this is what mature control looks like</div>
+      <div class="list-item"><span class="bullet">></span> The point is not drama. The point is trust boundaries made visible.</div>
+    </div>
+  </div>
+  <div class="slide-footer">6</div>
+</div>
+
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 13 | Review Questions</div>
+  <div class="action-title">A team should be able to answer these permission questions before the agent starts work.</div>
+  <div class="title-rule"></div>
+  <div class="matrix">
+    <div class="concept-card"><h4>Identity</h4><p>Whose authority is the agent operating under, and what role is it supposed to fulfill?</p></div>
+    <div class="concept-card green"><h4>Scope</h4><p>What is the narrowest useful permission set for this task?</p></div>
+    <div class="concept-card gold"><h4>Approval</h4><p>Which actions require explicit approval every time?</p></div>
+    <div class="concept-card warn"><h4>Deny list</h4><p>Where should the answer simply be “no” instead of “ask later” or “maybe if careful”?</p></div>
+  </div>
+  <div class="slide-footer">7</div>
+</div>
+
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 13 | Takeaway</div>
+  <div class="action-title" style="color:var(--white)">If the system cannot explain why the agent is allowed to do something, the agent should not be doing it.</div>
+  <div class="title-rule dark"></div>
+  <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:0 4vw; flex:1; align-content:start;">
+    <div>
+      <div class="list-item dark-text"><span class="bullet">></span> A useful agent is still a controlled agent.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Zero Trust keeps that distinction real.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Approval, whitelists, and narrow scopes are engineering controls, not admin trivia.</div>
+    </div>
+    <div>
+      <div class="concept-card gold" style="background:rgba(255,179,0,0.14); border-left-color:var(--gold);">
+        <h4 style="color:var(--white)">Bridge to Session 14</h4>
+        <p style="color:rgba(255,255,255,0.86)">Session 13 controls what the agent may do. Session 14 controls what external systems the agent may reach and how those systems must defend themselves.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer on-dark">8</div>
+</div>
+
+<script>
+document.addEventListener('keydown', function (event) {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const currentIndex = Math.round(window.scrollY / window.innerHeight);
+  if (event.key === 'ArrowDown' || event.key === 'PageDown' || event.key === ' ') {
+    event.preventDefault();
+    const next = Math.min(currentIndex + 1, slides.length - 1);
+    slides[next].scrollIntoView({ behavior: 'smooth' });
+  }
+  if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+    event.preventDefault();
+    const prev = Math.max(currentIndex - 1, 0);
+    slides[prev].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+</script>
+</body>
+</html>

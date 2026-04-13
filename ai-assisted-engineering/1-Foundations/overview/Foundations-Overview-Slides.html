@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundations Overview: Modules 1–4</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-light: #00E5FF;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --light-gray: #F0F0F0;
+    --off-white: #F8F9FA;
+    --med-gray: #666666;
+    --dark-gray: #333333;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+    --green: #00C853;
+    --amber: #FFB300;
+  }
+
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+
+  .slide {
+    width: 100vw; height: 100vh; scroll-snap-align: start;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+
+  .section-label {
+    font-size: clamp(10px, 0.85vw, 13px); font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh;
+  }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+  .section-label.navy { color: var(--navy); opacity: 0.5; }
+
+  .action-title {
+    font-size: clamp(18px, 2vw, 28px); font-weight: 700;
+    line-height: 1.25; margin-bottom: 1.5vh; max-width: 92%;
+  }
+
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+
+  .slide-footer {
+    position: absolute; bottom: 1.5vh; right: 6vw;
+    font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray);
+  }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+  .four-col { display: grid; grid-template-columns: repeat(4,1fr); gap: 0 2vw; flex: 1; align-content: start; }
+
+  .concept-card {
+    background: var(--off-white); border-radius: 10px; padding: 2vh 2vw;
+    border-left: 4px solid var(--cyan); margin-bottom: 1.5vh;
+  }
+  .concept-card.warn { border-left-color: var(--warn); }
+  .concept-card.green { border-left-color: var(--green); }
+  .concept-card.amber { border-left-color: var(--amber); }
+  .concept-card h4 {
+    font-size: clamp(13px, 1.15vw, 17px); font-weight: 700; color: var(--navy); margin-bottom: 0.4em;
+  }
+  .concept-card p { font-size: clamp(11px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.5; }
+
+  .list-item {
+    display: flex; gap: 1vw; align-items: flex-start; margin-bottom: 1.2vh;
+    font-size: clamp(12px, 1.05vw, 16px); color: var(--dark-gray); line-height: 1.5;
+  }
+  .list-item .bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+  .list-item.dark-text { color: rgba(255,255,255,0.85); }
+  .list-item.dark-text .bullet { color: var(--cyan-muted); }
+
+  /* MODULE CARDS */
+  .module-card {
+    border-radius: 12px; padding: 2vh 2vw; border-top: 4px solid var(--cyan);
+    background: var(--off-white); display: flex; flex-direction: column; gap: 0.8vh;
+  }
+  .module-card.m1 { border-top-color: var(--cyan); }
+  .module-card.m2 { border-top-color: var(--green); }
+  .module-card.m3 { border-top-color: var(--amber); }
+  .module-card.m4 { border-top-color: var(--warn); }
+  .module-num {
+    font-size: clamp(9px, 0.78vw, 12px); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+  .module-card.m1 .module-num { color: var(--cyan); }
+  .module-card.m2 .module-num { color: var(--green); }
+  .module-card.m3 .module-num { color: var(--amber); }
+  .module-card.m4 .module-num { color: var(--warn); }
+  .module-title { font-size: clamp(12px, 1.05vw, 15px); font-weight: 700; color: var(--navy); line-height: 1.3; }
+  .module-sessions { font-size: clamp(10px, 0.88vw, 13px); color: var(--med-gray); line-height: 1.5; }
+  .module-message { font-size: clamp(10px, 0.9vw, 13px); color: var(--dark-gray); line-height: 1.4; font-style: italic; border-top: 1px solid var(--light-gray); padding-top: 0.8vh; margin-top: 0.4vh; }
+
+  /* PROGRESSION TABLE */
+  .prog-grid { display: grid; grid-template-columns: auto 1fr; gap: 1.2vh 2vw; align-items: start; margin-top: 0.5vh; }
+  .prog-range {
+    font-size: clamp(12px, 1.0vw, 14px); font-weight: 700; color: var(--navy);
+    font-family: 'JetBrains Mono', monospace; white-space: nowrap;
+    padding: 0.8vh 1vw; background: var(--off-white); border-radius: 6px; text-align: center;
+  }
+  .prog-desc { font-size: clamp(12px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.5; padding: 0.8vh 0; border-bottom: 1px solid var(--light-gray); }
+
+  /* STACK STEPS */
+  .stack-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5vh 1.5vw; margin-top: 1vh; }
+  .stack-step {
+    background: var(--navy); border-radius: 10px; padding: 2vh 1.5vw; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 0.8vh;
+  }
+  .stack-num { font-size: clamp(20px, 2.2vw, 32px); font-weight: 800; color: var(--cyan); }
+  .stack-label { font-size: clamp(11px, 0.95vw, 14px); font-weight: 700; color: var(--white); line-height: 1.3; }
+  .stack-detail { font-size: clamp(10px, 0.85vw, 13px); color: var(--cyan-muted); line-height: 1.4; }
+
+  /* OUTCOMES GRID */
+  .outcomes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2vh 3vw; margin-top: 0.5vh; }
+  .outcome-item { display: flex; gap: 1vw; align-items: flex-start; }
+  .outcome-check { color: var(--green); font-weight: 700; font-size: clamp(14px, 1.2vw, 18px); flex-shrink: 0; }
+  .outcome-text { font-size: clamp(12px, 1.05vw, 15px); color: var(--dark-gray); line-height: 1.5; }
+
+  /* TITLE SLIDE */
+  .slide-title { background: var(--navy); color: var(--white); justify-content: center; padding: 5vh 6vw; }
+  .slide-title .brand {
+    position: absolute; top: 4vh; left: 6vw;
+    font-size: clamp(11px, 1.1vw, 16px); font-weight: 500;
+    letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); opacity: 0.9;
+  }
+  .slide-title .content { max-width: 55%; z-index: 2; }
+  .slide-title .session-tag {
+    font-size: clamp(11px, 1.0vw, 15px); font-weight: 600;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.2vh;
+  }
+  .slide-title h1 { font-size: clamp(26px, 3.4vw, 50px); font-weight: 700; line-height: 1.1; margin-bottom: 0.5em; }
+  .slide-title .accent-line { width: 100px; height: 3px; background: var(--cyan); margin-bottom: 0.8em; }
+  .slide-title .subtitle { font-size: clamp(14px, 1.4vw, 20px); font-weight: 400; color: var(--cyan-muted); line-height: 1.4; }
+  .slide-title .meta { font-size: clamp(11px, 1.0vw, 15px); color: #AABBCC; margin-top: 1.5em; }
+  .slide-title .footer { position: absolute; bottom: 3vh; left: 6vw; font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray); }
+
+  .geo { position: absolute; border-radius: 20px; }
+  .geo-1 { right: 2vw; top: 8vh; width: 35vw; height: 55vh; background: var(--teal-dark); opacity: 0.5; border-radius: 24px; }
+  .geo-2 { right: -2vw; top: 15vh; width: 28vw; height: 50vh; background: var(--teal-mid); opacity: 0.45; border-radius: 20px; }
+  .geo-3 { right: 5vw; top: 22vh; width: 22vw; height: 22vw; background: var(--cyan); opacity: 0.55; border-radius: 50%; }
+  .geo-4 { right: 12vw; top: 30vh; width: 10vw; height: 10vw; background: var(--navy); opacity: 0.7; border-radius: 50%; }
+  .geo-5 { right: 0; bottom: 0; width: 18vw; height: 28vh; background: var(--teal-dark); opacity: 0.35; border-radius: 16px 0 0 0; }
+
+  .slide-divider {
+    background: var(--navy); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 5vh 10vw;
+  }
+  .divider-content { z-index: 2; }
+  .divider-content .module-num-label {
+    font-size: clamp(12px, 1.1vw, 16px); font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.5vh;
+  }
+  .divider-content h2 { font-size: clamp(24px, 3vw, 44px); font-weight: 700; line-height: 1.2; margin-bottom: 0.6em; }
+  .divider-content .sub { font-size: clamp(14px, 1.3vw, 20px); color: var(--cyan-muted); line-height: 1.5; }
+
+  .kb-hint {
+    position: fixed; bottom: 12px; right: 12px;
+    background: rgba(0,0,0,0.6); color: #aaa; font-size: 11px;
+    padding: 4px 10px; border-radius: 4px; z-index: 100; opacity: 0.7; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="content">
+    <div class="session-tag">AI-Accelerated Software Development &nbsp;&bull;&nbsp; Foundations</div>
+    <h1>Foundations<br>Overview</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">Modules 1 through 4 — the operating baseline for trustworthy AI-accelerated delivery.</div>
+    <div class="meta">AI-Accelerated Software Development &nbsp;|&nbsp; Foundations Program</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<!-- SLIDE 2: WHAT FOUNDATIONS IS FOR (dark) -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Foundations &nbsp;|&nbsp; Purpose</div>
+  <div class="action-title" style="color:var(--white)">Foundations is not a theory block — it is the operating baseline</div>
+  <div class="title-rule dark"></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Replace ad hoc AI usage with a disciplined engineering operating model</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Establish the CLI-native working environment before acceleration features are added</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Teach control surfaces — specs, plans, rules, permissions, review — before scope expands</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Prepare learners to enter Labs with repeatable habits, not one-off prompt tricks</span></div>
+  <div style="margin-top:3vh; padding: 2vh 2.5vw; background: rgba(0,184,212,0.1); border-left: 3px solid var(--cyan); border-radius: 8px;">
+    <div style="font-size:clamp(13px,1.15vw,18px); font-weight:700; color:var(--cyan); margin-bottom:0.5vh;">The goal is not faster prompts.</div>
+    <div style="font-size:clamp(12px,1.05vw,16px); color:rgba(255,255,255,0.85); line-height:1.5;">The goal is controlled, reviewable, enterprise-ready engineering work.</div>
+  </div>
+  <div class="slide-footer on-dark">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 3: THE FOUR-MODULE ARC -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; Structure</div>
+  <div class="action-title">The four-module arc: each layer adds control before adding power</div>
+  <div class="title-rule"></div>
+  <div class="four-col">
+    <div class="module-card m1">
+      <div class="module-num">Module 1</div>
+      <div class="module-title">The Agentic Paradigm and CLI Environment</div>
+      <div class="module-sessions">Sessions 1–4</div>
+      <div class="module-message">Adopt the agentic posture and understand the tool.</div>
+    </div>
+    <div class="module-card m2">
+      <div class="module-num">Module 2</div>
+      <div class="module-title">Spec-Driven Development and Context Control</div>
+      <div class="module-sessions">Sessions 5–8</div>
+      <div class="module-message">Constrain intent, execution, and context.</div>
+    </div>
+    <div class="module-card m3">
+      <div class="module-num">Module 3</div>
+      <div class="module-title">Tooling, MCP, and Agentic Orchestration</div>
+      <div class="module-sessions">Sessions 9–12</div>
+      <div class="module-message">Extend capability and delegate work safely.</div>
+    </div>
+    <div class="module-card m4">
+      <div class="module-num">Module 4</div>
+      <div class="module-title">Enterprise Security, Governance, and Auditability</div>
+      <div class="module-sessions">Sessions 13–16</div>
+      <div class="module-message">Secure, govern, and produce auditable evidence.</div>
+    </div>
+  </div>
+  <div style="margin-top:2.5vh">
+    <div class="list-item"><span class="bullet">→</span><span>Each module assumes the previous one is in place. Control before capability is the sequence.</span></div>
+  </div>
+  <div class="slide-footer">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 4: MODULE 1 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Module 1 &nbsp;|&nbsp; Sessions 1–4</div>
+  <div class="action-title">The Agentic Paradigm and CLI Environment</div>
+  <div class="title-rule" style="border-top: 2px solid var(--cyan);"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>Session 1: The Agentic Engineering Shift</h4>
+        <p>Replace casual AI usage with a structured model: output, reviewability, and ownership all matter simultaneously.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Session 2: LLM Internals for Orchestrators</h4>
+        <p>Build mechanical sympathy — tokens, inference, variance, context windows — to make better workflow decisions.</p>
+      </div>
+    </div>
+    <div>
+      <div class="concept-card">
+        <h4>Session 3: Context Boundaries and Rot</h4>
+        <p>Understand why context quality matters more than context volume, and how to apply the minimum working set principle.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Session 4: Claude Code CLI Architecture and Setup</h4>
+        <p>Install and correctly bound the harness — context init, tool injection, trust boundary, approval mode.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:1.5vh; padding: 1.5vh 2vw; background: rgba(0,184,212,0.06); border-radius: 8px; border-left: 3px solid var(--cyan);">
+    <span style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy);">Core message: </span>
+    <span style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray);">AI writes syntax; engineers still own architecture, judgment, and liability.</span>
+  </div>
+  <div class="slide-footer">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 5: MODULE 2 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Module 2 &nbsp;|&nbsp; Sessions 5–8</div>
+  <div class="action-title">Spec-Driven Development and Context Control</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card" style="border-left-color:var(--green)">
+        <h4>Session 5: Spec-Driven Development</h4>
+        <p>Define machine-readable intent — goal, constraints, acceptance criteria, non-goals — before generation begins.</p>
+      </div>
+      <div class="concept-card" style="border-left-color:var(--green)">
+        <h4>Session 6: Plan Mode vs. Act Mode</h4>
+        <p>Separate codebase analysis from mutation. Review the plan before approving execution.</p>
+      </div>
+    </div>
+    <div>
+      <div class="concept-card" style="border-left-color:var(--green)">
+        <h4>Session 7: Context Control via CLAUDE.md</h4>
+        <p>Persist project rules so constraints survive across sessions, engineers, and agents without re-prompting.</p>
+      </div>
+      <div class="concept-card" style="border-left-color:var(--green)">
+        <h4>Session 8: Extending Capabilities with MCP</h4>
+        <p>Connect external systems through governed tool boundaries — security, payload legibility, and authorization.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:1.5vh; padding: 1.5vh 2vw; background: rgba(0,200,83,0.06); border-radius: 8px; border-left: 3px solid var(--green);">
+    <span style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy);">Core message: </span>
+    <span style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray);">Reliable agentic engineering starts with explicit intent and governed context.</span>
+  </div>
+  <div class="slide-footer">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 6: MODULE 3 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Module 3 &nbsp;|&nbsp; Sessions 9–12</div>
+  <div class="action-title">Tooling, MCP, and Agentic Orchestration</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card amber">
+        <h4>Session 9: Skills and Deterministic Hooks</h4>
+        <p>Decide what remains flexible (skills) versus what becomes automatic enforcement (hooks).</p>
+      </div>
+      <div class="concept-card amber">
+        <h4>Session 10: Task Decomposition and Subagents</h4>
+        <p>Break large work into bounded delegated units. Give each subagent a clear contract and scope.</p>
+      </div>
+    </div>
+    <div>
+      <div class="concept-card amber">
+        <h4>Session 11: Parallel Orchestration: Agent Teams</h4>
+        <p>Coordinate multiple agents without losing state discipline or collision control.</p>
+      </div>
+      <div class="concept-card amber">
+        <h4>Session 12: OWASP Top 10 for Agentic Apps</h4>
+        <p>Secure the broader execution surface created by tooling, teams, and expanded capability.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:1.5vh; padding: 1.5vh 2vw; background: rgba(255,179,0,0.06); border-radius: 8px; border-left: 3px solid var(--amber);">
+    <span style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy);">Core message: </span>
+    <span style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray);">Once the workflow is constrained, capability can expand safely.</span>
+  </div>
+  <div class="slide-footer">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 7: MODULE 4 -->
+<div class="slide slide-content">
+  <div class="section-label navy">Module 4 &nbsp;|&nbsp; Sessions 13–16</div>
+  <div class="action-title">Enterprise Security, Governance, and Auditability</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card warn">
+        <h4>Session 13: Zero Trust and Permission Boundaries</h4>
+        <p>Apply least privilege to agent execution — trust no implicit scope, verify all access.</p>
+      </div>
+      <div class="concept-card warn">
+        <h4>Session 14: Secure MCP Governance</h4>
+        <p>Govern external tool and MCP trust boundaries — authorization, payload inspection, blast radius.</p>
+      </div>
+    </div>
+    <div>
+      <div class="concept-card warn">
+        <h4>Session 15: Code Review and Cognitive Debt Mitigation</h4>
+        <p>Review AI-generated diffs for structural risk and comprehension debt, not just surface correctness.</p>
+      </div>
+      <div class="concept-card warn">
+        <h4>Session 16: Auditability and Workflow Narration</h4>
+        <p>Preserve enough evidence to reconstruct why a change happened — narration, traceability, compliance.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:1.5vh; padding: 1.5vh 2vw; background: rgba(255,107,53,0.06); border-radius: 8px; border-left: 3px solid var(--warn);">
+    <span style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy);">Core message: </span>
+    <span style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray);">Enterprise use is not real until permissions, review, and traceability hold under scrutiny.</span>
+  </div>
+  <div class="slide-footer">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 8: THE CONTROL STACK -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; What Learners Build</div>
+  <div class="action-title">The control stack — from posture to auditable evidence</div>
+  <div class="title-rule"></div>
+  <div class="stack-row">
+    <div class="stack-step">
+      <div class="stack-num">1</div>
+      <div class="stack-label">Posture &amp; Mental Model</div>
+      <div class="stack-detail">Output · Reviewability · Ownership · Mechanical sympathy</div>
+    </div>
+    <div class="stack-step">
+      <div class="stack-num">2</div>
+      <div class="stack-label">Bounded Context &amp; Explicit Intent</div>
+      <div class="stack-detail">Specs · Plan Mode · CLAUDE.md · Minimum working set</div>
+    </div>
+    <div class="stack-step">
+      <div class="stack-num">3</div>
+      <div class="stack-label">Deterministic Enforcement &amp; Decomposition</div>
+      <div class="stack-detail">Hooks · Subagents · Agent teams · OWASP threat model</div>
+    </div>
+    <div class="stack-step">
+      <div class="stack-num">4</div>
+      <div class="stack-label">Permissions, Review &amp; Auditable Evidence</div>
+      <div class="stack-detail">Zero trust · MCP governance · Cognitive debt · Narration</div>
+    </div>
+  </div>
+  <div style="margin-top:2.5vh">
+    <div class="list-item"><span class="bullet">→</span><span>Each layer depends on the previous. Skipping the posture layer makes the permission layer theater.</span></div>
+    <div class="list-item"><span class="bullet">→</span><span>This is the path from AI assistance to enterprise-grade agentic engineering.</span></div>
+  </div>
+  <div class="slide-footer">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 9: SESSION PROGRESSION -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; Session Map</div>
+  <div class="action-title">Session progression at a glance</div>
+  <div class="title-rule"></div>
+  <div class="prog-grid">
+    <div class="prog-range" style="color:var(--cyan)">S01–S04</div>
+    <div class="prog-desc">Posture, mechanics, context quality, and CLI harness setup. The mental model and the environment before any tooling is added.</div>
+    <div class="prog-range" style="color:var(--green)">S05–S08</div>
+    <div class="prog-desc">Specs, plans, persistent project rules, and governed external tools. Intent becomes explicit; context becomes bounded.</div>
+    <div class="prog-range" style="color:var(--amber)">S09–S12</div>
+    <div class="prog-desc">Hooks, subagents, parallel agent teams, and the OWASP threat surface. Capability expands inside the constraints already in place.</div>
+    <div class="prog-range" style="color:var(--warn)">S13–S16</div>
+    <div class="prog-desc">Zero trust permissions, MCP governance, cognitive debt review, and auditable narration. Enterprise-grade delivery requires all of these simultaneously.</div>
+  </div>
+  <div style="margin-top:2vh">
+    <div class="list-item"><span class="bullet">→</span><span><strong>Each module adds control before adding more power.</strong> The sequence is intentional.</span></div>
+  </div>
+  <div class="slide-footer">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 10: LEARNING OUTCOMES -->
+<div class="slide slide-content">
+  <div class="section-label navy">Foundations &nbsp;|&nbsp; Outcomes</div>
+  <div class="action-title">What learners can do by the end of Foundations</div>
+  <div class="title-rule"></div>
+  <div class="outcomes-grid">
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Explain the difference between vibe coding and structured agentic engineering</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Choose the smallest useful context for a task and defend that choice</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Drive work from specs and reviewed plans rather than open-ended prompts</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Operate Claude Code inside explicit permission and context boundaries</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Decompose work across tools and agents with clear delegation contracts</span></div>
+    <div class="outcome-item"><span class="outcome-check">✓</span><span class="outcome-text">Review and narrate AI-assisted changes in terms a team can inherit and audit</span></div>
+  </div>
+  <div style="margin-top:2.5vh; padding: 1.5vh 2vw; background: var(--off-white); border-radius: 8px; border-left: 3px solid var(--navy);">
+    <div style="font-size:clamp(12px,1.05vw,15px); color:var(--dark-gray); line-height:1.5;">Labs assume these capabilities are already in place. Learners who enter Labs without this foundation will be working at a disadvantage from the first exercise.</div>
+  </div>
+  <div class="slide-footer">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 11: BRIDGE TO LABS -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Foundations &nbsp;|&nbsp; What Comes Next</div>
+  <div class="action-title" style="color:var(--white)">Labs assume Foundations is already in practice — not just understood</div>
+  <div class="title-rule dark"></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Labs assume the learner can already work in the CLI without guidance on setup or basics</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Labs assume bounded scope and review discipline are the learner's default posture</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Labs assume AI output is treated as untrusted until verified by tests or review</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Labs build on this foundation with codebase reconnaissance, test generation, and CI loops</span></div>
+  <div style="margin-top:3vh; padding: 2vh 2.5vw; background: rgba(0,184,212,0.1); border-left: 3px solid var(--cyan); border-radius: 8px;">
+    <div style="font-size:clamp(12px,1.05vw,16px); color:rgba(255,255,255,0.9); line-height:1.6;">The difference between a learner who struggled through Foundations and one who internalized it will be visible in the first lab exercise.</div>
+  </div>
+  <div class="slide-footer on-dark">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 12: KEY TAKEAWAY -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num-label">Key Takeaway</div>
+    <h2>Control before capability.<br>Structure before speed.</h2>
+    <div class="sub">Foundations is the operating baseline for trustworthy AI-accelerated delivery.<br>Every session that follows builds on what this program establishes.</div>
+  </div>
+  <div class="slide-footer on-dark">Foundations Overview &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<script>
+document.addEventListener('keydown', e => {
+  const vh = window.innerHeight;
+  const cur = Math.round(window.scrollY / vh);
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    window.scrollTo({ top: (cur + 1) * vh, behavior: 'smooth' });
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    window.scrollTo({ top: (cur - 1) * vh, behavior: 'smooth' });
+  }
+});
+</script>
+</body>
+</html>

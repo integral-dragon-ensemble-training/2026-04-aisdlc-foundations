@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 15: Code Review and Cognitive Debt Mitigation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --off-white: #F8F9FA;
+    --dark-gray: #333333;
+    --med-gray: #666666;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+    --green: #00C853;
+    --gold: #FFB300;
+  }
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+  .slide { width: 100vw; height: 100vh; scroll-snap-align: start; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+  .section-label { font-size: clamp(10px,0.85vw,13px); font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh; }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+  .action-title { font-size: clamp(18px,2vw,28px); font-weight: 700; line-height: 1.25; margin-bottom: 1.5vh; max-width: 92%; }
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+  .slide-footer { position: absolute; bottom: 1.5vh; right: 6vw; font-size: clamp(8px,0.7vw,11px); color: var(--footer-gray); }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+  .list-item { display: flex; gap: 1vw; align-items: flex-start; margin-bottom: 1.15vh; font-size: clamp(12px,1.05vw,16px); color: var(--dark-gray); line-height: 1.5; }
+  .list-item .bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+  .list-item.dark-text { color: rgba(255,255,255,0.88); }
+  .list-item.dark-text .bullet { color: var(--cyan-muted); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+  .concept-card { background: var(--off-white); border-radius: 10px; padding: 2vh 2vw; border-left: 4px solid var(--cyan); margin-bottom: 1.5vh; }
+  .concept-card.warn { border-left-color: var(--warn); }
+  .concept-card.green { border-left-color: var(--green); }
+  .concept-card.gold { border-left-color: var(--gold); }
+  .concept-card h4 { font-size: clamp(13px,1.15vw,17px); font-weight: 700; color: var(--navy); margin-bottom: 0.4em; }
+  .concept-card p { font-size: clamp(11px,1vw,15px); color: var(--dark-gray); line-height: 1.5; }
+  .matrix { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5vh 2vw; flex: 1; align-content: start; }
+  .code-block { background: var(--navy); border-radius: 8px; padding: 1.5vh 2vw; margin-top: 1vh; color: var(--cyan-muted); font-family: 'JetBrains Mono', monospace; font-size: clamp(11px,0.95vw,14px); line-height: 1.6; white-space: pre-wrap; }
+  .slide-title { background: var(--navy); color: var(--white); justify-content: center; padding: 5vh 6vw; }
+  .slide-title .brand { position: absolute; top: 4vh; left: 6vw; font-size: clamp(11px,1.1vw,16px); font-weight: 500; letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); opacity: 0.9; }
+  .slide-title .content { max-width: 56%; z-index: 2; }
+  .slide-title .session-tag { font-size: clamp(11px,1vw,15px); font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.2vh; }
+  .slide-title h1 { font-size: clamp(26px,3.35vw,50px); font-weight: 700; line-height: 1.08; margin-bottom: 0.5em; }
+  .slide-title .accent-line { width: 100px; height: 3px; background: var(--cyan); margin-bottom: 0.8em; }
+  .slide-title .subtitle { font-size: clamp(14px,1.4vw,20px); font-weight: 400; color: var(--cyan-muted); line-height: 1.4; }
+  .slide-title .meta { font-size: clamp(11px,1vw,15px); color: #AABBCC; margin-top: 1.5em; }
+  .slide-title .footer { position: absolute; bottom: 3vh; left: 6vw; font-size: clamp(8px,0.7vw,11px); color: var(--footer-gray); }
+  .geo { position: absolute; border-radius: 20px; }
+  .geo-1 { right: 2vw; top: 8vh; width: 35vw; height: 55vh; background: var(--teal-dark); opacity: 0.5; border-radius: 24px; }
+  .geo-2 { right: -2vw; top: 15vh; width: 28vw; height: 50vh; background: var(--teal-mid); opacity: 0.45; border-radius: 20px; }
+  .geo-3 { right: 5vw; top: 22vh; width: 22vw; height: 22vw; background: var(--cyan); opacity: 0.55; border-radius: 50%; }
+  .geo-4 { right: 12vw; top: 30vh; width: 10vw; height: 10vw; background: var(--navy); opacity: 0.7; border-radius: 50%; }
+  .geo-5 { right: 0; bottom: 0; width: 18vw; height: 28vh; background: var(--teal-dark); opacity: 0.35; border-radius: 16px 0 0 0; }
+  .kb-hint { position: fixed; bottom: 12px; right: 12px; background: rgba(0,0,0,0.6); color: #aaa; font-size: 11px; padding: 4px 10px; border-radius: 4px; z-index: 100; opacity: 0.7; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="geo geo-1"></div><div class="geo geo-2"></div><div class="geo geo-3"></div><div class="geo geo-4"></div><div class="geo geo-5"></div>
+  <div class="content">
+    <div class="session-tag">Module 4 | Session 15</div>
+    <h1>Code Review and<br>Cognitive Debt Mitigation</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">A passing test suite is not the same thing as a safe change.</div>
+    <div class="meta">AI-Accelerated Software Development | Foundations Program</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 15 | Core Risk</div>
+  <div class="action-title" style="color:var(--white)">AI can ship code that looks right, sounds right, and still be structurally wrong.</div>
+  <div class="title-rule dark"></div>
+  <div class="two-col">
+    <div>
+      <div class="list-item dark-text"><span class="bullet">></span> Syntax can be clean.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Tests can still pass.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> The architecture can still drift.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> A hidden logic bug can still survive review.</div>
+    </div>
+    <div>
+      <div class="concept-card warn" style="background:rgba(255,107,53,0.14); border-left-color:var(--warn);">
+        <h4 style="color:var(--white)">Review failure mode</h4>
+        <p style="color:rgba(255,255,255,0.86)">Polished AI output can create false confidence. The team starts approving fluency instead of understanding.</p>
+      </div>
+      <div class="concept-card gold" style="background:rgba(255,179,0,0.14); border-left-color:var(--gold);">
+        <h4 style="color:var(--white)">Review standard</h4>
+        <p style="color:rgba(255,255,255,0.86)">The reviewer has to explain the change, the boundary it touches, and the risk it introduces.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer on-dark">2</div>
+</div>
+
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 15 | Structural Review</div>
+  <div class="action-title">Review must go beyond correctness theater.</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="list-item"><span class="bullet">></span> What changed in control flow?</div>
+      <div class="list-item"><span class="bullet">></span> What changed in ownership or boundaries?</div>
+      <div class="list-item"><span class="bullet">></span> Which failure modes were introduced?</div>
+      <div class="list-item"><span class="bullet">></span> What assumption got smuggled into the diff?</div>
+    </div>
+    <div class="code-block">Review the load-bearing behavior
+
+- invariants
+- data ownership
+- permission boundaries
+- error handling
+- side effects
+- integration seams</div>
+    </div>
+  </div>
+  <div class="slide-footer">3</div>
+</div>
+
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 15 | Evidence Standard</div>
+  <div class="action-title">Passing tests are evidence, not proof.</div>
+  <div class="title-rule"></div>
+  <div class="matrix">
+    <div class="concept-card"><h4>What tests prove</h4><p>The specific cases the suite currently expresses and checks.</p></div>
+    <div class="concept-card warn"><h4>What tests do not prove</h4><p>That untouched paths, integration seams, and architectural intent remain safe.</p></div>
+    <div class="concept-card green"><h4>Reviewer obligation</h4><p>Rebuild the mental model and look for what the tests forgot to ask.</p></div>
+    <div class="concept-card gold"><h4>Practical discipline</h4><p>Treat green checks as one signal, not a permission slip to stop thinking.</p></div>
+  </div>
+  <div class="slide-footer">4</div>
+</div>
+
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 15 | Human Failure Modes</div>
+  <div class="action-title" style="color:var(--white)">Automation bias and cognitive debt reinforce each other.</div>
+  <div class="title-rule dark"></div>
+  <div class="two-col">
+    <div>
+      <div class="list-item dark-text"><span class="bullet">></span> Polished output feels trustworthy.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Confident narration suppresses scrutiny.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Reviewers accept the answer too quickly.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> The repo grows while comprehension shrinks.</div>
+    </div>
+    <div>
+      <div class="concept-card warn" style="background:rgba(255,107,53,0.14); border-left-color:var(--warn);">
+        <h4 style="color:var(--white)">Automation bias</h4>
+        <p style="color:rgba(255,255,255,0.86)">Over-trusting the machine because it sounds certain or because prior outputs were good enough.</p>
+      </div>
+      <div class="concept-card gold" style="background:rgba(255,179,0,0.14); border-left-color:var(--gold);">
+        <h4 style="color:var(--white)">Cognitive debt</h4>
+        <p style="color:rgba(255,255,255,0.86)">Approving code the team does not deeply understand and leaving future engineers to carry the cost.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer on-dark">5</div>
+</div>
+
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 15 | Review Checklist</div>
+  <div class="action-title">A strong review checklist looks for structural risk, not just clean formatting.</div>
+  <div class="title-rule"></div>
+  <div class="matrix">
+    <div class="concept-card"><h4>Boundaries</h4><p>Does the change preserve ownership, interfaces, and trust assumptions?</p></div>
+    <div class="concept-card green"><h4>Error handling</h4><p>Do failure paths stay explicit, recoverable, and observable?</p></div>
+    <div class="concept-card gold"><h4>Logic drift</h4><p>Did a small diff quietly change business meaning or control flow?</p></div>
+    <div class="concept-card warn"><h4>Maintainability</h4><p>Will the next reviewer understand the system more clearly or less clearly after this lands?</p></div>
+  </div>
+  <div class="slide-footer">6</div>
+</div>
+
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 15 | Live Demo Pattern</div>
+  <div class="action-title">The demo should end with an actionable review comment, not just a vague concern.</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card"><h4>Step 1</h4><p>Present a short AI-generated PR with a subtle logic or architectural flaw.</p></div>
+      <div class="concept-card gold"><h4>Step 2</h4><p>Walk the diff line by line until the hidden assumption becomes visible.</p></div>
+      <div class="concept-card warn"><h4>Step 3</h4><p>Write a review comment that names the issue, impact, and smallest useful fix.</p></div>
+    </div>
+    <div class="code-block">Good review output
+
+- identify the risk
+- explain the impact
+- point to the boundary
+- ask for the smallest fix
+- leave evidence for later readers</div>
+      <div class="list-item"><span class="bullet">></span> If the reviewer cannot explain the diff later, the review did not finish.</div>
+    </div>
+  </div>
+  <div class="slide-footer">7</div>
+</div>
+
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 15 | Takeaway</div>
+  <div class="action-title" style="color:var(--white)">Good review is understanding plus evidence.</div>
+  <div class="title-rule dark"></div>
+  <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:0 4vw; flex:1; align-content:start;">
+    <div>
+      <div class="list-item dark-text"><span class="bullet">></span> Green tests are not the finish line.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> Review has to examine the load-bearing behavior.</div>
+      <div class="list-item dark-text"><span class="bullet">></span> If the reviewer cannot explain the change, the review is incomplete.</div>
+    </div>
+    <div>
+      <div class="concept-card gold" style="background:rgba(255,179,0,0.14); border-left-color:var(--gold);">
+        <h4 style="color:var(--white)">Bridge to Session 16</h4>
+        <p style="color:rgba(255,255,255,0.86)">Session 15 strengthens human judgment. Session 16 makes that judgment traceable, reconstructable, and auditable later.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer on-dark">8</div>
+</div>
+
+<script>
+document.addEventListener('keydown', function (event) {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const currentIndex = Math.round(window.scrollY / window.innerHeight);
+  if (event.key === 'ArrowDown' || event.key === 'PageDown' || event.key === ' ') {
+    event.preventDefault();
+    const next = Math.min(currentIndex + 1, slides.length - 1);
+    slides[next].scrollIntoView({ behavior: 'smooth' });
+  }
+  if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+    event.preventDefault();
+    const prev = Math.max(currentIndex - 1, 0);
+    slides[prev].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+</script>
+</body>
+</html>

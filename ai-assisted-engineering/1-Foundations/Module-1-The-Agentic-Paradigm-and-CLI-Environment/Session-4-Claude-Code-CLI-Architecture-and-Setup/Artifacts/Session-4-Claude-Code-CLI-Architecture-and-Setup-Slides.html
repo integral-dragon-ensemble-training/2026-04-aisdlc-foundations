@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Session 04 | Claude Code CLI Architecture and Setup</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css"
+            id="theme"
+        />
+        <style>
+            .reveal {
+                font-size: 30px;
+            }
+
+            .reveal .slides {
+                text-align: left;
+            }
+
+            .reveal h1,
+            .reveal h2,
+            .reveal h3 {
+                text-transform: none;
+            }
+
+            .reveal h1 {
+                font-size: 2.2em;
+                margin-bottom: 0.2em;
+            }
+
+            .reveal h2 {
+                font-size: 1.5em;
+                margin-bottom: 0.35em;
+            }
+
+            .reveal h3 {
+                font-size: 0.9em;
+                margin-bottom: 0.5em;
+                color: #666;
+            }
+
+            .eyebrow {
+                display: inline-block;
+                padding: 0.2em 0.55em;
+                margin-bottom: 0.8em;
+                border: 1px solid #d9d9d9;
+                border-radius: 999px;
+                font-size: 0.42em;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: #666;
+            }
+
+            .lead {
+                max-width: 18em;
+                font-size: 1em;
+            }
+
+            .panel,
+            .stat,
+            .step {
+                padding: 0.75em 0.9em;
+                border: 1px solid #dddddd;
+                border-radius: 16px;
+                background: #fafafa;
+            }
+
+            .two-col,
+            .three-col,
+            .step-grid,
+            .mini-grid {
+                display: grid;
+                gap: 0.7em;
+                align-items: start;
+            }
+
+            .two-col {
+                grid-template-columns: 1.08fr 0.92fr;
+            }
+
+            .three-col {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .step-grid {
+                grid-template-columns: repeat(4, 1fr);
+                margin-top: 0.8em;
+            }
+
+            .mini-grid {
+                grid-template-columns: repeat(2, 1fr);
+                margin-top: 0.7em;
+            }
+
+            .stat h4,
+            .step .label {
+                margin: 0 0 0.35em;
+                font-size: 0.5em;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: #666;
+            }
+
+            .stat p,
+            .step .value,
+            .small {
+                font-size: 0.72em;
+            }
+
+            .reveal ul,
+            .reveal ol {
+                margin-left: 1em;
+            }
+
+            .reveal li {
+                margin-bottom: 0.32em;
+            }
+
+            .callout {
+                padding: 0.6em 0.8em;
+                border-left: 4px solid #999;
+                background: #f7f7f7;
+                margin-top: 0.8em;
+                font-size: 0.72em;
+            }
+
+            .quote {
+                font-size: 1em;
+                line-height: 1.3;
+            }
+
+            .code-chip {
+                display: inline-block;
+                padding: 0.22em 0.5em;
+                margin: 0.12em 0.12em 0 0;
+                border-radius: 999px;
+                background: #f2f2f2;
+                border: 1px solid #ddd;
+                font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+                font-size: 0.5em;
+            }
+
+            .compare-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 0.8em;
+                font-size: 0.65em;
+            }
+
+            .compare-table th,
+            .compare-table td {
+                border: 1px solid #ddd;
+                padding: 0.45em 0.55em;
+                vertical-align: top;
+            }
+
+            .compare-table th {
+                background: #f4f4f4;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <div class="eyebrow">Foundations · Session 04</div>
+                    <h1>Claude Code CLI Architecture and Setup</h1>
+                    <p class="lead">
+                        Why the terminal-native harness matters, how the local agentic loop
+                        works, and what secure enterprise setup actually requires.
+                    </p>
+                    <div class="step-grid">
+                        <div class="step">
+                            <span class="label">Install</span>
+                            <span class="value">Local Node package and command entrypoint</span>
+                        </div>
+                        <div class="step">
+                            <span class="label">Authenticate</span>
+                            <span class="value">Secure OAuth flow tied to the local user</span>
+                        </div>
+                        <div class="step">
+                            <span class="label">Operate</span>
+                            <span class="value">Read, write, and execute through tools</span>
+                        </div>
+                        <div class="step">
+                            <span class="label">Control</span>
+                            <span class="value">Approvals, ignores, and least privilege</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Architectural Shift</div>
+                    <div class="two-col">
+                        <div>
+                            <h2>Move from browser chat to a terminal-native engineering loop</h2>
+                            <ul>
+                                <li>Browser copy-paste breaks flow and destroys local context.</li>
+                                <li>IDE chat is useful, but still narrower than a true local harness.</li>
+                                <li>The CLI turns AI from consultant behavior into tool-mediated execution.</li>
+                            </ul>
+                        </div>
+                        <div class="panel">
+                            <p class="quote">
+                                The CLI is not “chat in another window.” It is the local orchestration
+                                layer between your repo, your shell, and the remote model.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="callout">
+                        Session goal: make the execution environment itself understandable before
+                        later sessions add hooks, MCP, and subagents on top of it.
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Agentic Loop</div>
+                    <h2>What actually happens after you invoke `claude`</h2>
+                    <div class="three-col">
+                        <div class="stat">
+                            <h4>1. Context init</h4>
+                            <p>Load local rules, project files, and ignore boundaries.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>2. Tool injection</h4>
+                            <p>Expose local capabilities through structured tool schemas.</p>
+                        </div>
+                        <div class="stat">
+                            <h4>3. REPL loop</h4>
+                            <p>Tool calls execute locally, results flow back, and context deepens.</p>
+                        </div>
+                    </div>
+                    <div class="mini-grid">
+                        <div class="panel">
+                            <h3>Action phase</h3>
+                            <p class="small">
+                                Once it has enough context, the model proposes file edits or shell
+                                actions instead of only writing prose.
+                            </p>
+                        </div>
+                        <div class="panel">
+                            <h3>Critical implication</h3>
+                            <p class="small">
+                                This is why permissions, approvals, and review boundaries matter so
+                                much more than they do in plain chat interfaces.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Trust Boundary</div>
+                    <div class="two-col">
+                        <div>
+                            <h2>The CLI runs with the permissions of the logged-in user</h2>
+                            <ul>
+                                <li>Local execution inherits real filesystem and shell access.</li>
+                                <li>Authentication establishes identity, not safety.</li>
+                                <li>Least privilege has to be enforced in the harness setup.</li>
+                            </ul>
+                        </div>
+                        <div class="panel">
+                            <h3>Enterprise controls to emphasize</h3>
+                            <div class="code-chip">manual approvals</div>
+                            <div class="code-chip">read-only first</div>
+                            <div class="code-chip">network controls</div>
+                            <div class="code-chip">.claudeignore</div>
+                            <div class="code-chip">repo scoping</div>
+                            <div class="code-chip">audit trail</div>
+                        </div>
+                    </div>
+                    <div class="callout">
+                        The risk is not that the CLI exists. The risk is treating a local agent as if
+                        it had no execution authority.
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Setup Sequence</div>
+                    <h2>Installation and first-time setup should be simple, but not casual</h2>
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>Stage</th>
+                                <th>What happens</th>
+                                <th>What to verify</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Install</td>
+                                <td>`npm install -g @anthropic-ai/claude-code`</td>
+                                <td>Binary available, version resolves, node environment healthy</td>
+                            </tr>
+                            <tr>
+                                <td>Authenticate</td>
+                                <td>OAuth browser flow creates the local authenticated session</td>
+                                <td>Identity is correct and tied to the intended environment</td>
+                            </tr>
+                            <tr>
+                                <td>Constrain</td>
+                                <td>Configure approvals, ignore rules, and repo boundaries</td>
+                                <td>Sensitive files and broad mutation paths stay blocked</td>
+                            </tr>
+                            <tr>
+                                <td>Verify</td>
+                                <td>Run lightweight read-only diagnostics and help commands</td>
+                                <td>Expected commands work before any write-capable usage</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Command Surface</div>
+                    <h2>Use the basic commands to verify the harness before trusting it</h2>
+                    <div class="mini-grid">
+                        <div class="panel">
+                            <h3>Operational checks</h3>
+                            <div class="code-chip">/help</div>
+                            <div class="code-chip">/model</div>
+                            <div class="code-chip">/doctor</div>
+                            <p class="small">
+                                Validate availability, health, and the active runtime before asking
+                                the agent to do real work.
+                            </p>
+                        </div>
+                        <div class="panel">
+                            <h3>Project boundary checks</h3>
+                            <div class="code-chip">.claudeignore</div>
+                            <div class="code-chip">repo root</div>
+                            <div class="code-chip">approval mode</div>
+                            <p class="small">
+                                Make sure the repo boundary and denial posture are correct before any
+                                shell execution or file mutation is attempted.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="callout">
+                        Good setup means the first blocked action is expected and informative, not a
+                        surprise.
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Live Demo Pattern</div>
+                    <h2>Demonstrate setup with a harmless read-only path first</h2>
+                    <ol>
+                        <li>Install and authenticate in an isolated dummy repository.</li>
+                        <li>Run `/help` and `/model` to orient the interface.</li>
+                        <li>Run a read-only `/doctor` or equivalent diagnostic check.</li>
+                        <li>Show where approvals and ignore boundaries would stop risky actions.</li>
+                    </ol>
+                    <div class="mini-grid">
+                        <div class="panel">
+                            <h3>Teaching point</h3>
+                            <p class="small">
+                                The first session with the CLI should prove control, not power.
+                            </p>
+                        </div>
+                        <div class="panel">
+                            <h3>Misconception to correct</h3>
+                            <p class="small">
+                                Serious agentic work does not begin when the model answers a question.
+                                It begins when the execution environment is correctly bounded.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="eyebrow">Takeaway</div>
+                    <div class="two-col">
+                        <div>
+                            <h2>The professional shift is not “use AI more.” It is “run the harness responsibly.”</h2>
+                            <ul>
+                                <li>The CLI is the native environment for later agentic orchestration.</li>
+                                <li>Local execution changes the risk model immediately.</li>
+                                <li>Setup, approvals, and ignore boundaries are part of engineering quality.</li>
+                            </ul>
+                        </div>
+                        <div class="panel">
+                            <h3>Bridge to Module 2</h3>
+                            <p class="small">
+                                Once the harness is installed and bounded, the next problem is no
+                                longer setup. It is how to steer the agent with specs, plan mode, and
+                                persistent context controls.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+        <script>
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                hash: true,
+                center: true,
+                transition: "slide"
+            });
+        </script>
+    </body>
+</html>

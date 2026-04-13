@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 06: Plan Mode vs. Act Mode</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-light: #00E5FF;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --light-gray: #F0F0F0;
+    --off-white: #F8F9FA;
+    --med-gray: #666666;
+    --dark-gray: #333333;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+    --green: #00C853;
+  }
+
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+
+  .slide {
+    width: 100vw; height: 100vh; scroll-snap-align: start;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+
+  .section-label {
+    font-size: clamp(10px, 0.85vw, 13px); font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh;
+  }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+  .section-label.navy { color: var(--navy); opacity: 0.5; }
+
+  .action-title {
+    font-size: clamp(18px, 2vw, 28px); font-weight: 700;
+    line-height: 1.25; margin-bottom: 1.5vh; max-width: 92%;
+  }
+
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+
+  .slide-footer {
+    position: absolute; bottom: 1.5vh; right: 6vw;
+    font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray);
+  }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+
+  .concept-card {
+    background: var(--off-white); border-radius: 10px; padding: 2vh 2vw;
+    border-left: 4px solid var(--cyan); margin-bottom: 1.5vh;
+  }
+  .concept-card.warn { border-left-color: var(--warn); }
+  .concept-card.green { border-left-color: var(--green); }
+  .concept-card h4 {
+    font-size: clamp(13px, 1.15vw, 17px); font-weight: 700; color: var(--navy); margin-bottom: 0.4em;
+  }
+  .concept-card p { font-size: clamp(11px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.5; }
+
+  .code-block {
+    background: var(--navy); border-radius: 8px; padding: 1.5vh 2vw; margin-top: 1vh;
+    font-family: 'JetBrains Mono', monospace; color: var(--cyan-muted);
+    font-size: clamp(11px, 0.95vw, 14px); line-height: 1.6;
+  }
+  .code-block .prompt { color: var(--cyan); font-weight: 600; }
+  .code-block .comment { color: var(--med-gray); }
+
+  .list-item {
+    display: flex; gap: 1vw; align-items: flex-start; margin-bottom: 1.2vh;
+    font-size: clamp(12px, 1.05vw, 16px); color: var(--dark-gray); line-height: 1.5;
+  }
+  .list-item .bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+  .list-item.dark-text { color: rgba(255,255,255,0.85); }
+  .list-item.dark-text .bullet { color: var(--cyan-muted); }
+
+  .mode-table { width: 100%; border-collapse: collapse; margin-top: 1vh; }
+  .mode-table th {
+    background: var(--navy); color: var(--white); padding: 1vh 1.5vw;
+    font-size: clamp(11px, 0.95vw, 14px); font-weight: 600; text-align: left; border: none;
+  }
+  .mode-table td {
+    padding: 1vh 1.5vw; font-size: clamp(11px, 0.95vw, 14px); color: var(--dark-gray);
+    border-bottom: 1px solid var(--light-gray); vertical-align: top; line-height: 1.4;
+  }
+  .mode-table tr:nth-child(even) td { background: var(--off-white); }
+  .mode-table td:first-child { font-weight: 600; color: var(--navy); font-family: 'JetBrains Mono', monospace; font-size: clamp(10px, 0.85vw, 13px); }
+
+  .rhythm-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1vh 1.5vw; margin-top:1vh; }
+  .rhythm-step { background: var(--off-white); border-radius: 8px; padding: 1.2vh 1vw; border-top: 3px solid var(--cyan); text-align: center; }
+  .rhythm-step .step-num { font-size: clamp(10px,0.85vw,13px); font-weight:700; color:var(--cyan); margin-bottom:0.3em; }
+  .rhythm-step .step-text { font-size: clamp(11px,0.95vw,14px); color:var(--dark-gray); line-height:1.3; }
+
+  /* TITLE SLIDE */
+  .slide-title { background: var(--navy); color: var(--white); justify-content: center; padding: 5vh 6vw; }
+  .slide-title .brand {
+    position: absolute; top: 4vh; left: 6vw;
+    font-size: clamp(11px, 1.1vw, 16px); font-weight: 500;
+    letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); opacity: 0.9;
+  }
+  .slide-title .content { max-width: 55%; z-index: 2; }
+  .slide-title .session-tag {
+    font-size: clamp(11px, 1.0vw, 15px); font-weight: 600;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.2vh;
+  }
+  .slide-title h1 { font-size: clamp(26px, 3.4vw, 50px); font-weight: 700; line-height: 1.1; margin-bottom: 0.5em; }
+  .slide-title .accent-line { width: 100px; height: 3px; background: var(--cyan); margin-bottom: 0.8em; }
+  .slide-title .subtitle { font-size: clamp(14px, 1.4vw, 20px); font-weight: 400; color: var(--cyan-muted); line-height: 1.4; }
+  .slide-title .meta { font-size: clamp(11px, 1.0vw, 15px); color: #AABBCC; margin-top: 1.5em; }
+  .slide-title .footer { position: absolute; bottom: 3vh; left: 6vw; font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray); }
+
+  .geo { position: absolute; border-radius: 20px; }
+  .geo-1 { right: 2vw; top: 8vh; width: 35vw; height: 55vh; background: var(--teal-dark); opacity: 0.5; border-radius: 24px; }
+  .geo-2 { right: -2vw; top: 15vh; width: 28vw; height: 50vh; background: var(--teal-mid); opacity: 0.45; border-radius: 20px; }
+  .geo-3 { right: 5vw; top: 22vh; width: 22vw; height: 22vw; background: var(--cyan); opacity: 0.55; border-radius: 50%; }
+  .geo-4 { right: 12vw; top: 30vh; width: 10vw; height: 10vw; background: var(--navy); opacity: 0.7; border-radius: 50%; }
+  .geo-5 { right: 0; bottom: 0; width: 18vw; height: 28vh; background: var(--teal-dark); opacity: 0.35; border-radius: 16px 0 0 0; }
+
+  .slide-divider {
+    background: var(--navy); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 5vh 10vw;
+  }
+  .divider-content { z-index: 2; }
+  .divider-content .module-num {
+    font-size: clamp(12px, 1.1vw, 16px); font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.5vh;
+  }
+  .divider-content h2 { font-size: clamp(24px, 3vw, 44px); font-weight: 700; line-height: 1.2; margin-bottom: 0.6em; }
+  .divider-content .sub { font-size: clamp(14px, 1.3vw, 20px); color: var(--cyan-muted); line-height: 1.5; }
+
+  .kb-hint {
+    position: fixed; bottom: 12px; right: 12px;
+    background: rgba(0,0,0,0.6); color: #aaa; font-size: 11px;
+    padding: 4px 10px; border-radius: 4px; z-index: 100; opacity: 0.7; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="content">
+    <div class="session-tag">Module 2 &nbsp;&bull;&nbsp; Session 06</div>
+    <h1>Plan Mode<br>vs. Act Mode</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">Make the agent show its work before it edits the repo.</div>
+    <div class="meta">AI-Accelerated Software Development &nbsp;|&nbsp; Foundations Program</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<!-- SLIDE 2: MODE SEPARATION IS A CONTROL (dark) -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 06 &nbsp;|&nbsp; The Control Model</div>
+  <div class="action-title" style="color:var(--white)">Mode separation is an engineering control, not a UI preference</div>
+  <div class="title-rule dark"></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Planning and execution create different kinds of risk.</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>The same agent that can help quickly can also widen scope quickly.</span></div>
+  <div class="list-item dark-text"><span class="bullet">→</span><span>Separating analysis from action gives the human a real approval gate — not a checkbox.</span></div>
+  <div class="slide-footer on-dark">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 3: WHAT PLAN MODE IS FOR -->
+<div class="slide slide-content">
+  <div class="section-label navy">Session 06 &nbsp;|&nbsp; Plan Mode</div>
+  <div class="action-title">What Plan Mode is for</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card"><h4>Read-only codebase analysis</h4><p>Claude explores files, traces logic, and identifies boundaries without touching anything.</p></div>
+      <div class="concept-card"><h4>Clarifying question discovery</h4><p>Missing requirements and hidden assumptions surface before a single line is written.</p></div>
+    </div>
+    <div>
+      <div class="concept-card"><h4>Multi-file change proposals</h4><p>See the full proposed change surface before execution begins — with room to challenge it.</p></div>
+      <div class="concept-card"><h4>Safe exploration of sensitive areas</h4><p>Auth, billing, compliance-sensitive paths — analyze the risk before committing to a direction.</p></div>
+    </div>
+  </div>
+  <div class="slide-footer">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 4: WHEN TO USE PLAN MODE -->
+<div class="slide slide-content">
+  <div class="section-label navy">Session 06 &nbsp;|&nbsp; Trigger Conditions</div>
+  <div class="action-title">Use Plan Mode when the task is high-risk or high-ambiguity</div>
+  <div class="title-rule"></div>
+  <div class="code-block" style="margin-bottom:2vh">
+    <span class="prompt">$</span> claude --permission-mode plan
+  </div>
+  <div class="list-item"><span class="bullet">→</span><span>Multi-step implementation touching several files or systems</span></div>
+  <div class="list-item"><span class="bullet">→</span><span>Refactors that span multiple files or cross module boundaries</span></div>
+  <div class="list-item"><span class="bullet">→</span><span>Migrations, auth changes, billing logic, CI/CD, or compliance-sensitive flows</span></div>
+  <div class="list-item"><span class="bullet">→</span><span>Any work where the repo boundary is still unclear from the ticket alone</span></div>
+  <div class="slide-footer">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 5: WHAT A GOOD PLAN CONTAINS -->
+<div class="slide slide-content">
+  <div class="section-label navy">Session 06 &nbsp;|&nbsp; Plan Quality</div>
+  <div class="action-title">What a good plan should contain</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card"><h4>Likely files and components touched</h4><p>Explicit list — not "probably some auth files" but named paths and modules.</p></div>
+      <div class="concept-card"><h4>Invariants that must remain true</h4><p>Schema stability, API contracts, test baseline, permissions model.</p></div>
+      <div class="concept-card"><h4>Migration or compatibility concerns</h4><p>Any backward compatibility risk, rollout ordering, or flag dependency.</p></div>
+    </div>
+    <div>
+      <div class="concept-card"><h4>Testing strategy</h4><p>Which tests will verify the change, what new tests are needed, and how to run them.</p></div>
+      <div class="concept-card"><h4>Open questions and assumptions</h4><p>What the plan assumed without evidence — this is where reviewers should focus.</p></div>
+    </div>
+  </div>
+  <div class="slide-footer">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 6: REVIEW THE PLAN -->
+<div class="slide slide-content">
+  <div class="section-label navy">Session 06 &nbsp;|&nbsp; Review Discipline</div>
+  <div class="action-title">Review the plan like an engineer, not a spectator</div>
+  <div class="title-rule"></div>
+  <div class="list-item"><span class="bullet">→</span><span><strong>What did the plan assume without evidence?</strong> These are the highest-risk items.</span></div>
+  <div class="list-item"><span class="bullet">→</span><span><strong>What failure modes did it ignore?</strong> Ask for explicit coverage of edge cases.</span></div>
+  <div class="list-item"><span class="bullet">→</span><span><strong>Which files should not be touched?</strong> If they are not in the plan, confirm they are out of scope.</span></div>
+  <div class="list-item"><span class="bullet">→</span><span><strong>What test evidence would prove this change is safe?</strong> Make it concrete before approving.</span></div>
+  <div class="concept-card" style="margin-top:2vh">
+    <h4>Approval is not a ceremony</h4>
+    <p>A plan approval should be a defensible engineering judgment, not a rubber stamp. If you cannot explain why you approved it, the plan is not ready.</p>
+  </div>
+  <div class="slide-footer">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 7: PERMISSION MODES (teaching nuance) -->
+<div class="slide slide-content">
+  <div class="section-label navy">Session 06 &nbsp;|&nbsp; Teaching Nuance</div>
+  <div class="action-title">Claude Code has more than two permission modes — but one mental model governs them all</div>
+  <div class="title-rule"></div>
+  <table class="mode-table">
+    <tr><th>Mode</th><th>Behavior</th><th>When to use</th></tr>
+    <tr><td>plan</td><td>Read-only analysis; no repo writes</td><td>High-risk or high-ambiguity tasks</td></tr>
+    <tr><td>default</td><td>Prompts for approval on writes and commands</td><td>Normal development work</td></tr>
+    <tr><td>acceptEdits</td><td>Auto-approves file edits; prompts for commands</td><td>Trusted editing in known codebases</td></tr>
+    <tr><td>auto</td><td>Runs autonomously within allowed tool set</td><td>Scripted or pipeline-driven runs</td></tr>
+    <tr><td>bypassPermissions</td><td>No confirmations — full autonomy</td><td>Controlled automation only; never interactive</td></tr>
+  </table>
+  <div style="margin-top:2vh">
+    <div class="list-item"><span class="bullet">→</span><span>Core mental model: <strong>analyze first, execute only after review.</strong> The mode determines how that boundary is enforced.</span></div>
+  </div>
+  <div class="slide-footer">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 8: THE SAFE EXECUTION RHYTHM -->
+<div class="slide slide-content">
+  <div class="section-label navy">Session 06 &nbsp;|&nbsp; Execution Pattern</div>
+  <div class="action-title">The safest execution rhythm is small and explicit</div>
+  <div class="title-rule"></div>
+  <div class="rhythm-grid">
+    <div class="rhythm-step"><div class="step-num">01</div><div class="step-text">Spec</div></div>
+    <div class="rhythm-step"><div class="step-num">02</div><div class="step-text">Plan</div></div>
+    <div class="rhythm-step"><div class="step-num">03</div><div class="step-text">Challenge the plan</div></div>
+    <div class="rhythm-step"><div class="step-num">04</div><div class="step-text">Approve</div></div>
+    <div class="rhythm-step"><div class="step-num">05</div><div class="step-text">Execute a bounded slice</div></div>
+    <div class="rhythm-step"><div class="step-num">06</div><div class="step-text">Test</div></div>
+    <div class="rhythm-step"><div class="step-num">07</div><div class="step-text">Narrate</div></div>
+    <div class="rhythm-step"><div class="step-num">→</div><div class="step-text">Repeat</div></div>
+  </div>
+  <div style="margin-top:2vh">
+    <div class="list-item"><span class="bullet">→</span><span>Each cycle should be reviewable. If a slice cannot be independently reviewed, it is too large.</span></div>
+  </div>
+  <div class="slide-footer">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 9: LIVE DEMO DIVIDER -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num">Live Demo</div>
+    <h2>Propose → critique →<br>refine → approve</h2>
+    <div class="sub">Using Plan Mode on a real refactor before touching the repo</div>
+  </div>
+  <div class="slide-footer on-dark">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 10: DEMO WALKTHROUGH -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 06 &nbsp;|&nbsp; Demo</div>
+  <div class="action-title" style="color:var(--white)">Prompt flow</div>
+  <div class="title-rule dark"></div>
+  <div class="code-block">
+    <div><span class="prompt">$</span> claude --permission-mode plan</div>
+    <div>&nbsp;</div>
+    <div><span class="comment"># Step 1 — explore</span></div>
+    <div>"Analyze the auth module and propose the safest refactor path."</div>
+    <div>&nbsp;</div>
+    <div><span class="comment"># Step 2 — surface risk</span></div>
+    <div>"List touched files, hidden risks, and required tests."</div>
+    <div>&nbsp;</div>
+    <div><span class="comment"># Step 3 — constrain</span></div>
+    <div>"Revise the plan to avoid schema changes and keep the diff small."</div>
+  </div>
+  <div style="margin-top:2vh">
+    <div class="list-item dark-text"><span class="bullet">→</span><span>Did the plan name specific files? Did it acknowledge the risk it couldn't evaluate?</span></div>
+    <div class="list-item dark-text"><span class="bullet">→</span><span>Could you approve this plan in a real code review? Would it hold up under scrutiny?</span></div>
+  </div>
+  <div class="slide-footer on-dark">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 11: FAILURE MODES -->
+<div class="slide slide-content">
+  <div class="section-label navy">Session 06 &nbsp;|&nbsp; Failure Modes</div>
+  <div class="action-title">Common mistakes with Plan Mode</div>
+  <div class="title-rule"></div>
+  <div class="two-col">
+    <div>
+      <div class="concept-card warn"><h4>Approving a plan that never named the touched files</h4><p>If you don't know what will change, you haven't reviewed the plan.</p></div>
+      <div class="concept-card warn"><h4>Letting the agent execute against ambiguity</h4><p>An ambiguous request produces an ambiguous plan. Approve only when the acceptance criteria are clear.</p></div>
+    </div>
+    <div>
+      <div class="concept-card warn"><h4>Treating Plan Mode as ceremony</h4><p>Running Plan Mode without reading the output doesn't add safety — it adds latency.</p></div>
+      <div class="concept-card warn"><h4>Using broad permissions to compensate for weak planning</h4><p><code>bypassPermissions</code> is not a substitute for understanding what the agent will do.</p></div>
+    </div>
+  </div>
+  <div class="slide-footer">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<!-- SLIDE 12: KEY TAKEAWAY -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num">Key Takeaway</div>
+    <h2>Planning is not delay.<br>Planning is where uncertainty leaves the repo.</h2>
+    <div class="sub">Session 07 next: how persistent project rules in CLAUDE.md keep these constraints alive across every session.</div>
+  </div>
+  <div class="slide-footer on-dark">Session 06 &nbsp;|&nbsp; Integral Dragon</div>
+</div>
+
+<script>
+document.addEventListener('keydown', e => {
+  const vh = window.innerHeight;
+  const cur = Math.round(window.scrollY / vh);
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    window.scrollTo({ top: (cur + 1) * vh, behavior: 'smooth' });
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    window.scrollTo({ top: (cur - 1) * vh, behavior: 'smooth' });
+  }
+});
+</script>
+</body>
+</html>

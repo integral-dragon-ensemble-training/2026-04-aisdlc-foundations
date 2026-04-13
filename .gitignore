@@ -1,0 +1,16 @@
+# Secrets
+.env
+*.env
+.env.*
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Node
+node_modules/
