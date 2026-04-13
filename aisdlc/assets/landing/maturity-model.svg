@@ -1,0 +1,104 @@
+<svg viewBox="0 0 1400 580" xmlns="http://www.w3.org/2000/svg" font-family="Avenir Next, Segoe UI, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#EEF4FF"/>
+    </linearGradient>
+    <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="12" r="1.2" fill="#D6E0F5"/>
+    </pattern>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#C5D4EE" flood-opacity="0.45"/>
+    </filter>
+    <filter id="shadow-hi" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#C7652D" flood-opacity="0.30"/>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="580" fill="url(#bg)"/>
+  <rect width="1400" height="580" fill="url(#dots)"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1400" height="100" fill="#1D2A44"/>
+  <text x="700" y="40" text-anchor="middle" font-size="13" font-weight="600" fill="#8A9BB8" letter-spacing="3">AGENTIC ENGINEERING MATURITY MODEL</text>
+  <text x="700" y="76" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Where Foundations Fits</text>
+
+  <!-- Arrow bar (progress) -->
+  <rect x="60" y="136" width="1280" height="12" rx="6" fill="#D8E3F5"/>
+  <rect x="60" y="136" width="660" height="12" rx="6" fill="#C7652D" opacity="0.7"/>
+  <polygon points="740,124 760,142 740,160" fill="#C7652D"/>
+
+  <!-- Level cards -->
+
+  <!-- L1: highlighted -->
+  <rect x="60" y="168" width="295" height="340" rx="22" fill="white" stroke="#C7652D" stroke-width="2.5" filter="url(#shadow-hi)"/>
+  <rect x="60" y="168" width="295" height="68" rx="22" fill="#C7652D"/>
+  <rect x="60" y="214" width="295" height="22" fill="#C7652D"/>
+  <text x="207" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="white" letter-spacing="1">LEVEL 1</text>
+  <text x="207" y="220" text-anchor="middle" font-size="17" font-weight="800" fill="white">Ad Hoc AI Use</text>
+  <!-- Badge -->
+  <rect x="96" y="246" width="222" height="30" rx="15" fill="#C7652D"/>
+  <text x="207" y="266" text-anchor="middle" font-size="12" font-weight="700" fill="white" letter-spacing="1">THIS COURSE COVERS ▸</text>
+
+  <text x="90" y="306" font-size="12" fill="#667A9A">Chat-based, prompt-by-prompt</text>
+  <text x="90" y="328" font-size="12" fill="#667A9A">No context discipline</text>
+  <text x="90" y="350" font-size="12" fill="#667A9A">Unreviewed output accepted</text>
+  <text x="90" y="372" font-size="12" fill="#667A9A">No versioned rules</text>
+  <text x="90" y="394" font-size="12" fill="#667A9A">Individual, not team-scale</text>
+  <!-- Progress line -->
+  <rect x="82" y="418" width="251" height="4" rx="2" fill="#FAE0D0"/>
+  <text x="90" y="442" font-size="11" fill="#C7652D" font-style="italic">Starting point → Foundation transforms this</text>
+  <text x="90" y="462" font-size="11" fill="#C7652D" font-style="italic">into controlled, reviewable delivery</text>
+
+  <!-- L2: highlighted -->
+  <rect x="385" y="168" width="295" height="340" rx="22" fill="white" stroke="#C7652D" stroke-width="2.5" filter="url(#shadow-hi)"/>
+  <rect x="385" y="168" width="295" height="68" rx="22" fill="#C7652D"/>
+  <rect x="385" y="214" width="295" height="22" fill="#C7652D"/>
+  <text x="532" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="white" letter-spacing="1">LEVEL 2</text>
+  <text x="532" y="220" text-anchor="middle" font-size="17" font-weight="800" fill="white">Controlled Agentic Eng.</text>
+  <!-- Badge -->
+  <rect x="421" y="246" width="222" height="30" rx="15" fill="#C7652D"/>
+  <text x="532" y="266" text-anchor="middle" font-size="12" font-weight="700" fill="white" letter-spacing="1">THIS COURSE BUILDS THIS</text>
+
+  <text x="415" y="306" font-size="12" fill="#1D2A44">CLI-native, spec-driven workflow</text>
+  <text x="415" y="328" font-size="12" fill="#1D2A44">Bounded context and CLAUDE.md</text>
+  <text x="415" y="350" font-size="12" fill="#1D2A44">Plan Mode + review discipline</text>
+  <text x="415" y="372" font-size="12" fill="#1D2A44">Hooks, tools, and MCP governance</text>
+  <text x="415" y="394" font-size="12" fill="#1D2A44">Auditability and traceability</text>
+  <rect x="407" y="418" width="251" height="4" rx="2" fill="#FAE0D0"/>
+  <text x="415" y="442" font-size="11" fill="#C7652D" font-style="italic">Exit state of Foundations course</text>
+  <text x="415" y="462" font-size="11" fill="#C7652D" font-style="italic">→ Ready to enter labs</text>
+
+  <!-- L3: muted -->
+  <rect x="710" y="168" width="295" height="340" rx="22" fill="white" stroke="#D8E3F5" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="710" y="168" width="295" height="68" rx="22" fill="#28457C"/>
+  <rect x="710" y="214" width="295" height="22" fill="#28457C"/>
+  <text x="857" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="white" letter-spacing="1">LEVEL 3</text>
+  <text x="857" y="220" text-anchor="middle" font-size="17" font-weight="800" fill="white">Production Agentic Eng.</text>
+
+  <text x="740" y="286" font-size="12" fill="#667A9A">Codebase reconnaissance</text>
+  <text x="740" y="308" font-size="12" fill="#667A9A">CI/CD loop integration</text>
+  <text x="740" y="330" font-size="12" fill="#667A9A">Multi-agent team coordination</text>
+  <text x="740" y="352" font-size="12" fill="#667A9A">Security-hardened pipelines</text>
+  <text x="740" y="374" font-size="12" fill="#667A9A">Cross-team context sharing</text>
+  <rect x="732" y="418" width="251" height="4" rx="2" fill="#D8E3F5"/>
+  <text x="740" y="442" font-size="11" fill="#667A9A" font-style="italic">Covered in: Labs — Applied Tracks</text>
+
+  <!-- L4: muted -->
+  <rect x="1035" y="168" width="325" height="340" rx="22" fill="white" stroke="#D8E3F5" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1035" y="168" width="325" height="68" rx="22" fill="#1D2A44"/>
+  <rect x="1035" y="214" width="325" height="22" fill="#1D2A44"/>
+  <text x="1197" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="white" letter-spacing="1">LEVEL 4</text>
+  <text x="1197" y="220" text-anchor="middle" font-size="17" font-weight="800" fill="white">Enterprise-Grade Delivery</text>
+
+  <text x="1065" y="286" font-size="12" fill="#667A9A">Zero-trust organizational posture</text>
+  <text x="1065" y="308" font-size="12" fill="#667A9A">Governed MCP ecosystem</text>
+  <text x="1065" y="330" font-size="12" fill="#667A9A">Compliance-ready audit trails</text>
+  <text x="1065" y="352" font-size="12" fill="#667A9A">AI-accelerated delivery at scale</text>
+  <text x="1065" y="374" font-size="12" fill="#667A9A">Org-wide standards enforcement</text>
+  <rect x="1057" y="418" width="281" height="4" rx="2" fill="#D8E3F5"/>
+  <text x="1065" y="442" font-size="11" fill="#667A9A" font-style="italic">Covered in: Enterprise Accelerator Track</text>
+
+  <!-- Footer -->
+  <text x="700" y="552" text-anchor="middle" font-size="12" fill="#8A9BB8">Integral Dragon  ·  Confidential  ·  Ensemble Health Partners  ·  April 2026</text>
+</svg>

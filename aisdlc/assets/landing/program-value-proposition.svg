@@ -1,0 +1,103 @@
+<svg viewBox="0 0 1400 860" xmlns="http://www.w3.org/2000/svg" font-family="Avenir Next, Segoe UI, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#EEF4FF"/>
+    </linearGradient>
+    <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="12" r="1.2" fill="#D6E0F5"/>
+    </pattern>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#C5D4EE" flood-opacity="0.45"/>
+    </filter>
+    <filter id="shadow-sm" x="-6%" y="-6%" width="112%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#C5D4EE" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="860" fill="url(#bg)"/>
+  <rect width="1400" height="860" fill="url(#dots)"/>
+
+  <!-- Hero band -->
+  <rect x="0" y="0" width="1400" height="140" rx="0" fill="#1D2A44"/>
+  <text x="700" y="52" text-anchor="middle" font-size="13" font-weight="600" fill="#8A9BB8" letter-spacing="3">AI-ACCELERATED SOFTWARE DEVELOPMENT</text>
+  <text x="700" y="98" text-anchor="middle" font-size="36" font-weight="700" fill="#FFFFFF">Foundations</text>
+  <text x="700" y="128" text-anchor="middle" font-size="15" fill="#8A9BB8">The operating baseline for enterprise-grade agentic engineering</text>
+
+  <!-- Stats cards row -->
+  <!-- Card 1: Sessions -->
+  <rect x="120" y="180" width="340" height="140" rx="18" fill="white" stroke="#D8E3F5" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="120" y="180" width="340" height="8" rx="18" fill="#4B73BF"/>
+  <rect x="120" y="184" width="340" height="4" fill="#4B73BF"/>
+  <text x="290" y="260" text-anchor="middle" font-size="52" font-weight="700" fill="#1D2A44">16</text>
+  <text x="290" y="294" text-anchor="middle" font-size="14" font-weight="600" fill="#667A9A" letter-spacing="1">SESSIONS</text>
+
+  <!-- Card 2: Modules -->
+  <rect x="530" y="180" width="340" height="140" rx="18" fill="white" stroke="#D8E3F5" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="530" y="180" width="340" height="8" rx="18" fill="#4D7C64"/>
+  <rect x="530" y="184" width="340" height="4" fill="#4D7C64"/>
+  <text x="700" y="260" text-anchor="middle" font-size="52" font-weight="700" fill="#1D2A44">4</text>
+  <text x="700" y="294" text-anchor="middle" font-size="14" font-weight="600" fill="#667A9A" letter-spacing="1">MODULES</text>
+
+  <!-- Card 3: Per session -->
+  <rect x="940" y="180" width="340" height="140" rx="18" fill="white" stroke="#D8E3F5" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="940" y="180" width="340" height="8" rx="18" fill="#C7652D"/>
+  <rect x="940" y="184" width="340" height="4" fill="#C7652D"/>
+  <text x="1110" y="260" text-anchor="middle" font-size="52" font-weight="700" fill="#1D2A44">23</text>
+  <text x="1110" y="294" text-anchor="middle" font-size="14" font-weight="600" fill="#667A9A" letter-spacing="1">MIN / SESSION</text>
+
+  <!-- Delivery model banner -->
+  <rect x="80" y="368" width="1240" height="56" rx="12" fill="#1D2A44" filter="url(#shadow-sm)"/>
+  <text x="700" y="401" text-anchor="middle" font-size="15" font-weight="600" fill="#FFFFFF" letter-spacing="1">INSTRUCTOR-LED  ·  ENTERPRISE DELIVERY  ·  HANDS-ON CLI PRACTICE  ·  REVIEW-DISCIPLINED OUTPUT</text>
+
+  <!-- Two-column benefits -->
+  <!-- Left panel -->
+  <rect x="80" y="458" width="600" height="340" rx="18" fill="white" stroke="#D8E3F5" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="80" y="458" width="600" height="50" rx="18" fill="#28457C"/>
+  <rect x="80" y="490" width="600" height="18" fill="#28457C"/>
+  <text x="380" y="491" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF" letter-spacing="2">WHAT ENGINEERS GAIN</text>
+
+  <text x="120" y="546" font-size="13" fill="#4B73BF" font-weight="700">▸</text>
+  <text x="142" y="546" font-size="13" fill="#1D2A44">A disciplined agentic engineering operating model</text>
+  <text x="120" y="578" font-size="13" fill="#4B73BF" font-weight="700">▸</text>
+  <text x="142" y="578" font-size="13" fill="#1D2A44">CLI-native workflow with bounded context control</text>
+  <text x="120" y="610" font-size="13" fill="#4B73BF" font-weight="700">▸</text>
+  <text x="142" y="610" font-size="13" fill="#1D2A44">Spec-driven development before generation begins</text>
+  <text x="120" y="642" font-size="13" fill="#4B73BF" font-weight="700">▸</text>
+  <text x="142" y="642" font-size="13" fill="#1D2A44">Plan Mode separation for safe, reversible execution</text>
+  <text x="120" y="674" font-size="13" fill="#4B73BF" font-weight="700">▸</text>
+  <text x="142" y="674" font-size="13" fill="#1D2A44">Tooling, hooks, and subagent orchestration patterns</text>
+  <text x="120" y="706" font-size="13" fill="#4B73BF" font-weight="700">▸</text>
+  <text x="142" y="706" font-size="13" fill="#1D2A44">Zero-trust permissions and auditability practices</text>
+  <text x="120" y="738" font-size="13" fill="#4B73BF" font-weight="700">▸</text>
+  <text x="142" y="738" font-size="13" fill="#1D2A44">Review discipline for AI-generated diffs</text>
+  <text x="120" y="770" font-size="13" fill="#4B73BF" font-weight="700">▸</text>
+  <text x="142" y="770" font-size="13" fill="#1D2A44">Ready to enter labs with repeatable, verifiable habits</text>
+
+  <!-- Right panel -->
+  <rect x="720" y="458" width="600" height="340" rx="18" fill="white" stroke="#D8E3F5" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="720" y="458" width="600" height="50" rx="18" fill="#4D7C64"/>
+  <rect x="720" y="490" width="600" height="18" fill="#4D7C64"/>
+  <text x="1020" y="491" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF" letter-spacing="2">WHAT THE ORGANIZATION GAINS</text>
+
+  <text x="760" y="546" font-size="13" fill="#4D7C64" font-weight="700">▸</text>
+  <text x="782" y="546" font-size="13" fill="#1D2A44">Consistent AI output quality across teams and sessions</text>
+  <text x="760" y="578" font-size="13" fill="#4D7C64" font-weight="700">▸</text>
+  <text x="782" y="578" font-size="13" fill="#1D2A44">Versioned project rules that survive engineer turnover</text>
+  <text x="760" y="610" font-size="13" fill="#4D7C64" font-weight="700">▸</text>
+  <text x="782" y="610" font-size="13" fill="#1D2A44">Auditable evidence trail for every agentic change</text>
+  <text x="760" y="642" font-size="13" fill="#4D7C64" font-weight="700">▸</text>
+  <text x="782" y="642" font-size="13" fill="#1D2A44">Least-privilege execution boundaries by default</text>
+  <text x="760" y="674" font-size="13" fill="#4D7C64" font-weight="700">▸</text>
+  <text x="782" y="674" font-size="13" fill="#1D2A44">Reduced review burden through structured narration</text>
+  <text x="760" y="706" font-size="13" fill="#4D7C64" font-weight="700">▸</text>
+  <text x="782" y="706" font-size="13" fill="#1D2A44">OWASP-aware teams operating agentic systems safely</text>
+  <text x="760" y="738" font-size="13" fill="#4D7C64" font-weight="700">▸</text>
+  <text x="782" y="738" font-size="13" fill="#1D2A44">MCP governance and trust boundary standards</text>
+  <text x="760" y="770" font-size="13" fill="#4D7C64" font-weight="700">▸</text>
+  <text x="782" y="770" font-size="13" fill="#1D2A44">Engineers who own architecture, judgment, and liability</text>
+
+  <!-- Footer -->
+  <text x="700" y="836" text-anchor="middle" font-size="12" fill="#8A9BB8">Integral Dragon  ·  Confidential  ·  Ensemble Health Partners  ·  April 2026</text>
+</svg>
