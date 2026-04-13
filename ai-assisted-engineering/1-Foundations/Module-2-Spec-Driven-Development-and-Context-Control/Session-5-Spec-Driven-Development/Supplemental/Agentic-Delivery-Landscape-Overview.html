@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Agentic-Delivery-Landscape-Overview</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<h1 id="agentic-delivery-landscape-overview">Agentic Delivery Landscape
+Overview</h1>
+<p>This is optional presenter material for framing the Session 05
+discussion.</p>
+<h2 id="working-position">Working position</h2>
+<p>Spec-Driven Development is useful, but it is not the only serious
+pattern on the table, and the field is not settled yet.</p>
+<p>That is not just opinion. It is an inference from the fact that major
+players are using different center-of-gravity terms for roughly adjacent
+ideas:</p>
+<ul>
+<li>Anthropic talks about <a
+href="https://resources.anthropic.com/scaling-agentic-coding">agentic
+coding</a>.</li>
+<li>OpenAI talks about <a
+href="https://openai.com/index/harness-engineering/">harness
+engineering</a>.</li>
+<li>GitHub and Microsoft are pushing <a
+href="https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/">spec-driven
+development</a> and <a
+href="https://developer.microsoft.com/blog/spec-driven-development-spec-kit">Spec
+Kit</a>.</li>
+<li>Emerging tool builders are explicitly using the <a
+href="https://godarkfactory.com/">dark factory</a> or lights-out
+framing.</li>
+</ul>
+<p>If you want a clean way to say this live:</p>
+<p><code>We do not yet have one dominant doctrine. We have a landscape of operating models.</code></p>
+<p>One useful nuance: Box’s public material is less “software dark
+factory” and more “governed agentic enterprise automation.” Their
+current positioning is strongly about secure MCP-backed content access,
+permission-respecting agents, and human-oversight patterns inside
+enterprise workflows rather than a pure no-human-code-touch
+doctrine.</p>
+<h2 id="a-practical-taxonomy">A practical taxonomy</h2>
+<h3 id="assisted-coding">1. Assisted coding</h3>
+<p>Human writes or steers most of the implementation.</p>
+<ul>
+<li>AI helps with code generation, review drafts, tests, docs, and
+debugging.</li>
+<li>Human remains deeply in the loop on code and PR review.</li>
+<li>Lowest organizational disruption.</li>
+<li>Usually the easiest starting point in regulated environments.</li>
+</ul>
+<h3 id="spec-driven-development">2. Spec-driven development</h3>
+<p>The main control point moves upstream into the specification.</p>
+<ul>
+<li>Humans write the requirements, acceptance criteria, and constraints
+first.</li>
+<li>Agents implement from those specs.</li>
+<li>The promise is less prompt thrash, cleaner decomposition, and easier
+regeneration or variant exploration.</li>
+<li>GitHub’s Spec Kit framing explicitly argues that business logic can
+be captured in a modern spec, then used to generate plans, tasks, and
+implementations.</li>
+</ul>
+<h3 id="harness-engineering">3. Harness engineering</h3>
+<p>The main leverage point is not the prompt or even the spec by itself.
+It is the total system around the model.</p>
+<ul>
+<li>OpenAI’s framing is that the real discipline increasingly lives in
+scaffolding, feedback loops, tools, invariants, and control
+systems.</li>
+<li>The harness includes repo structure, validation loops, worktrees,
+review agents, observability, and encoded rules.</li>
+<li>This view tends to treat prompts and specs as important, but
+insufficient without the surrounding execution system.</li>
+</ul>
+<h3 id="dark-factory-or-lights-out-software-delivery">4. Dark factory or
+lights-out software delivery</h3>
+<p>The strongest autonomy claim in the landscape.</p>
+<ul>
+<li>Humans define roadmap, architecture, conventions, and merge
+policy.</li>
+<li>Agents implement, review, and sometimes merge with minimal or no
+direct human code touch.</li>
+<li>Dark Factory’s own framing is
+<code>Humans design. Agents build.</code></li>
+<li>This is the most aggressive model and usually depends on a strong
+harness, strong specs, and strong guardrails.</li>
+</ul>
+<h2 id="the-big-variables-and-trade-offs">The big variables and
+trade-offs</h2>
+<h3 id="where-is-the-source-of-truth">Where is the source of truth?</h3>
+<ul>
+<li>Assisted coding: usually the repo plus the human operator’s
+judgment</li>
+<li>Spec-driven: the spec tries to become the durable source of
+truth</li>
+<li>Harness engineering: the source of truth is distributed across repo
+artifacts, constraints, tooling, and feedback systems</li>
+<li>Dark factory: the source of truth is the combination of roadmap,
+specs, architecture rules, and the harness</li>
+</ul>
+<h3 id="where-does-human-effort-move">Where does human effort move?</h3>
+<ul>
+<li>Assisted coding: still largely in implementation and review</li>
+<li>Spec-driven: more effort moves into defining requirements well</li>
+<li>Harness engineering: more effort moves into toolchains, controls,
+and agent legibility</li>
+<li>Dark factory: more effort moves into portfolio direction,
+constraints, monitoring, and exception handling</li>
+</ul>
+<h3 id="what-is-optimized">What is optimized?</h3>
+<ul>
+<li>Assisted coding: immediate velocity for individuals</li>
+<li>Spec-driven: convergence and reduced ambiguity</li>
+<li>Harness engineering: reliability and repeatability at scale</li>
+<li>Dark factory: throughput and automation depth</li>
+</ul>
+<h3 id="what-breaks-first">What breaks first?</h3>
+<ul>
+<li>Assisted coding: review burden and inconsistent quality</li>
+<li>Spec-driven: ceremony, stale specs, and weak links to reality if the
+repo is not read first</li>
+<li>Harness engineering: setup cost, complexity, and organizational
+readiness</li>
+<li>Dark factory: trust, governance, and silent drift if
+review/monitoring is weak</li>
+</ul>
+<h2 id="is-the-spec-the-new-code">Is the spec the new code?</h2>
+<p>This is one of the most useful live debates to surface.</p>
+<h3 id="position-a-yes-the-spec-becomes-the-durable-asset">Position A:
+Yes, the spec becomes the durable asset</h3>
+<p>Argument:</p>
+<ul>
+<li>code is now cheaper to regenerate than to handcraft</li>
+<li>the real scarce asset is validated intent</li>
+<li>GitHub’s SDD ecosystem explicitly leans into the idea that you can
+capture logic in spec, design fresh architecture, and rebuild without
+carrying inherited debt</li>
+</ul>
+<p>Best use case:</p>
+<ul>
+<li>greenfield systems</li>
+<li>bounded features</li>
+<li>high-variance exploration where multiple implementations are
+useful</li>
+</ul>
+<h3
+id="position-b-no-the-repo-and-harness-are-still-the-real-system">Position
+B: No, the repo and harness are still the real system</h3>
+<p>Argument:</p>
+<ul>
+<li>the running system includes code, tests, logs, CI, observability,
+lints, permissions, conventions, and feedback loops</li>
+<li>OpenAI’s harness engineering write-up argues that the critical work
+shifts into scaffolding and control systems, not away from them</li>
+<li>specs matter, but they do not replace the rest of the engineering
+substrate</li>
+</ul>
+<p>Best use case:</p>
+<ul>
+<li>mature products</li>
+<li>long-lived codebases</li>
+<li>environments where maintainability, operability, and evolution
+matter more than regeneration purity</li>
+</ul>
+<h3
+id="position-c-the-spec-is-not-the-new-code-it-is-the-new-control-surface">Position
+C: The spec is not the new code; it is the new control surface</h3>
+<p>This is probably the most defensible teaching position for your
+audience.</p>
+<ul>
+<li>the spec is where intent becomes legible</li>
+<li>the harness is where that intent becomes enforceable</li>
+<li>the repo is where that intent becomes operational</li>
+</ul>
+<p>That lets you teach SDD without overstating its finality.</p>
+<h2 id="a-framing-you-can-use-live">A framing you can use live</h2>
+<p><code>Spec-driven development is one serious answer to the AI delivery problem, but it is not the whole answer.</code></p>
+<p><code>If your agents are unreliable, you may need better specs.</code></p>
+<p><code>If your agents are inconsistent at scale, you probably need a better harness.</code></p>
+<p><code>If your goal is near-total automation, you are really talking about some version of a dark factory.</code></p>
+<h2 id="my-recommendation-for-ensemble-framing">My recommendation for
+Ensemble framing</h2>
+<p>For this audience, I would frame the landscape like this:</p>
+<ul>
+<li>umbrella term: <code>AI-assisted engineering</code> or
+<code>AI-accelerated software development</code></li>
+<li>module-level method:
+<code>spec-driven development and context control</code></li>
+<li>systems-level lens: <code>harness engineering</code></li>
+<li>frontier autonomy pattern: <code>dark factory</code> or
+<code>lights-out software delivery</code></li>
+</ul>
+<p>That gives you one safe enterprise umbrella and three distinct
+operating models underneath it.</p>
+<h2 id="a-simple-2x2-you-could-sketch-live">A simple 2x2 you could
+sketch live</h2>
+<p>Axis 1:</p>
+<ul>
+<li>left: human-touch-heavy</li>
+<li>right: high autonomy</li>
+</ul>
+<p>Axis 2:</p>
+<ul>
+<li>bottom: loose process</li>
+<li>top: strong constraints and controls</li>
+</ul>
+<p>Map it roughly like this:</p>
+<ul>
+<li>bottom-left: ad hoc prompting / vibe coding</li>
+<li>top-left: disciplined assisted coding</li>
+<li>top-middle: spec-driven development</li>
+<li>top-right: dark factory</li>
+</ul>
+<p>Then say:</p>
+<p><code>Harness engineering is not one box on the chart. It is the reason the upper half works at all.</code></p>
+<h2 id="suggested-discussion-prompts">Suggested discussion prompts</h2>
+<ul>
+<li>If code becomes cheap, what becomes the scarce engineering
+asset?</li>
+<li>Do we want the source of truth to be the spec, the repo, or the
+harness?</li>
+<li>What would your security team allow first: better specs, stronger
+harnesses, or fully lights-out delivery?</li>
+<li>Where does human judgment add the most leverage in your environment
+today?</li>
+</ul>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Anthropic, <a
+href="https://resources.anthropic.com/scaling-agentic-coding">Scaling
+Agentic Coding Across Your Organization</a></li>
+<li>OpenAI, <a
+href="https://openai.com/index/harness-engineering/">Harness
+engineering: leveraging Codex in an agent-first world</a></li>
+<li>OpenAI, <a
+href="https://openai.com/index/unlocking-the-codex-harness/">Unlocking
+the Codex harness: how we built the App Server</a></li>
+<li>GitHub Blog, <a
+href="https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/">Spec-driven
+development with AI: Get started with a new open source toolkit</a></li>
+<li>Microsoft for Developers, <a
+href="https://developer.microsoft.com/blog/spec-driven-development-spec-kit">Diving
+Into Spec-Driven Development With GitHub Spec Kit</a></li>
+<li>Dark Factory, <a href="https://godarkfactory.com/">Lights-out
+software development</a></li>
+<li>Box Blog, <a
+href="https://blog.box.com/agentic-process-automation">Agentic process
+automation: The complete guide</a></li>
+<li>Box Blog, <a
+href="https://blog.box.com/secure-content-layer-ai-box-mcp-server-now-ga-claude-and-growing-partner-ecosystem">The
+secure content layer for AI: The Box MCP server is now GA with Claude
+and a growing partner ecosystem</a></li>
+</ul>
+</body>
+</html>

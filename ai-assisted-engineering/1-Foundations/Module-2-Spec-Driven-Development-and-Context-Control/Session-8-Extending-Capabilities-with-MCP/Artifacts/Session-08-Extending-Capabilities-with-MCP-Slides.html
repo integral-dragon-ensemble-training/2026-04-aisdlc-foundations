@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 08: Extending Capabilities with MCP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-light: #00E5FF;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --light-gray: #F0F0F0;
+    --off-white: #F8F9FA;
+    --med-gray: #666666;
+    --dark-gray: #333333;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+    --green: #00C853;
+  }
+
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+
+  .slide {
+    width: 100vw; height: 100vh; scroll-snap-align: start;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+
+  .section-label {
+    font-size: clamp(10px, 0.85vw, 13px); font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh;
+  }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+
+  .action-title {
+    font-size: clamp(18px, 2vw, 28px); font-weight: 700;
+    line-height: 1.25; margin-bottom: 1.5vh; max-width: 92%;
+  }
+
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+
+  .slide-footer {
+    position: absolute; bottom: 1.5vh; right: 6vw;
+    font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray);
+  }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+
+  .accent-band {
+    background: var(--light-gray); padding: 1.8vh 6vw;
+    margin: 0 -6vw; width: calc(100% + 12vw);
+  }
+  .accent-band.dark { background: rgba(0,0,0,0.2); }
+  .accent-band-text { font-size: clamp(12px, 1.05vw, 16px); line-height: 1.4; color: var(--navy); }
+  .accent-band-text strong { font-weight: 700; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+
+  .concept-card {
+    background: var(--off-white); border-radius: 10px; padding: 2vh 2vw;
+    border-left: 4px solid var(--cyan); margin-bottom: 1.5vh;
+  }
+  .concept-card.warn { border-left-color: var(--warn); }
+  .concept-card.dark-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-left: 4px solid var(--cyan); border-radius: 10px; padding: 2vh 2vw; margin-bottom: 1.5vh;
+  }
+  .concept-card h4 {
+    font-size: clamp(13px, 1.15vw, 17px); font-weight: 700; color: var(--navy); margin-bottom: 0.4em;
+  }
+  .concept-card.dark-card h4 { color: var(--white); }
+  .concept-card p { font-size: clamp(11px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.5; }
+  .concept-card.dark-card p { color: rgba(255,255,255,0.75); }
+
+  .code-block {
+    background: var(--navy); border-radius: 8px; padding: 1.5vh 2vw; margin-top: 1vh;
+    font-family: 'JetBrains Mono', monospace; color: var(--cyan-muted);
+    font-size: clamp(11px, 0.95vw, 14px); line-height: 1.6;
+  }
+  .code-block .prompt { color: var(--cyan); font-weight: 600; }
+  .code-block .comment { color: var(--med-gray); }
+
+  .list-item {
+    display: flex; gap: 1vw; align-items: flex-start; margin-bottom: 1.2vh;
+    font-size: clamp(12px, 1.05vw, 16px); color: var(--dark-gray); line-height: 1.5;
+  }
+  .list-item .bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+  .list-item.dark-text { color: rgba(255,255,255,0.85); }
+  .list-item.dark-text .bullet { color: var(--cyan-muted); }
+
+  .pill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2vh 2vw; margin-top: 1vh; }
+  .pill {
+    background: rgba(0,184,212,0.08); border: 1px solid rgba(0,184,212,0.2);
+    border-radius: 8px; padding: 1.2vh 1.5vw;
+  }
+  .pill h5 { font-size: clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy); margin-bottom:0.3em; }
+  .pill p { font-size: clamp(11px,0.95vw,14px); color:var(--dark-gray); line-height:1.4; }
+
+  /* TITLE SLIDE */
+  .slide-title { background: var(--navy); color: var(--white); justify-content: center; padding: 5vh 6vw; }
+  .slide-title .brand {
+    position: absolute; top: 4vh; left: 6vw;
+    font-size: clamp(11px, 1.1vw, 16px); font-weight: 500;
+    letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); opacity: 0.9;
+  }
+  .slide-title .content { max-width: 55%; z-index: 2; }
+  .slide-title .session-tag {
+    font-size: clamp(11px, 1.0vw, 15px); font-weight: 600;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.2vh;
+  }
+  .slide-title h1 { font-size: clamp(26px, 3.4vw, 50px); font-weight: 700; line-height: 1.1; margin-bottom: 0.5em; }
+  .slide-title .accent-line { width: 100px; height: 3px; background: var(--cyan); margin-bottom: 0.8em; }
+  .slide-title .subtitle { font-size: clamp(14px, 1.4vw, 20px); font-weight: 400; color: var(--cyan-muted); line-height: 1.4; }
+  .slide-title .meta { font-size: clamp(11px, 1.0vw, 15px); color: #AABBCC; margin-top: 1.5em; }
+  .slide-title .footer { position: absolute; bottom: 3vh; left: 6vw; font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray); }
+
+  .geo { position: absolute; border-radius: 20px; }
+  .geo-1 { right: 2vw; top: 8vh; width: 35vw; height: 55vh; background: var(--teal-dark); opacity: 0.5; border-radius: 24px; }
+  .geo-2 { right: -2vw; top: 15vh; width: 28vw; height: 50vh; background: var(--teal-mid); opacity: 0.45; border-radius: 20px; }
+  .geo-3 { right: 5vw; top: 22vh; width: 22vw; height: 22vw; background: var(--cyan); opacity: 0.55; border-radius: 50%; }
+  .geo-4 { right: 12vw; top: 30vh; width: 10vw; height: 10vw; background: var(--navy); opacity: 0.7; border-radius: 50%; }
+  .geo-5 { right: 0; bottom: 0; width: 18vw; height: 28vh; background: var(--teal-dark); opacity: 0.35; border-radius: 16px 0 0 0; }
+
+  .slide-divider {
+    background: var(--navy); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 5vh 10vw;
+  }
+  .divider-content { z-index: 2; }
+  .divider-content .module-num {
+    font-size: clamp(12px, 1.1vw, 16px); font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.5vh;
+  }
+  .divider-content h2 { font-size: clamp(24px, 3vw, 44px); font-weight: 700; line-height: 1.2; margin-bottom: 0.6em; }
+  .divider-content .sub { font-size: clamp(14px, 1.3vw, 20px); color: var(--cyan-muted); line-height: 1.5; }
+
+  .kb-hint {
+    position: fixed; bottom: 12px; right: 12px;
+    background: rgba(0,0,0,0.6); color: #aaa; font-size: 11px;
+    padding: 4px 10px; border-radius: 4px; z-index: 100; opacity: 0.7; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="content">
+    <div class="session-tag">Module 2 &nbsp;&bull;&nbsp; Session 08</div>
+    <h1>Extending Capabilities<br>with MCP</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">Connect the agent to tools without inventing a new integration every time</div>
+    <div class="meta">AI-Accelerated Software Development &nbsp;|&nbsp; Foundations Program</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<!-- ==================== SLIDE 2: TOOL ACCESS ==================== -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 08 &nbsp;|&nbsp; The Shift</div>
+  <div class="action-title" style="color:var(--white)">Tool access changes what the agent can do &mdash; and changes what your team needs to govern</div>
+  <div class="title-rule dark"></div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 4vw; flex:1; align-content:start;">
+    <div>
+      <div style="font-size:clamp(13px,1.1vw,17px); font-weight:600; color:var(--cyan-muted); margin-bottom:1.5vh; text-transform:uppercase; letter-spacing:0.15em;">Without tools</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> The model can reason about code it was shown</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> It can draft, explain, and propose</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> It cannot see live system state</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> It cannot query databases, tickets, or repos in real time</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> It cannot act on external systems</div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.1vw,17px); font-weight:600; color:var(--cyan-muted); margin-bottom:1.5vh; text-transform:uppercase; letter-spacing:0.15em;">With tools via MCP</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Inspect live repository state</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Query databases directly by prompt</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Read tickets, docs, and telemetry</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Take actions through auditable integrations</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Work against the real environment, not a snapshot</div>
+    </div>
+  </div>
+
+  <div class="accent-band dark" style="margin-top:auto;">
+    <div class="accent-band-text" style="color:var(--white);">
+      <strong>The implication:</strong> More capability means a larger action surface. The same governance discipline that applies to human engineers &mdash; least privilege, audit trails, approved access &mdash; applies to the agent.
+    </div>
+  </div>
+
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 2</div>
+</div>
+
+<!-- ==================== SLIDE 3: WHAT MCP IS ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 08 &nbsp;|&nbsp; What MCP Is</div>
+  <div class="action-title">MCP is infrastructure, not a chat feature &mdash; it belongs in enterprise architecture discussions</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>The Model Context Protocol</h4>
+        <p>An open standard for connecting LLM applications to external tools, resources, and prompts. Replaces brittle one-off custom wrappers with a shared protocol that any compliant client and server can speak.</p>
+      </div>
+      <div class="concept-card">
+        <h4>A Common Integration Contract</h4>
+        <p>Teams no longer have to write custom glue code for every model-tool pairing. Build the MCP server once for your internal system, and any MCP-capable agent can connect to it through the same interface.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Open Protocol Over Vendor Plugins</h4>
+        <p>Vendor-specific plugin ecosystems create lock-in and fragmented governance. An open standard lets organizations reason clearly about capability boundaries, approve specific servers, and audit usage consistently.</p>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1.2vh;">Why open protocols matter</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Less vendor lock-in &mdash; one standard, many providers</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Reusable integration patterns across teams</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Clearer boundary ownership and access control</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Easier enterprise governance than ad hoc plugin ecosystems</div>
+
+      <div style="margin-top:2.5vh; padding:2vh 2vw; background:rgba(0,184,212,0.06); border:1px solid rgba(0,184,212,0.15); border-radius:10px;">
+        <div style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--cyan); margin-bottom:0.5em;">MCP sits in architecture, not settings</div>
+        <div style="font-size:clamp(11px,1.0vw,15px); color:var(--dark-gray); line-height:1.5;">It affects security boundaries, credential management, operational logging, and access control. Review it as part of your architecture process &mdash; not as a developer convenience decision.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 3</div>
+</div>
+
+<!-- ==================== SLIDE 4: CORE CONCEPTS ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 08 &nbsp;|&nbsp; Core Concepts</div>
+  <div class="action-title">Servers, tools, resources, and prompts &mdash; the four things teams need to recognize</div>
+  <div class="title-rule"></div>
+
+  <div class="pill-grid" style="grid-template-columns:1fr 1fr; gap:1.5vh 3vw; flex:1; align-content:start;">
+    <div class="pill" style="border-color:rgba(0,184,212,0.3);">
+      <h5>MCP Server</h5>
+      <p>The process that exposes capabilities &mdash; tools, resources, and prompts &mdash; to any connected MCP client. Your internal system (GitHub, database, ticketing) becomes an MCP server when you add the integration layer.</p>
+    </div>
+    <div class="pill" style="border-color:rgba(0,184,212,0.3);">
+      <h5>Client</h5>
+      <p>The application that connects to MCP servers and calls their capabilities on behalf of the model. Claude Code is the client in most enterprise contexts.</p>
+    </div>
+    <div class="pill" style="border-color:rgba(0,184,212,0.3);">
+      <h5>Tools</h5>
+      <p>Callable functions exposed by the server. The model invokes tools to take actions &mdash; querying a database, listing repo files, reading a ticket, updating a field. This is where capability and risk both live.</p>
+    </div>
+    <div class="pill" style="border-color:rgba(0,184,212,0.3);">
+      <h5>Resources</h5>
+      <p>Data that the server makes available for the model to read without direct function calls &mdash; documentation, schemas, configuration files, reference data.</p>
+    </div>
+    <div class="pill" style="border-color:rgba(0,184,212,0.3);">
+      <h5>Prompts</h5>
+      <p>Pre-structured prompt templates the server can provide. Allows teams to standardize how the model is instructed to use particular tools or interpret particular data.</p>
+    </div>
+    <div class="pill" style="border-color:rgba(0,95,127,0.3); background:rgba(0,95,127,0.04);">
+      <h5>Transport</h5>
+      <p>The message exchange mechanism between client and server. Determines how data moves and what operational choices exist around latency, reliability, and authentication.</p>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 4</div>
+</div>
+
+<!-- ==================== SLIDE 5: PAYLOAD INSPECTION ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 08 &nbsp;|&nbsp; Legibility</div>
+  <div class="action-title">MCP should remove mystery, not add it &mdash; engineers must understand what a tool call is actually doing</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>What the Payload Tells You</h4>
+        <p>Every MCP tool call is structured data. It tells you which tool was called, which arguments were passed, what context the agent received back, and where authorization boundaries matter. This is legible by design.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Inspectable Integrations</h4>
+        <p>A good MCP integration is one engineers can inspect, explain, and audit. "Claude talked to the system somehow" is not an acceptable enterprise description of a production integration.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Protocol Literacy Reduces Blind Trust</h4>
+        <p>When teams understand the tool call structure, they can reason about risk. When they treat it as a black box, they extend trust without basis &mdash; which is how privileged access gets quietly over-exposed.</p>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1vh;">Example tool call structure</div>
+      <div class="code-block">
+        <span class="comment">// What a tool call looks like</span><br>
+        {<br>
+        &nbsp;&nbsp;"tool": "list_issues",<br>
+        &nbsp;&nbsp;"arguments": {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;"repo": "org/payments-api",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;"label": "critical",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;"state": "open"<br>
+        &nbsp;&nbsp;}<br>
+        }<br><br>
+        <span class="comment">// Questions to ask:</span><br>
+        <span class="prompt">&rsaquo;</span> What authority does list_issues carry?<br>
+        <span class="prompt">&rsaquo;</span> Can it see private repos?<br>
+        <span class="prompt">&rsaquo;</span> What credentials back this call?<br>
+        <span class="prompt">&rsaquo;</span> Is usage logged and reviewable?
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 5</div>
+</div>
+
+<!-- ==================== SLIDE 6: SECURITY AND GOVERNANCE ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 08 &nbsp;|&nbsp; Governance</div>
+  <div class="action-title">Tool access is a real capability boundary &mdash; treating every connector as harmless convenience is the enterprise mistake</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1.2vh;">Security questions to ask immediately</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> What authority does this server grant to the agent?</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Which credentials back the connection?</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Which tools should be exposed at all &mdash; and which should stay disabled?</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> What is read-only vs. write-enabled?</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> How is usage logged and reviewed?</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> What is the rollout boundary for first exposure?</div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1.2vh;">The governance model</div>
+      <div class="concept-card">
+        <h4>Permissions</h4>
+        <p>Specify exactly which tools a server may expose and what level of access each carries. Start with read-only. Expand only after governance review.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Approved Servers + Scoped Credentials</h4>
+        <p>Maintain a team or organization-level allowlist of approved MCP servers. Credentials should be scoped to the minimum access required &mdash; not a service account with elevated privileges.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Auditable Usage</h4>
+        <p>Every tool call should produce a log entry. Teams should be able to answer "what did the agent do through this integration and when?" without guessing.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 6</div>
+</div>
+
+<!-- ==================== SLIDE 7: LIVE DEMO ==================== -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num">Live Demo &mdash; Session 08</div>
+    <h2>Connect one MCP server.<br>Inspect one payload.</h2>
+    <div class="sub">Read-only first. Understand what the connection actually created before expanding.</div>
+  </div>
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 7</div>
+</div>
+
+<!-- ==================== SLIDE 8: DEMO FLOW ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 08 &nbsp;|&nbsp; Demo</div>
+  <div class="action-title">A demo success is the beginning of the governance conversation &mdash; not the end of it</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1vh;">Demo sequence</div>
+      <div class="code-block">
+        <span class="comment"># Step 1: Connect a read-only server</span><br>
+        <span class="prompt">$</span> claude mcp add github<br><br>
+        <span class="comment"># Step 2: List available tools</span><br>
+        <span class="prompt">&gt;</span> "What tools does the GitHub server expose?"<br><br>
+        <span class="comment"># Step 3: Use one read-only action</span><br>
+        <span class="prompt">&gt;</span> "Show open issues labeled 'critical'"<br>
+        <span class="prompt">&rarr;</span> Live data returned via tool call<br><br>
+        <span class="comment"># Step 4: Inspect the payload structure</span><br>
+        <span class="prompt">&rarr;</span> Walk through: tool name, arguments,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; returned fields, auth boundary
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1vh;">The governance follow-up</div>
+      <div class="code-block">
+        <span class="comment"># After the demo — the real questions:</span><br><br>
+        <span class="prompt">&rsaquo;</span> "Which tools from this server<br>
+        &nbsp;&nbsp;&nbsp; should remain disabled for now?"<br><br>
+        <span class="prompt">&rsaquo;</span> "What credentials back this connection<br>
+        &nbsp;&nbsp;&nbsp; and what scope do they carry?"<br><br>
+        <span class="prompt">&rsaquo;</span> "How would we audit usage of this<br>
+        &nbsp;&nbsp;&nbsp; tool set across the team?"<br><br>
+        <span class="prompt">&rsaquo;</span> "What is the safest first rollout<br>
+        &nbsp;&nbsp;&nbsp; boundary before broader access?"
+      </div>
+
+      <div style="margin-top:1.5vh; padding:1.5vh 1.5vw; background:rgba(255,107,53,0.06); border:1px solid rgba(255,107,53,0.15); border-radius:8px;">
+        <div style="font-size:clamp(11px,1.0vw,15px); color:var(--dark-gray); line-height:1.5;"><strong>The principle:</strong> Capability review is part of architecture review. Least privilege applies when the caller is an agent. Rollout should be staged, not assumed.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 8</div>
+</div>
+
+<!-- ==================== SLIDE 9: KEY TAKEAWAY ==================== -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num">Session 08 &mdash; Key Takeaway</div>
+    <h2>MCP is the standard integration layer<br>for agent tooling</h2>
+    <div class="sub" style="max-width:620px; margin:0 auto;">
+      That is exactly why teams must understand both the leverage and the guardrails.<br><br>
+      <span style="color:var(--cyan); font-weight:600;">Next: Module 03</span> &mdash; Module 2 taught intent, plans, persistent rules, and connectivity. Module 3 builds on that foundation with hooks, skills, subagents, and orchestration.
+    </div>
+  </div>
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 9</div>
+</div>
+
+<script>
+  document.addEventListener('keydown', (e) => {
+    const slides = document.querySelectorAll('.slide');
+    const vh = window.innerHeight;
+    const current = Math.round(window.scrollY / vh);
+    if (['ArrowDown',' ','PageDown','ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+      if (current < slides.length - 1) slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+    } else if (['ArrowUp','PageUp','ArrowLeft'].includes(e.key)) {
+      e.preventDefault();
+      if (current > 0) slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+  window.addEventListener('scroll', () => { const h = document.querySelector('.kb-hint'); if (h) h.style.display = 'none'; }, { once: true });
+</script>
+</body>
+</html>

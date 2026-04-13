@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 07: Context Control via CLAUDE.md</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-light: #00E5FF;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --light-gray: #F0F0F0;
+    --off-white: #F8F9FA;
+    --med-gray: #666666;
+    --dark-gray: #333333;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+    --green: #00C853;
+  }
+
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+
+  .slide {
+    width: 100vw; height: 100vh; scroll-snap-align: start;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+
+  .section-label {
+    font-size: clamp(10px, 0.85vw, 13px); font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh;
+  }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+
+  .action-title {
+    font-size: clamp(18px, 2vw, 28px); font-weight: 700;
+    line-height: 1.25; margin-bottom: 1.5vh; max-width: 92%;
+  }
+
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+
+  .slide-footer {
+    position: absolute; bottom: 1.5vh; right: 6vw;
+    font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray);
+  }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+
+  .accent-band {
+    background: var(--light-gray); padding: 1.8vh 6vw;
+    margin: 0 -6vw; width: calc(100% + 12vw);
+  }
+  .accent-band.dark { background: rgba(0,0,0,0.2); }
+  .accent-band-text { font-size: clamp(12px, 1.05vw, 16px); line-height: 1.4; color: var(--navy); }
+  .accent-band-text strong { font-weight: 700; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+
+  .concept-card {
+    background: var(--off-white); border-radius: 10px; padding: 2vh 2vw;
+    border-left: 4px solid var(--cyan); margin-bottom: 1.5vh;
+  }
+  .concept-card.warn { border-left-color: var(--warn); }
+  .concept-card.green { border-left-color: var(--green); }
+  .concept-card h4 {
+    font-size: clamp(13px, 1.15vw, 17px); font-weight: 700; color: var(--navy); margin-bottom: 0.4em;
+  }
+  .concept-card p {
+    font-size: clamp(11px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.5;
+  }
+
+  .code-block {
+    background: var(--navy); border-radius: 8px; padding: 1.5vh 2vw; margin-top: 1vh;
+    font-family: 'JetBrains Mono', monospace; color: var(--cyan-muted);
+    font-size: clamp(11px, 0.95vw, 14px); line-height: 1.6;
+  }
+  .code-block .prompt { color: var(--cyan); font-weight: 600; }
+  .code-block .comment { color: var(--med-gray); }
+
+  .compare-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0 1.5vw; align-items: start; margin-bottom: 1.5vh; }
+  .compare-weak {
+    background: rgba(255,107,53,0.06); border: 1px solid rgba(255,107,53,0.15);
+    border-radius: 8px; padding: 1.2vh 1.2vw;
+  }
+  .compare-better {
+    background: rgba(0,200,83,0.06); border: 1px solid rgba(0,200,83,0.2);
+    border-radius: 8px; padding: 1.2vh 1.2vw;
+  }
+  .compare-arrow { color: var(--cyan); font-size: clamp(18px, 1.8vw, 26px); align-self: center; text-align: center; }
+  .compare-label { font-size: clamp(10px, 0.85vw, 13px); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3em; }
+  .compare-text { font-size: clamp(11px, 1.0vw, 15px); line-height: 1.45; }
+
+  .scope-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5vw; margin-top: 1vh; flex: 1; align-content: start; }
+  .scope-card {
+    border-radius: 10px; padding: 2vh 1.5vw;
+    display: flex; flex-direction: column; gap: 0.8vh;
+  }
+  .scope-card .scope-name {
+    font-size: clamp(12px, 1.1vw, 16px); font-weight: 700; color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .scope-card .scope-desc { font-size: clamp(11px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.45; }
+  .scope-card .scope-example { font-size: clamp(10px, 0.9vw, 13px); color: var(--med-gray); font-style: italic; margin-top: 0.3vh; }
+
+  .list-item {
+    display: flex; gap: 1vw; align-items: flex-start; margin-bottom: 1.2vh;
+    font-size: clamp(12px, 1.05vw, 16px); color: var(--dark-gray); line-height: 1.5;
+  }
+  .list-item .bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; margin-top: 0.1em; }
+  .list-item.dark-text { color: rgba(255,255,255,0.85); }
+  .list-item.dark-text .bullet { color: var(--cyan-muted); }
+
+  /* TITLE SLIDE */
+  .slide-title { background: var(--navy); color: var(--white); justify-content: center; padding: 5vh 6vw; }
+  .slide-title .brand {
+    position: absolute; top: 4vh; left: 6vw;
+    font-size: clamp(11px, 1.1vw, 16px); font-weight: 500;
+    letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); opacity: 0.9;
+  }
+  .slide-title .content { max-width: 55%; z-index: 2; }
+  .slide-title .session-tag {
+    font-size: clamp(11px, 1.0vw, 15px); font-weight: 600;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.2vh;
+  }
+  .slide-title h1 { font-size: clamp(26px, 3.4vw, 50px); font-weight: 700; line-height: 1.1; margin-bottom: 0.5em; }
+  .slide-title .accent-line { width: 100px; height: 3px; background: var(--cyan); margin-bottom: 0.8em; }
+  .slide-title .subtitle { font-size: clamp(14px, 1.4vw, 20px); font-weight: 400; color: var(--cyan-muted); line-height: 1.4; }
+  .slide-title .meta { font-size: clamp(11px, 1.0vw, 15px); color: #AABBCC; margin-top: 1.5em; }
+  .slide-title .footer { position: absolute; bottom: 3vh; left: 6vw; font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray); }
+
+  .geo { position: absolute; border-radius: 20px; }
+  .geo-1 { right: 2vw; top: 8vh; width: 35vw; height: 55vh; background: var(--teal-dark); opacity: 0.5; border-radius: 24px; }
+  .geo-2 { right: -2vw; top: 15vh; width: 28vw; height: 50vh; background: var(--teal-mid); opacity: 0.45; border-radius: 20px; }
+  .geo-3 { right: 5vw; top: 22vh; width: 22vw; height: 22vw; background: var(--cyan); opacity: 0.55; border-radius: 50%; }
+  .geo-4 { right: 12vw; top: 30vh; width: 10vw; height: 10vw; background: var(--navy); opacity: 0.7; border-radius: 50%; }
+  .geo-5 { right: 0; bottom: 0; width: 18vw; height: 28vh; background: var(--teal-dark); opacity: 0.35; border-radius: 16px 0 0 0; }
+
+  .slide-divider {
+    background: var(--navy); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 5vh 10vw;
+  }
+  .divider-content { z-index: 2; }
+  .divider-content .module-num {
+    font-size: clamp(12px, 1.1vw, 16px); font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.5vh;
+  }
+  .divider-content h2 { font-size: clamp(24px, 3vw, 44px); font-weight: 700; line-height: 1.2; margin-bottom: 0.6em; }
+  .divider-content .sub { font-size: clamp(14px, 1.3vw, 20px); color: var(--cyan-muted); line-height: 1.5; }
+
+  .kb-hint {
+    position: fixed; bottom: 12px; right: 12px;
+    background: rgba(0,0,0,0.6); color: #aaa; font-size: 11px;
+    padding: 4px 10px; border-radius: 4px; z-index: 100; opacity: 0.7; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="content">
+    <div class="session-tag">Module 2 &nbsp;&bull;&nbsp; Session 07</div>
+    <h1>Context Control<br>via CLAUDE.md</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">Put stable rules in the harness, not in the prompt</div>
+    <div class="meta">AI-Accelerated Software Development &nbsp;|&nbsp; Foundations Program</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<!-- ==================== SLIDE 2: OPENING INSIGHT ==================== -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 07 &nbsp;|&nbsp; The Problem</div>
+  <div class="action-title" style="color:var(--white)">A repeated reminder is not a rule &mdash; it is a configuration gap</div>
+  <div class="title-rule dark"></div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 4vw; flex:1; align-content:start;">
+    <div>
+      <div style="font-size:clamp(13px,1.1vw,17px); font-weight:600; color:var(--cyan-muted); margin-bottom:2vh; text-transform:uppercase; letter-spacing:0.15em;">What teams keep doing</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Typing "use our testing conventions" at the start of every session</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Reminding Claude not to touch protected paths every time</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Repeating the same architectural constraints across engineers</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Hoping the model remembers something it was told three messages ago</div>
+
+      <div style="margin-top:3vh; padding:2vh 2vw; background:rgba(255,107,53,0.12); border:1px solid rgba(255,107,53,0.25); border-radius:10px;">
+        <div style="font-size:clamp(11px,0.95vw,14px); font-weight:700; color:var(--warn); margin-bottom:0.5em;">The result</div>
+        <div style="font-size:clamp(12px,1.05vw,16px); color:rgba(255,255,255,0.85); line-height:1.5;">Variance across teammates. Output that drifts depending on who prompted. Rules that exist only in someone's memory instead of the project itself.</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.1vw,17px); font-weight:600; color:var(--cyan-muted); margin-bottom:2vh; text-transform:uppercase; letter-spacing:0.15em;">The better approach</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Stable rules belong in the environment, not in a one-off prompt</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> <span class="mono" style="color:var(--cyan);">CLAUDE.md</span> carries durable instructions the agent applies on every task</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Project rules become part of the harness, not tribal knowledge</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Versioned in git &mdash; reviewed in PRs, shared across the team</div>
+
+      <div style="margin-top:3vh; padding:2vh 2vw; background:rgba(0,184,212,0.1); border:1px solid rgba(0,184,212,0.2); border-radius:10px;">
+        <div style="font-size:clamp(11px,0.95vw,14px); font-weight:700; color:var(--cyan); margin-bottom:0.5em;">Session goal</div>
+        <div style="font-size:clamp(12px,1.05vw,16px); color:rgba(255,255,255,0.85); line-height:1.5;">Know what belongs in <span class="mono" style="color:var(--cyan);">CLAUDE.md</span>, how scope layers work, and how to write rules that actually change behavior.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 2</div>
+</div>
+
+<!-- ==================== SLIDE 3: WHAT CLAUDE.MD IS ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 07 &nbsp;|&nbsp; What CLAUDE.md Is</div>
+  <div class="action-title">CLAUDE.md is shared working context &mdash; project memory with rules, not a giant prompt scrapbook</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>Part of the Environment, Not the Task</h4>
+        <p>CLAUDE.md carries durable instructions the agent applies repeatedly. It is loaded into every session automatically &mdash; not because you remembered to paste it, but because it lives in the project.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Durable Instructions for Repeating Patterns</h4>
+        <p>If an instruction applies to more than one task, it belongs here. Architecture boundaries, testing expectations, review requirements, and formatting conventions are all candidates.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Version-Controlled and Team-Shared</h4>
+        <p>Because CLAUDE.md lives in the repository, it travels with the code. Every teammate works from the same rules. Changes go through pull requests. The file earns the same engineering discipline as the code it governs.</p>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1.2vh;">What belongs here</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Coding and formatting conventions</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Architecture boundaries and no-go zones</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Testing and verification expectations</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Review and narration requirements</div>
+      <div class="list-item"><span class="bullet">&rsaquo;</span> Repo-specific workflow rules</div>
+
+      <div style="margin-top:2.5vh; font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1.2vh;">What does not belong</div>
+      <div class="list-item" style="color:var(--med-gray);"><span style="color:var(--warn); font-weight:700;">&times;</span>&ensp;Temporary task goals</div>
+      <div class="list-item" style="color:var(--med-gray);"><span style="color:var(--warn); font-weight:700;">&times;</span>&ensp;One-time business decisions</div>
+      <div class="list-item" style="color:var(--med-gray);"><span style="color:var(--warn); font-weight:700;">&times;</span>&ensp;Speculative background dumps</div>
+      <div class="list-item" style="color:var(--med-gray);"><span style="color:var(--warn); font-weight:700;">&times;</span>&ensp;Instructions that change every session</div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 3</div>
+</div>
+
+<!-- ==================== SLIDE 4: SCOPE HIERARCHY ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 07 &nbsp;|&nbsp; Scope</div>
+  <div class="action-title">Scope is part of the control model &mdash; the right layer solves the right problem</div>
+  <div class="title-rule"></div>
+
+  <div class="scope-row">
+    <div class="scope-card" style="background:rgba(0,184,212,0.06); border:1px solid rgba(0,184,212,0.2);">
+      <div class="scope-name" style="color:var(--cyan);">User</div>
+      <div style="width:40px; height:3px; background:var(--cyan); margin-bottom:0.5vh;"></div>
+      <div class="scope-desc">Personal preferences that apply across all your projects. Your default style and workflow habits.</div>
+      <div class="scope-example">Example: preferred diff narration style, terminal output verbosity</div>
+    </div>
+    <div class="scope-card" style="background:rgba(0,95,127,0.06); border:1px solid rgba(0,95,127,0.25);">
+      <div class="scope-name" style="color:var(--teal-mid);">Project</div>
+      <div style="width:40px; height:3px; background:var(--teal-mid); margin-bottom:0.5vh;"></div>
+      <div class="scope-desc">Rules shared with the team, checked into the repository. The most important layer for enterprise consistency.</div>
+      <div class="scope-example">Example: architecture boundaries, testing requirements, protected paths</div>
+    </div>
+    <div class="scope-card" style="background:rgba(102,102,102,0.06); border:1px solid rgba(102,102,102,0.2);">
+      <div class="scope-name" style="color:var(--med-gray);">Local</div>
+      <div style="width:40px; height:3px; background:var(--med-gray); margin-bottom:0.5vh;"></div>
+      <div class="scope-desc">Per-machine or experimental overrides. Not shared with teammates. Useful for local exploration.</div>
+      <div class="scope-example">Example: verbose debug output for your own dev environment</div>
+    </div>
+    <div class="scope-card" style="background:rgba(255,107,53,0.06); border:1px solid rgba(255,107,53,0.2);">
+      <div class="scope-name" style="color:var(--warn);">Managed</div>
+      <div style="width:40px; height:3px; background:var(--warn); margin-bottom:0.5vh;"></div>
+      <div class="scope-desc">Organization-enforced policy. Cannot be casually bypassed. Applied centrally across the enterprise.</div>
+      <div class="scope-example">Example: compliance rules, approved model list, mandatory audit logging</div>
+    </div>
+  </div>
+
+  <div style="margin-top:auto;">
+    <div class="accent-band">
+      <div class="accent-band-text">
+        <strong>Key rule:</strong> Team conventions belong in <strong>project scope</strong>. Personal experiments belong in <strong>local scope</strong>. Enterprise policy belongs in <strong>managed settings</strong>. Do not hide shared project rules in your private user file.
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 4</div>
+</div>
+
+<!-- ==================== SLIDE 5: WRITING GOOD RULES ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 07 &nbsp;|&nbsp; Rule Quality</div>
+  <div class="action-title">A good CLAUDE.md rule is short, enforceable, and worth carrying forward across every task</div>
+  <div class="title-rule"></div>
+
+  <div style="flex:1; display:flex; flex-direction:column; gap:1.5vh;">
+    <div class="compare-row">
+      <div class="compare-weak">
+        <div class="compare-label" style="color:var(--warn);">Too vague</div>
+        <div class="compare-text" style="color:var(--dark-gray);">"Write clean code."</div>
+      </div>
+      <div class="compare-arrow">&rarr;</div>
+      <div class="compare-better">
+        <div class="compare-label" style="color:var(--green);">Enforceable</div>
+        <div class="compare-text" style="color:var(--dark-gray);">"Prefer existing service abstractions. Do not introduce new top-level folders without approval."</div>
+      </div>
+    </div>
+
+    <div class="compare-row">
+      <div class="compare-weak">
+        <div class="compare-label" style="color:var(--warn);">Too vague</div>
+        <div class="compare-text" style="color:var(--dark-gray);">"Be careful with tests."</div>
+      </div>
+      <div class="compare-arrow">&rarr;</div>
+      <div class="compare-better">
+        <div class="compare-label" style="color:var(--green);">Enforceable</div>
+        <div class="compare-text" style="color:var(--dark-gray);">"Run targeted tests for changed modules and narrate which were run or skipped."</div>
+      </div>
+    </div>
+
+    <div class="compare-row">
+      <div class="compare-weak">
+        <div class="compare-label" style="color:var(--warn);">Too vague</div>
+        <div class="compare-text" style="color:var(--dark-gray);">"Don't touch the database."</div>
+      </div>
+      <div class="compare-arrow">&rarr;</div>
+      <div class="compare-better">
+        <div class="compare-label" style="color:var(--green);">Enforceable</div>
+        <div class="compare-text" style="color:var(--dark-gray);">"No schema changes without explicit approval in the task. Preserve all existing audit log columns."</div>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;">
+      <div class="accent-band">
+        <div class="accent-band-text"><strong>Bad CLAUDE.md files fail in two ways:</strong> too vague to change behavior, or too bloated to stay relevant. The goal is durable, high-signal constraints &mdash; few enough to remember, precise enough to enforce.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 5</div>
+</div>
+
+<!-- ==================== SLIDE 6: LIVE DEMO ==================== -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num">Live Demo &mdash; Session 07</div>
+    <h2>Behavior changes when<br>the rules move into the repo</h2>
+    <div class="sub">Same task. Same model. Different output &mdash; because the environment changed.</div>
+  </div>
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 6</div>
+</div>
+
+<!-- ==================== SLIDE 7: DEMO WALKTHROUGH ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 07 &nbsp;|&nbsp; Demo</div>
+  <div class="action-title">Rule in prompt vs. rule in harness &mdash; what the difference looks like in practice</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1vh;">Without a project rule</div>
+      <div class="code-block">
+        <span class="prompt">$</span> cd my-service<br>
+        <span class="prompt">&gt;</span> "Refactor the payment processor to<br>
+        &nbsp;&nbsp;&nbsp; reduce duplication."<br><br>
+        <span class="comment"># Output varies depending on who asks.</span><br>
+        <span class="comment"># No narration. Test coverage undefined.</span><br>
+        <span class="comment"># May touch protected paths.</span>
+      </div>
+
+      <div style="margin-top:2vh; font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1vh;">After adding CLAUDE.md</div>
+      <div class="code-block">
+        <span class="comment"># CLAUDE.md in repo root:</span><br>
+        <span class="comment"># - Prefer existing PaymentService methods.</span><br>
+        <span class="comment"># - Do not modify /migrations.</span><br>
+        <span class="comment"># - Run tests for changed modules.</span><br>
+        <span class="comment"># - Narrate file-level impact.</span>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1vh;">Same request &mdash; different behavior</div>
+      <div class="code-block">
+        <span class="prompt">&gt;</span> "Refactor the payment processor to<br>
+        &nbsp;&nbsp;&nbsp; reduce duplication."<br><br>
+        <span class="prompt">&rarr;</span> Respects PaymentService boundaries.<br>
+        <span class="prompt">&rarr;</span> No migration files touched.<br>
+        <span class="prompt">&rarr;</span> Reports: "ran payment_test.py;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; skipped db_schema_test.py (not in scope)"<br>
+        <span class="prompt">&rarr;</span> Narrates: "modified processor.py L42-58,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; extracted duplicate logic to helper.py"
+      </div>
+
+      <div style="margin-top:2vh; padding:1.5vh 1.5vw; background:rgba(0,184,212,0.06); border:1px solid rgba(0,184,212,0.15); border-radius:8px;">
+        <div style="font-size:clamp(11px,0.95vw,14px); font-weight:700; color:var(--cyan); margin-bottom:0.3em;">What changed</div>
+        <div style="font-size:clamp(11px,1.0vw,15px); color:var(--dark-gray); line-height:1.5;">Nothing in the prompt. Nothing in the model. The project rules moved from someone's memory into the environment &mdash; and the behavior followed.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 7</div>
+</div>
+
+<!-- ==================== SLIDE 8: SYSTEM FIT ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 07 &nbsp;|&nbsp; The Bigger Picture</div>
+  <div class="action-title">CLAUDE.md complements specs and plans &mdash; each layer controls a different thing</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>The Spec Defines This Task</h4>
+        <p>Machine-readable acceptance criteria for one specific piece of work. What the output should do, how it should be validated, what edge cases apply. Task-scoped by definition.</p>
+      </div>
+      <div class="concept-card">
+        <h4>The Plan Defines This Execution Path</h4>
+        <p>How Claude intends to implement the spec &mdash; which files, which changes, in what order. Reviewed and approved before any writes. Session-scoped.</p>
+      </div>
+      <div class="concept-card green">
+        <h4>CLAUDE.md Defines Recurring Project Rules</h4>
+        <p>The durable constraints that apply to every task, every session, every engineer on the team. Architecture conventions, testing standards, protected zones. Always in scope.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="concept-card" style="border-left-color:var(--teal-dark);">
+        <h4>Hooks and Permissions Enforce Deterministically</h4>
+        <p>The controls that run mechanically regardless of what Claude decided. These sit outside model judgment entirely and provide the final enforcement layer around everything above.</p>
+      </div>
+
+      <div style="margin-top:2vh; padding:2vh 2vw; background:var(--off-white); border-radius:10px;">
+        <div style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy); margin-bottom:1vh;">Regulated team examples for CLAUDE.md</div>
+        <div class="list-item"><span class="bullet">&rsaquo;</span> No schema changes without explicit approval</div>
+        <div class="list-item"><span class="bullet">&rsaquo;</span> Preserve existing audit logging columns</div>
+        <div class="list-item"><span class="bullet">&rsaquo;</span> Keep diffs small; narrate file-level impact</div>
+        <div class="list-item"><span class="bullet">&rsaquo;</span> Do not introduce new dependencies without justification</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 8</div>
+</div>
+
+<!-- ==================== SLIDE 9: FAILURE MODES ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 07 &nbsp;|&nbsp; Failure Modes</div>
+  <div class="action-title">Common ways teams get CLAUDE.md wrong &mdash; and what to do instead</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card warn">
+        <h4>Stuffing Every Thought In</h4>
+        <p>A bloated CLAUDE.md becomes background fog. When the file contains 80 lines of loosely related guidance, none of it gets reliable weight. Rules compete for attention. The high-value constraints get buried.</p>
+      </div>
+      <div class="concept-card warn">
+        <h4>Encoding Personal Taste as Team Policy</h4>
+        <p>Preferences that belong in user or local scope end up in the project file. Now every teammate's agent is enforcing one engineer's idiosyncratic habits. Scope confusion creates hidden inconsistency.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="concept-card warn">
+        <h4>Hiding Project Rules in Local Files</h4>
+        <p>Shared standards that belong in the repo end up in one engineer's personal config. New teammates and CI agents don't see them. The rules exist on one machine and nowhere else.</p>
+      </div>
+      <div class="concept-card warn">
+        <h4>Forgetting to Update It</h4>
+        <p>CLAUDE.md rules decay. Architectures change, services get renamed, constraints evolve. A stale file enforces yesterday's standards. Treat it like code: review it, update it, remove rules that no longer apply.</p>
+      </div>
+
+      <div style="margin-top:1.5vh;">
+        <div class="accent-band">
+          <div class="accent-band-text"><strong>The test:</strong> Can every rule in your CLAUDE.md survive the question "would this meaningfully change agent behavior on any task this week?" If not, remove it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 9</div>
+</div>
+
+<!-- ==================== SLIDE 10: KEY TAKEAWAY ==================== -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num">Session 07 &mdash; Key Takeaway</div>
+    <h2>Stable rules belong in<br>the environment</h2>
+    <div class="sub" style="max-width:600px; margin:0 auto;">
+      CLAUDE.md is how teams turn repeated verbal reminders into durable project controls.<br><br>
+      <span style="color:var(--cyan); font-weight:600;">Next: Session 08</span> &mdash; Extending the environment outward by connecting Claude to external tools and systems through MCP.
+    </div>
+  </div>
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 10</div>
+</div>
+
+<script>
+  document.addEventListener('keydown', (e) => {
+    const slides = document.querySelectorAll('.slide');
+    const vh = window.innerHeight;
+    const current = Math.round(window.scrollY / vh);
+    if (['ArrowDown',' ','PageDown','ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+      if (current < slides.length - 1) slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+    } else if (['ArrowUp','PageUp','ArrowLeft'].includes(e.key)) {
+      e.preventDefault();
+      if (current > 0) slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+  window.addEventListener('scroll', () => { const h = document.querySelector('.kb-hint'); if (h) h.style.display = 'none'; }, { once: true });
+</script>
+</body>
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2 Review &amp; Module 3 Preview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-light: #00E5FF;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --light-gray: #F0F0F0;
+    --off-white: #F8F9FA;
+    --med-gray: #666666;
+    --dark-gray: #333333;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+  }
+
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+
+  .slide {
+    width: 100vw; height: 100vh; scroll-snap-align: start;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+
+  /* ========== SHARED ========== */
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+
+  .section-label {
+    font-size: clamp(10px, 0.85vw, 13px); font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh;
+  }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+  .section-label.warn { color: var(--warn); }
+
+  .action-title {
+    font-size: clamp(18px, 2vw, 28px); font-weight: 700;
+    line-height: 1.25; margin-bottom: 1.5vh; max-width: 90%;
+  }
+
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+
+  .slide-footer {
+    position: absolute; bottom: 1.5vh; right: 6vw;
+    font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray);
+  }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+
+  .accent-band {
+    background: var(--light-gray); padding: 1.8vh 6vw;
+    margin: 0 -6vw; width: calc(100% + 12vw);
+  }
+  .accent-band.dark { background: rgba(0,0,0,0.2); }
+  .accent-band-text { font-size: clamp(12px, 1.05vw, 16px); color: var(--navy); line-height: 1.4; }
+  .accent-band-text strong { font-weight: 700; }
+  .accent-band-text .cyan { color: var(--cyan); font-weight: 700; }
+
+  /* ========== TITLE SLIDE ========== */
+  .slide-title { background: var(--navy); color: var(--white); justify-content: center; padding: 5vh 6vw; }
+  .slide-title .brand {
+    position: absolute; top: 4vh; left: 6vw;
+    font-size: clamp(11px, 1.1vw, 16px); font-weight: 500;
+    letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); opacity: 0.9;
+  }
+  .slide-title .content { max-width: 55%; z-index: 2; }
+  .slide-title h1 { font-size: clamp(28px, 3.8vw, 56px); font-weight: 700; line-height: 1.1; margin-bottom: 0.5em; }
+  .slide-title .accent-line { width: 120px; height: 3px; background: var(--cyan); margin-bottom: 0.8em; }
+  .slide-title .subtitle { font-size: clamp(16px, 1.6vw, 24px); font-weight: 400; color: var(--cyan-muted); margin-bottom: 0.3em; line-height: 1.4; }
+  .slide-title .meta { font-size: clamp(12px, 1.1vw, 16px); color: #AABBCC; margin-top: 1.5em; }
+  .slide-title .footer { position: absolute; bottom: 3vh; left: 6vw; font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray); }
+
+  .geo { position: absolute; border-radius: 20px; }
+  .geo-1 { right: 2vw; top: 8vh; width: 35vw; height: 55vh; background: var(--teal-dark); opacity: 0.5; border-radius: 24px; }
+  .geo-2 { right: -2vw; top: 15vh; width: 28vw; height: 50vh; background: var(--teal-mid); opacity: 0.45; border-radius: 20px; }
+  .geo-3 { right: 5vw; top: 22vh; width: 22vw; height: 22vw; background: var(--cyan); opacity: 0.55; border-radius: 50%; }
+  .geo-4 { right: 12vw; top: 30vh; width: 10vw; height: 10vw; background: var(--navy); opacity: 0.7; border-radius: 50%; }
+  .geo-5 { right: 0; bottom: 0; width: 18vw; height: 28vh; background: var(--teal-dark); opacity: 0.35; border-radius: 16px 0 0 0; }
+
+  /* ========== TWO-COLUMN LAYOUT ========== */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+  .two-col .divider-v { width: 1px; background: #E0E0E0; align-self: stretch; }
+
+  /* ========== KEY CONCEPT CARD ========== */
+  .concept-card {
+    background: var(--off-white); border-radius: 10px; padding: 2vh 2vw;
+    border-left: 4px solid var(--cyan); margin-bottom: 1.5vh;
+  }
+  .concept-card.warn { border-left-color: var(--warn); }
+  .concept-card h4 {
+    font-size: clamp(13px, 1.15vw, 17px); font-weight: 700; color: var(--navy); margin-bottom: 0.4em;
+  }
+  .concept-card p {
+    font-size: clamp(11px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.5;
+  }
+
+  /* ========== SESSION SUMMARY CARDS (Module overview) ========== */
+  .session-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5vh 3vw; flex: 1; align-content: start; margin-top: 1vh; }
+  .session-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 2vh 2vw;
+  }
+  .session-card.highlight { border-color: var(--cyan); background: rgba(0,184,212,0.08); }
+  .session-num {
+    font-size: clamp(9px, 0.8vw, 12px); font-weight: 700; color: var(--cyan);
+    text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.5vh;
+  }
+  .session-card h4 {
+    font-size: clamp(14px, 1.3vw, 20px); font-weight: 700; color: var(--white); margin-bottom: 0.6vh;
+  }
+  .session-card p {
+    font-size: clamp(11px, 1.0vw, 15px); color: rgba(255,255,255,0.7); line-height: 1.45;
+  }
+
+  /* ========== MISCONCEPTION BOX ========== */
+  .misconception {
+    display: grid; grid-template-columns: auto 1fr; gap: 0 1.2vw; align-items: start;
+    margin-top: 1.5vh; padding: 1.5vh 1.5vw; background: rgba(255,107,53,0.08);
+    border-radius: 8px; border: 1px solid rgba(255,107,53,0.2);
+  }
+  .misconception .icon {
+    font-size: clamp(18px, 1.8vw, 26px); line-height: 1;
+  }
+  .misconception .label {
+    font-size: clamp(11px, 0.95vw, 14px); font-weight: 700; color: var(--warn); margin-bottom: 0.2em;
+  }
+  .misconception .text {
+    font-size: clamp(11px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.45;
+  }
+
+  /* ========== CODE DEMO HINT ========== */
+  .demo-hint {
+    background: var(--navy); border-radius: 8px; padding: 1.5vh 2vw; margin-top: 1.5vh;
+    font-family: 'JetBrains Mono', monospace; color: var(--cyan-muted);
+    font-size: clamp(11px, 0.95vw, 14px); line-height: 1.5;
+  }
+  .demo-hint .prompt { color: var(--cyan); font-weight: 600; }
+
+  /* ========== DIVIDER SLIDE ========== */
+  .slide-divider {
+    background: var(--navy); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 5vh 10vw;
+  }
+  .divider-content { z-index: 2; }
+  .divider-content .module-num {
+    font-size: clamp(12px, 1.1vw, 16px); font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--cyan);
+    margin-bottom: 1.5vh;
+  }
+  .divider-content h2 {
+    font-size: clamp(28px, 3.5vw, 50px); font-weight: 700; line-height: 1.15; margin-bottom: 0.6em;
+  }
+  .divider-content .sub {
+    font-size: clamp(14px, 1.4vw, 20px); font-weight: 400; color: var(--cyan-muted); line-height: 1.5;
+  }
+
+  .kb-hint {
+    position: fixed; bottom: 12px; right: 12px;
+    background: rgba(0,0,0,0.6); color: #aaa; font-size: 11px;
+    padding: 4px 10px; border-radius: 4px; z-index: 100; opacity: 0.7; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="content">
+    <h1>Module 2 Review &amp;<br>Module 3 Preview</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">Spec-Driven Development &amp; Context Control &rarr; Tooling, MCP &amp; Agentic Orchestration</div>
+    <div class="meta">AI-Accelerated Software Development &nbsp;|&nbsp; Foundations Program</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<!-- ==================== SLIDE 2: MODULE 2 AT A GLANCE ==================== -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Module 2 Review</div>
+  <div class="action-title" style="color:var(--white)">Spec-Driven Development &amp; Context Control &mdash; what we covered</div>
+  <div class="title-rule dark"></div>
+
+  <div class="session-grid">
+    <div class="session-card">
+      <div class="session-num">Session 5</div>
+      <h4>Spec-Driven Development</h4>
+      <p>The control point for intent. Write a machine-readable, testable spec before permitting any code generation. The spec &mdash; not the model &mdash; determines output quality.</p>
+    </div>
+    <div class="session-card">
+      <div class="session-num">Session 6</div>
+      <h4>Plan Mode vs. Act Mode</h4>
+      <p>The control point for safe execution. Force the AI to show its reasoning and propose changes before touching a single file. The human reviews and approves the plan; only then does execution begin.</p>
+    </div>
+    <div class="session-card">
+      <div class="session-num">Session 7</div>
+      <h4>CLAUDE.md</h4>
+      <p>The control point for durable project rules. Version-controlled standards that inject automatically into every session &mdash; no repetition, no drift, no forgotten constraints.</p>
+    </div>
+    <div class="session-card">
+      <div class="session-num">Session 8</div>
+      <h4>Model Context Protocol (MCP)</h4>
+      <p>The control point for external capability extension. One open standard connects your agents to every enterprise database, API, and tool &mdash; with auditable, governed access.</p>
+    </div>
+  </div>
+
+  <div class="accent-band dark" style="margin-top:auto;">
+    <div class="accent-band-text" style="color:var(--white)">
+      <strong>Module 2 teaching promise:</strong> Reliable agentic engineering depends on four things &mdash; a <span class="cyan">clear spec</span>, a <span class="cyan">reviewed plan</span>, <span class="cyan">durable project rules</span>, and <span class="cyan">governed tool access</span>.
+    </div>
+  </div>
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 2</div>
+</div>
+
+<!-- ==================== SLIDE 3: SESSION 5 DEEP DIVE ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Module 2 &nbsp;|&nbsp; Session 5 Review</div>
+  <div class="action-title">A vague prompt produces rework &mdash; the spec is the only mechanism that makes AI output converge on correct</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>Spec-Driven Development</h4>
+        <p>Write machine-readable, testable specifications <em>before</em> permitting code generation. When the output is flawed, the specification was flawed &mdash; not the model. The spec is the single source of truth that makes AI output auditable.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Binary Acceptance Criteria</h4>
+        <p>Every spec item must be testable with a yes/no answer. "The endpoint should be fast" is useless. "The endpoint responds in under 200ms at p99 with a valid JSON body conforming to this schema" is a spec. Ambiguous specs produce ambiguous output.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Specs Break the Rework Loop</h4>
+        <p>Without a spec, teams enter an infinite prompt-tweak-retry cycle. The spec is the convergence mechanism &mdash; it gives the model a precise target and gives the engineer a precise acceptance test. Both are necessary to stop iterating.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="misconception">
+        <div class="icon">&#9888;</div>
+        <div>
+          <div class="label">Misconception to correct</div>
+          <div class="text">"Writing specs slows down AI development." This gets it exactly backwards. Without a spec, output never converges. The spec is not overhead &mdash; it is the only thing that makes the AI stop changing the answer.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2.5vh;">
+        <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1vh;">What we built</div>
+        <div class="demo-hint">
+          <span class="prompt">Test A:</span> "Build me a user auth endpoint"<br>
+          <span class="prompt">&rarr;</span> Missing edge cases, inconsistent errors, no validation<br><br>
+          <span class="prompt">Test B:</span> Markdown PRD with 10 acceptance criteria,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; input rules, error contract, response schema<br>
+          <span class="prompt">&rarr;</span> Complete implementation, correct edge handling,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; consistent errors, every criterion passing
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 3</div>
+</div>
+
+<!-- ==================== SLIDE 4: SESSION 6 DEEP DIVE ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Module 2 &nbsp;|&nbsp; Session 6 Review</div>
+  <div class="action-title">Separating thinking from typing is the single most important safety discipline in autonomous enterprise systems</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>Plan Mode (Read-Only Exploration)</h4>
+        <p>The AI maps the directory structure, reads relevant files, and proposes a detailed execution plan &mdash; including every file it intends to modify and exactly why. No writes. No side effects. Pure analysis before any action.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Act Mode (Supervised Execution)</h4>
+        <p>Only after the engineer reviews and approves the plan does the AI gain write access. Every file modification is previewed, diffed, and confirmed. The human remains the gatekeeper at every step of the execution.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>The Discipline of Separation</h4>
+        <p>This is not a convenience feature. In production systems touching payroll, billing, or regulated data &mdash; the plan review IS the safety net. Making the AI's reasoning visible before it acts is the difference between a controlled system and an unchecked one.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="misconception">
+        <div class="icon">&#9888;</div>
+        <div>
+          <div class="label">Dangerous pattern to avoid</div>
+          <div class="text">"I'll let it code and fix the bugs later." This is how critical files get overwritten, migrations get corrupted, and production databases receive unexpected schema changes at 11pm on a Friday.</div>
+        </div>
+      </div>
+
+      <div class="demo-hint" style="margin-top:2.5vh;">
+        <div style="font-size:clamp(11px,1.0vw,14px); color:var(--white); font-weight:600; margin-bottom:0.5em; font-family:Inter,sans-serif;">What we practiced</div>
+        <span class="prompt">$</span> claude --permission-mode plan<br>
+        <span class="prompt">&gt;</span> "Propose a refactor of the auth middleware"<br>
+        <span class="prompt">&rarr;</span> Claude mapped files, identified dependencies,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; listed every file it intended to touch<br>
+        <span class="prompt">&rarr;</span> Reviewed, critiqued, requested one revision<br>
+        <span class="prompt">&rarr;</span> Approved plan &rarr; transitioned to Act Mode
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 4</div>
+</div>
+
+<!-- ==================== SLIDE 5: SESSION 7 DEEP DIVE ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Module 2 &nbsp;|&nbsp; Session 7 Review</div>
+  <div class="action-title">CLAUDE.md turns your team&rsquo;s architectural standards into automated enforcement that never forgets and never needs reminding</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>Configuration Hierarchy</h4>
+        <p>CLAUDE.md files operate at three scopes: global (~/.claude/CLAUDE.md), project-local (repo root), and directory-specific. Rules cascade and compose. Teams get fine-grained control over agent behavior at every level of the codebase.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Persistent Rule Enforcement</h4>
+        <p>Instead of pasting the same system constraints into every new chat session, CLAUDE.md automatically injects your team's architectural rules, coding standards, and review requirements into every agent session. Write once, enforce forever.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Version-Controlled Governance</h4>
+        <p>Because CLAUDE.md lives in the repository, it's versioned with git, reviewed in pull requests, and shared across the entire team. Your AI governance rules receive the same engineering rigor as the production code they govern.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="misconception">
+        <div class="icon">&#9888;</div>
+        <div>
+          <div class="label">Misconception to correct</div>
+          <div class="text">"I have to paste my rules into every new conversation." No. CLAUDE.md eliminates this permanently. Standards persist automatically across every session without any repetition from the engineer.</div>
+        </div>
+      </div>
+
+      <div class="demo-hint" style="margin-top:2.5vh;">
+        <div style="font-size:clamp(11px,1.0vw,14px); color:var(--white); font-weight:600; margin-bottom:0.5em; font-family:Inter,sans-serif;">What we configured</div>
+        <span class="prompt">$</span> cat CLAUDE.md<br>
+        <span style="color:var(--med-gray);"># Never modify /migrations without explicit approval</span><br>
+        <span style="color:var(--med-gray);"># Always use single quotes and trailing commas</span><br>
+        <span style="color:var(--med-gray);"># Run full test suite before any commit</span><br><br>
+        <span class="prompt">&rarr;</span> Claude autonomously follows every rule in every<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; response &mdash; zero reminders needed
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 5</div>
+</div>
+
+<!-- ==================== SLIDE 6: SESSION 8 DEEP DIVE ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Module 2 &nbsp;|&nbsp; Session 8 Review</div>
+  <div class="action-title">MCP connects your agents to every enterprise system through one auditable protocol &mdash; eliminating the integration tax permanently</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>The Model Context Protocol</h4>
+        <p>An open standard that securely connects AI agents to enterprise databases, internal tools, and proprietary APIs &mdash; without custom brittle integration code. Build the connector once; every agent in the organization speaks the same language.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>From Autocomplete to Enterprise Agent</h4>
+        <p>Without MCP, an AI assistant is limited to what's in the prompt. With MCP, it queries live databases, reads issue trackers, accesses documentation systems, and takes governed actions &mdash; all through a standardized, auditable protocol.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Solving the Integration Tax</h4>
+        <p>Before MCP, every AI tool needed custom API wrappers for every enterprise integration. MCP replaces vendor-locked plugin ecosystems with one open standard &mdash; the same way USB-C replaced a drawer full of proprietary chargers.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="misconception">
+        <div class="icon">&#9888;</div>
+        <div>
+          <div class="label">Misconception to correct</div>
+          <div class="text">"Teams must write custom API wrappers for every AI tool integration." MCP eliminates this entirely. One protocol, one integration pattern, every enterprise system. The connector ecosystem is growing &mdash; most systems already have one.</div>
+        </div>
+      </div>
+
+      <div class="demo-hint" style="margin-top:2.5vh;">
+        <div style="font-size:clamp(11px,1.0vw,14px); color:var(--white); font-weight:600; margin-bottom:0.5em; font-family:Inter,sans-serif;">What we connected</div>
+        <span class="prompt">$</span> claude mcp add github<br>
+        <span class="prompt">&gt;</span> "Show open bugs labeled 'critical' in our repo"<br>
+        <span class="prompt">&rarr;</span> Claude queried GitHub live &mdash; no custom code<br><br>
+        <span class="prompt">$</span> claude mcp add postgres<br>
+        <span class="prompt">&gt;</span> "How many active users signed up this week?"<br>
+        <span class="prompt">&rarr;</span> Claude queried the database directly by prompt
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 6</div>
+</div>
+
+<!-- ==================== SLIDE 7: MODULE 3 DIVIDER ==================== -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num">Coming Next &mdash; Module 3</div>
+    <h2>Tooling, MCP, and<br>Agentic Orchestration</h2>
+    <div class="sub">Sessions 9&ndash;12: Skills, Subagents, Agent Teams, and Securing the Expanded Surface</div>
+  </div>
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 7</div>
+</div>
+
+<!-- ==================== SLIDE 8: SESSION 9 PREVIEW ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Module 3 Preview &nbsp;|&nbsp; Session 9</div>
+  <div class="action-title">What should stay probabilistic, and what must become deterministic?</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>Skills vs. Hooks &mdash; The Key Distinction</h4>
+        <p>Skills are flexible, reusable workflows that augment probabilistic AI reasoning. Hooks are rigid enforcement gates that execute deterministically &mdash; regardless of what the model decides. Skills enable capability; hooks enforce non-negotiables.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Deterministic Enforcement Gates</h4>
+        <p>Some behaviors cannot be negotiable: security scans, test runners, lint checks, audit log writes. Hooks enforce these unconditionally, running before and after every model action. The model doesn't get a vote on whether the hook fires.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Composable Capability Units</h4>
+        <p>Skills package sophisticated agent workflows into callable, auditable units. Instead of re-prompting from scratch for recurring tasks, skills create reusable patterns &mdash; shareable across teams and composable into larger orchestrations.</p>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1vh;">The decision rule</div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5vw; margin-bottom:2vh;">
+        <div style="background:var(--light-gray); border-radius:8px; padding:1.5vh 1.5vw;">
+          <div style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy); margin-bottom:0.3em;">Negotiable?</div>
+          <div style="font-size:clamp(11px,1.0vw,14px); color:var(--med-gray); line-height:1.4;">Implement as a <strong>skill</strong>. Flexible, reusable, probabilistic.</div>
+        </div>
+        <div style="background:var(--off-white); border-radius:8px; padding:1.5vh 1.5vw; border-left:3px solid var(--warn);">
+          <div style="font-size:clamp(12px,1.05vw,15px); font-weight:700; color:var(--navy); margin-bottom:0.3em;">Non-negotiable?</div>
+          <div style="font-size:clamp(11px,1.0vw,14px); color:var(--dark-gray); line-height:1.4;">Implement as a <strong>hook</strong>. Rigid, deterministic, unconditional.</div>
+        </div>
+      </div>
+
+      <div class="demo-hint">
+        <div style="font-size:clamp(11px,1.0vw,14px); color:var(--white); font-weight:600; margin-bottom:0.5em; font-family:Inter,sans-serif;">What you&rsquo;ll build</div>
+        <span class="prompt">Hook:</span> Blocks any write to /migrations without approval<br>
+        <span class="prompt">Hook:</span> Runs test suite after every code change<br>
+        <span class="prompt">Skill:</span> /spec &mdash; full spec-driven dev workflow as one command
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 8</div>
+</div>
+
+<!-- ==================== SLIDE 9: SESSION 10 PREVIEW ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Module 3 Preview &nbsp;|&nbsp; Session 10</div>
+  <div class="action-title">How do we keep complexity from collapsing the context window?</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>Atomic Task Slicing</h4>
+        <p>Large problems must be decomposed into isolated, independently executable units before delegation. Ambiguous handoffs produce hallucinated work. A well-sliced atomic task has a single clear input, a single verifiable output, and no hidden dependencies.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Isolated Subagent Execution</h4>
+        <p>Each subagent receives only the context required for its specific unit of work &mdash; nothing more. This prevents context rot, keeps reasoning sharp, and makes each subagent's output independently auditable before it flows into the larger result.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>The Delegation Contract</h4>
+        <p>Every delegation must define: what the subagent receives, what it produces, what success looks like, and what the orchestrator validates before accepting the output. Without a contract, the orchestrator has no basis for rejection.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="misconception">
+        <div class="icon">&#9888;</div>
+        <div>
+          <div class="label">Misconception to correct</div>
+          <div class="text">"I can just tell the agent to do the whole feature." Complex tasks that overflow the context window silently degrade. The model won't say it's confused &mdash; it will produce plausible-looking output that misses the actual requirements.</div>
+        </div>
+      </div>
+
+      <div class="demo-hint" style="margin-top:2.5vh;">
+        <div style="font-size:clamp(11px,1.0vw,14px); color:var(--white); font-weight:600; margin-bottom:0.5em; font-family:Inter,sans-serif;">What you&rsquo;ll practice</div>
+        <span class="prompt">1.</span> Decompose a billing feature into 4 atomic tasks<br>
+        <span class="prompt">2.</span> Delegate each task with a scoped context bundle<br>
+        <span class="prompt">3.</span> Validate each subagent output individually<br>
+        <span class="prompt">4.</span> Compose the verified outputs into the final result
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 9</div>
+</div>
+
+<!-- ==================== SLIDE 10: SESSION 11 PREVIEW ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Module 3 Preview &nbsp;|&nbsp; Session 11</div>
+  <div class="action-title">What changes when multiple workers operate at once?</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card">
+        <h4>Parallel Execution Model</h4>
+        <p>Multiple agents working concurrently on decomposed task units. When designed correctly, this dramatically compresses time-to-completion for complex work. The constraint is not speed &mdash; it is boundary design. Bad boundaries make concurrency dangerous.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>Shared-State Risks</h4>
+        <p>Concurrent agents modifying the same files, databases, or APIs can create race conditions, merge conflicts, and corrupted state. Boundary design is not optional &mdash; it is what determines whether parallel execution accelerates work or destroys it.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>The Orchestrator Role</h4>
+        <p>The parent agent coordinates the team &mdash; it does not write code. Its job is to decompose work cleanly, delegate with clear contracts, monitor for failures, and validate output before composition. It governs; it does not execute.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="misconception">
+        <div class="icon">&#9888;</div>
+        <div>
+          <div class="label">Misconception to correct</div>
+          <div class="text">"More agents always means faster results." Without clean boundaries and state isolation, more agents means more collision surface. Concurrency amplifies design quality &mdash; good design gets faster, bad design gets worse.</div>
+        </div>
+      </div>
+
+      <div class="demo-hint" style="margin-top:2.5vh;">
+        <div style="font-size:clamp(11px,1.0vw,14px); color:var(--white); font-weight:600; margin-bottom:0.5em; font-family:Inter,sans-serif;">What you&rsquo;ll build</div>
+        <span class="prompt">Orchestrator:</span> Decomposes and delegates 3 parallel workers<br>
+        <span class="prompt">Boundaries:</span> Explicit rules preventing shared-state collision<br>
+        <span class="prompt">Validation:</span> Each worker output checked before composition<br>
+        <span class="prompt">Result:</span> Composed, verified final artifact from 3 concurrent streams
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 10</div>
+</div>
+
+<!-- ==================== SLIDE 11: SESSION 12 PREVIEW ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Module 3 Preview &nbsp;|&nbsp; Session 12</div>
+  <div class="action-title">What new attack and governance surface did we just create?</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card warn">
+        <h4>Prompt Injection</h4>
+        <p>Malicious instructions embedded in tool outputs, external data sources, or user input that redirect agent behavior without the engineer's knowledge. The agentic attack surface is every data source the agent reads &mdash; not just direct user input.</p>
+      </div>
+
+      <div class="concept-card warn">
+        <h4>Excessive Agency &amp; Privilege</h4>
+        <p>Agents that can take irreversible actions &mdash; delete, deploy, publish, send &mdash; without a human review gate at the point of action. Scope every tool to the minimum access required. Irreversibility demands a human in the loop.</p>
+      </div>
+
+      <div class="concept-card warn">
+        <h4>Insecure Data Handling</h4>
+        <p>Agents that pass sensitive data through untrusted channels, log credentials in conversation history, or expose internal system context via overly permissive MCP connections. Every MCP connection is a new data flow that requires a security audit.</p>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:0.8vh;">Delivery frame for this session</div>
+      <div style="font-size:clamp(11px,1.0vw,15px); color:var(--dark-gray); line-height:1.5; margin-bottom:2vh; font-style:italic;">
+        "Module 3 taught you to expand capability. Session 12 teaches you to secure the surface you just created. Every new tool connection, every subagent boundary, every hook &mdash; is also a new attack vector."
+      </div>
+
+      <div class="demo-hint">
+        <div style="font-size:clamp(11px,1.0vw,14px); color:var(--white); font-weight:600; margin-bottom:0.5em; font-family:Inter,sans-serif;">What you&rsquo;ll audit</div>
+        <span class="prompt">&#10003;</span> MCP config for over-provisioned access scopes<br>
+        <span class="prompt">&#10003;</span> Hooks for injection vulnerability in input handling<br>
+        <span class="prompt">&#10003;</span> Subagent contracts for unintended privilege escalation<br>
+        <span class="prompt">&#10003;</span> Orchestrator for excessive agency in irreversible actions
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 11</div>
+</div>
+
+<script>
+  document.addEventListener('keydown', (e) => {
+    const slides = document.querySelectorAll('.slide');
+    const vh = window.innerHeight;
+    const current = Math.round(window.scrollY / vh);
+    if (['ArrowDown',' ','PageDown','ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+      if (current < slides.length - 1) slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+    } else if (['ArrowUp','PageUp','ArrowLeft'].includes(e.key)) {
+      e.preventDefault();
+      if (current > 0) slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+  window.addEventListener('scroll', () => { const h = document.querySelector('.kb-hint'); if (h) h.style.display = 'none'; }, { once: true });
+</script>
+</body>
+</html>

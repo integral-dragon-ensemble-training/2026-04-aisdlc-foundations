@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 10: Task Decomposition and Subagents</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page { size: 13.333in 7.5in; margin: 0; }
+  @media print {
+    body { scroll-snap-type: none; overflow: visible; height: auto; }
+    .slide { width: 13.333in; height: 7.5in; page-break-after: always; page-break-inside: avoid; }
+    .slide:last-child { page-break-after: auto; }
+    .kb-hint { display: none; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B2A4A;
+    --cyan: #00B8D4;
+    --cyan-light: #00E5FF;
+    --cyan-muted: #4DD0E1;
+    --white: #FFFFFF;
+    --light-gray: #F0F0F0;
+    --off-white: #F8F9FA;
+    --med-gray: #666666;
+    --dark-gray: #333333;
+    --footer-gray: #999999;
+    --teal-dark: #005F7F;
+    --teal-mid: #0088A8;
+    --warn: #FF6B35;
+    --green: #00C853;
+  }
+
+  html { font-family: 'Inter', 'Avenir Next', system-ui, sans-serif; }
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+  body { background: #111; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+
+  .slide {
+    width: 100vw; height: 100vh; scroll-snap-align: start;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+
+  .slide-dark { background: var(--navy); color: var(--white); padding: 4vh 6vw 2vh; }
+  .slide-content { background: var(--white); color: var(--navy); padding: 4vh 6vw 2vh; }
+
+  .section-label {
+    font-size: clamp(10px, 0.85vw, 13px); font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1vh;
+  }
+  .section-label.cyan { color: var(--cyan); }
+  .section-label.muted { color: var(--cyan-muted); }
+
+  .action-title {
+    font-size: clamp(18px, 2vw, 28px); font-weight: 700;
+    line-height: 1.25; margin-bottom: 1.5vh; max-width: 92%;
+  }
+
+  .title-rule { width: 100%; height: 1.5px; background: var(--cyan); margin-bottom: 2.5vh; }
+  .title-rule.dark { background: var(--teal-dark); }
+
+  .slide-footer {
+    position: absolute; bottom: 1.5vh; right: 6vw;
+    font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray);
+  }
+  .slide-footer.on-dark { color: rgba(255,255,255,0.35); }
+
+  .accent-band {
+    background: var(--light-gray); padding: 1.8vh 6vw;
+    margin: 0 -6vw; width: calc(100% + 12vw);
+  }
+  .accent-band.dark { background: rgba(0,0,0,0.2); }
+  .accent-band-text { font-size: clamp(12px, 1.05vw, 16px); line-height: 1.4; color: var(--navy); }
+  .accent-band-text strong { font-weight: 700; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4vw; flex: 1; align-content: start; }
+
+  .concept-card {
+    background: var(--off-white); border-radius: 10px; padding: 2vh 2vw;
+    border-left: 4px solid var(--cyan); margin-bottom: 1.5vh;
+  }
+  .concept-card.warn { border-left-color: var(--warn); }
+  .concept-card.green { border-left-color: var(--green); }
+  .concept-card h4 {
+    font-size: clamp(13px, 1.15vw, 17px); font-weight: 700; color: var(--navy); margin-bottom: 0.4em;
+  }
+  .concept-card p { font-size: clamp(11px, 1.0vw, 15px); color: var(--dark-gray); line-height: 1.5; }
+
+  .code-block {
+    background: var(--navy); border-radius: 8px; padding: 1.5vh 2vw; margin-top: 1vh;
+    font-family: 'JetBrains Mono', monospace; color: var(--cyan-muted);
+    font-size: clamp(11px, 0.95vw, 14px); line-height: 1.6;
+  }
+  .code-block .prompt { color: var(--cyan); font-weight: 600; }
+  .code-block .comment { color: var(--med-gray); }
+  .code-block .good { color: #69F0AE; }
+  .code-block .bad { color: var(--warn); }
+
+  .list-item {
+    display: flex; gap: 1vw; align-items: flex-start; margin-bottom: 1.2vh;
+    font-size: clamp(12px, 1.05vw, 16px); color: var(--dark-gray); line-height: 1.5;
+  }
+  .list-item .bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+  .list-item.dark-text { color: rgba(255,255,255,0.85); }
+  .list-item.dark-text .bullet { color: var(--cyan-muted); }
+
+  .contract-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vh 3vw; flex: 1; align-content: start; }
+  .contract-item {
+    padding: 1.8vh 1.8vw; border-radius: 10px;
+    background: var(--off-white); border-left: 4px solid var(--cyan);
+  }
+  .contract-item .ci-label { font-size: clamp(10px,0.85vw,13px); font-weight:700; color:var(--cyan); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:0.4em; }
+  .contract-item .ci-desc { font-size: clamp(11px,1.0vw,15px); color:var(--dark-gray); line-height:1.45; }
+
+  /* TITLE SLIDE */
+  .slide-title { background: var(--navy); color: var(--white); justify-content: center; padding: 5vh 6vw; }
+  .slide-title .brand {
+    position: absolute; top: 4vh; left: 6vw;
+    font-size: clamp(11px, 1.1vw, 16px); font-weight: 500;
+    letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); opacity: 0.9;
+  }
+  .slide-title .content { max-width: 55%; z-index: 2; }
+  .slide-title .session-tag {
+    font-size: clamp(11px, 1.0vw, 15px); font-weight: 600;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.2vh;
+  }
+  .slide-title h1 { font-size: clamp(26px, 3.4vw, 50px); font-weight: 700; line-height: 1.1; margin-bottom: 0.5em; }
+  .slide-title .accent-line { width: 100px; height: 3px; background: var(--cyan); margin-bottom: 0.8em; }
+  .slide-title .subtitle { font-size: clamp(14px, 1.4vw, 20px); font-weight: 400; color: var(--cyan-muted); line-height: 1.4; }
+  .slide-title .meta { font-size: clamp(11px, 1.0vw, 15px); color: #AABBCC; margin-top: 1.5em; }
+  .slide-title .footer { position: absolute; bottom: 3vh; left: 6vw; font-size: clamp(8px, 0.7vw, 11px); color: var(--footer-gray); }
+
+  .geo { position: absolute; border-radius: 20px; }
+  .geo-1 { right: 2vw; top: 8vh; width: 35vw; height: 55vh; background: var(--teal-dark); opacity: 0.5; border-radius: 24px; }
+  .geo-2 { right: -2vw; top: 15vh; width: 28vw; height: 50vh; background: var(--teal-mid); opacity: 0.45; border-radius: 20px; }
+  .geo-3 { right: 5vw; top: 22vh; width: 22vw; height: 22vw; background: var(--cyan); opacity: 0.55; border-radius: 50%; }
+  .geo-4 { right: 12vw; top: 30vh; width: 10vw; height: 10vw; background: var(--navy); opacity: 0.7; border-radius: 50%; }
+  .geo-5 { right: 0; bottom: 0; width: 18vw; height: 28vh; background: var(--teal-dark); opacity: 0.35; border-radius: 16px 0 0 0; }
+
+  .slide-divider {
+    background: var(--navy); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 5vh 10vw;
+  }
+  .divider-content { z-index: 2; }
+  .divider-content .module-num {
+    font-size: clamp(12px, 1.1vw, 16px); font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.5vh;
+  }
+  .divider-content h2 { font-size: clamp(24px, 3vw, 44px); font-weight: 700; line-height: 1.2; margin-bottom: 0.6em; }
+  .divider-content .sub { font-size: clamp(14px, 1.3vw, 20px); color: var(--cyan-muted); line-height: 1.5; }
+
+  .kb-hint {
+    position: fixed; bottom: 12px; right: 12px;
+    background: rgba(0,0,0,0.6); color: #aaa; font-size: 11px;
+    padding: 4px 10px; border-radius: 4px; z-index: 100; opacity: 0.7; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="kb-hint">Arrow keys / Space to navigate</div>
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<div class="slide slide-title">
+  <div class="brand">Integral Dragon</div>
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="content">
+    <div class="session-tag">Module 3 &nbsp;&bull;&nbsp; Session 10</div>
+    <h1>Task Decomposition<br>and Subagents</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle">Break the work down before you delegate it</div>
+    <div class="meta">AI-Accelerated Software Development &nbsp;|&nbsp; Foundations Program</div>
+  </div>
+  <div class="footer">Confidential. Prepared exclusively for Ensemble Health Partners.</div>
+</div>
+
+<!-- ==================== SLIDE 2: WHY GIANT PROMPTS FAIL ==================== -->
+<div class="slide slide-dark">
+  <div class="section-label muted">Session 10 &nbsp;|&nbsp; The Problem</div>
+  <div class="action-title" style="color:var(--white)">Giant prompts fail for structural reasons &mdash; not because the model isn&rsquo;t capable enough</div>
+  <div class="title-rule dark"></div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 4vw; flex:1; align-content:start;">
+    <div>
+      <div style="font-size:clamp(13px,1.1vw,17px); font-weight:600; color:var(--warn); margin-bottom:1.5vh; text-transform:uppercase; letter-spacing:0.15em;">Why they fail</div>
+      <div class="list-item dark-text"><span style="color:var(--warn); font-weight:700;">&rsaquo;</span>&ensp;Too many goals mixed together in one request</div>
+      <div class="list-item dark-text"><span style="color:var(--warn); font-weight:700;">&rsaquo;</span>&ensp;Unclear boundaries between what counts as done</div>
+      <div class="list-item dark-text"><span style="color:var(--warn); font-weight:700;">&rsaquo;</span>&ensp;Noisy intermediate output floods the working context</div>
+      <div class="list-item dark-text"><span style="color:var(--warn); font-weight:700;">&rsaquo;</span>&ensp;No explicit contract for what should come back</div>
+      <div class="list-item dark-text"><span style="color:var(--warn); font-weight:700;">&rsaquo;</span>&ensp;Mixed concerns make the output hard to review or trust</div>
+
+      <div style="margin-top:3vh; padding:2vh 2vw; background:rgba(255,107,53,0.12); border:1px solid rgba(255,107,53,0.25); border-radius:10px;">
+        <div style="font-size:clamp(12px,1.05vw,16px); color:rgba(255,255,255,0.9); line-height:1.6;">These are structural failures &mdash; they exist before the model runs. A better model does not fix bad task design.</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.1vw,17px); font-weight:600; color:var(--cyan-muted); margin-bottom:1.5vh; text-transform:uppercase; letter-spacing:0.15em;">What subagents provide</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Fresh context — no accumulated noise from the main session</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Focused role — one job, one outcome</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Optional tool restrictions — tighter capability scope</div>
+      <div class="list-item dark-text"><span class="bullet">&rsaquo;</span> Concise return path — summary only, not the full trace</div>
+
+      <div style="margin-top:3vh; padding:2vh 2vw; background:rgba(0,184,212,0.1); border:1px solid rgba(0,184,212,0.2); border-radius:10px;">
+        <div style="font-size:clamp(12px,1.05vw,16px); color:rgba(255,255,255,0.9); line-height:1.6;"><strong>Session focus:</strong> The real skill is not delegation syntax. It is task decomposition &mdash; defining bounded units of work that can be delegated cleanly.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 2</div>
+</div>
+
+<!-- ==================== SLIDE 3: GOOD VS BAD TASKS ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 10 &nbsp;|&nbsp; Task Design</div>
+  <div class="action-title">Good delegated tasks are narrow and explicit &mdash; bad ones sound like mini-projects</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--green); margin-bottom:1.2vh;">Well-formed delegated tasks</div>
+      <div class="code-block" style="margin-top:0;">
+        <span class="good">&rsaquo;</span> "Review the auth module for security issues<br>
+        &nbsp;&nbsp;&nbsp; and return a ranked summary of findings."<br><br>
+        <span class="good">&rsaquo;</span> "Trace the failing tests and return only<br>
+        &nbsp;&nbsp;&nbsp; the root causes &mdash; not the full trace."<br><br>
+        <span class="good">&rsaquo;</span> "Map files touched by this feature and<br>
+        &nbsp;&nbsp;&nbsp; list the likely risk areas."<br><br>
+        <span class="good">&rsaquo;</span> "Extract duplicate logic across these<br>
+        &nbsp;&nbsp;&nbsp; 3 files and propose a single abstraction."
+      </div>
+      <div style="margin-top:1.5vh; padding:1.2vh 1.5vw; background:rgba(0,200,83,0.06); border:1px solid rgba(0,200,83,0.2); border-radius:8px;">
+        <div style="font-size:clamp(11px,1.0vw,14px); color:var(--dark-gray); line-height:1.45;">Each has one objective, one scope boundary, and one clear return deliverable.</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--warn); margin-bottom:1.2vh;">Poorly-formed delegated tasks</div>
+      <div class="code-block" style="margin-top:0;">
+        <span class="bad">&times;</span> "Build the whole feature."<br><br>
+        <span class="bad">&times;</span> "Fix everything wrong with this repo."<br><br>
+        <span class="bad">&times;</span> "Refactor the app and improve security."<br><br>
+        <span class="bad">&times;</span> "Help me with the billing dashboard."
+      </div>
+      <div style="margin-top:1.5vh; padding:1.2vh 1.5vw; background:rgba(255,107,53,0.06); border:1px solid rgba(255,107,53,0.2); border-radius:8px;">
+        <div style="font-size:clamp(11px,1.0vw,14px); color:var(--dark-gray); line-height:1.45;">These are not task boundaries. They are wishful thinking delegated to a machine. The model will attempt them &mdash; and produce plausible-looking, hard-to-review output.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 3</div>
+</div>
+
+<!-- ==================== SLIDE 4: THE DELEGATION CONTRACT ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 10 &nbsp;|&nbsp; Delegation Contract</div>
+  <div class="action-title">Every delegated task needs a contract &mdash; five things that must be defined before the subagent runs</div>
+  <div class="title-rule"></div>
+
+  <div class="contract-grid">
+    <div class="contract-item">
+      <div class="ci-label">1. Objective</div>
+      <div class="ci-desc">One concrete goal. A single sentence describing what success looks like. If you need two sentences, you have two tasks.</div>
+    </div>
+    <div class="contract-item">
+      <div class="ci-label">2. Scope Boundary</div>
+      <div class="ci-desc">Exactly which files, modules, systems, or data are in scope. Anything not listed is out of scope &mdash; explicitly. The model should not guess at the edges.</div>
+    </div>
+    <div class="contract-item">
+      <div class="ci-label">3. Allowed Tools</div>
+      <div class="ci-desc">Which tools the subagent may use. Read-only for reviewers. Write access only for implementers. Tighter permissions reduce blast radius when the scope is unclear.</div>
+    </div>
+    <div class="contract-item">
+      <div class="ci-label">4. Expected Deliverable</div>
+      <div class="ci-desc">The exact format of what comes back. A ranked list? A diff? A one-paragraph summary? A JSON object? The main session must be able to consume the output without interpretation.</div>
+    </div>
+    <div class="contract-item" style="grid-column: 1 / -1; border-left-color: var(--teal-mid);">
+      <div class="ci-label" style="color:var(--teal-mid);">5. Stop Condition</div>
+      <div class="ci-desc">When is the task done? What should the subagent do if it hits a blocker? An undefined stop condition leads to scope creep inside the delegated session &mdash; the subagent keeps going because nothing told it to stop.</div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 4</div>
+</div>
+
+<!-- ==================== SLIDE 5: WHEN TO USE SUBAGENTS ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 10 &nbsp;|&nbsp; Routing Work</div>
+  <div class="action-title">Use subagents when isolation helps &mdash; stay in the main conversation when continuity matters</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--cyan); margin-bottom:1.2vh;">Use a subagent when&hellip;</div>
+      <div class="concept-card">
+        <h4>Output would pollute the main context</h4>
+        <p>Verbose test traces, large search results, noisy research output &mdash; these do not belong in the main conversation. The subagent compresses them into a summary before returning.</p>
+      </div>
+      <div class="concept-card">
+        <h4>The work is genuinely self-contained</h4>
+        <p>A bounded review, an isolated analysis, a specialist task that has a single clean input and a single useful output. No back-and-forth needed during execution.</p>
+      </div>
+      <div class="concept-card">
+        <h4>A tighter permission boundary is valuable</h4>
+        <p>When the task should only read, not write. When only specific tools should be available. A subagent can operate with stricter tool access than the main session.</p>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1.2vh;">Stay in the main conversation when&hellip;</div>
+      <div class="concept-card" style="border-left-color:var(--med-gray);">
+        <h4>Rapid refinement is needed</h4>
+        <p>Back-and-forth clarification, in-flight adjustments, quick pivots based on partial output. Subagent startup overhead would dominate the value.</p>
+      </div>
+      <div class="concept-card" style="border-left-color:var(--med-gray);">
+        <h4>Planning and implementation are tightly coupled</h4>
+        <p>When the plan changes the implementation and the implementation changes the plan in real time. Isolation would sever the feedback loop that makes the work coherent.</p>
+      </div>
+      <div class="concept-card" style="border-left-color:var(--med-gray);">
+        <h4>The task is small and targeted</h4>
+        <p>One-line bugfixes, quick edits, short targeted changes. The cost of context isolation exceeds the benefit when the task takes thirty seconds either way.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 5</div>
+</div>
+
+<!-- ==================== SLIDE 6: LIVE DEMO ==================== -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num">Live Demo &mdash; Session 10</div>
+    <h2>One focused reviewer subagent.<br>One bounded area. One summary.</h2>
+    <div class="sub">Define the contract. Delegate the work. Bring back only what matters.</div>
+  </div>
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 6</div>
+</div>
+
+<!-- ==================== SLIDE 7: DEMO + WHY IT IMPROVES ACCURACY ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 10 &nbsp;|&nbsp; Demo</div>
+  <div class="action-title">Bounded tasks improve accuracy and reduce cost &mdash; not because of the model, but because of the structure</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1vh;">Demo sequence</div>
+      <div class="code-block">
+        <span class="comment"># Step 1: Define the reviewer subagent</span><br>
+        Role: read-only code reviewer<br>
+        Scope: auth/ directory only<br>
+        Tools: read_file, search<br>
+        Deliverable: ranked findings, max 5<br><br>
+        <span class="comment"># Step 2: Delegate</span><br>
+        <span class="prompt">&gt;</span> "Review auth/ for security issues.<br>
+        &nbsp;&nbsp;&nbsp; Return: issue, severity, location.<br>
+        &nbsp;&nbsp;&nbsp; Stop after 5 findings."<br><br>
+        <span class="comment"># Step 3: Receive the summary</span><br>
+        <span class="prompt">&rarr;</span> 5-item ranked list returned<br>
+        <span class="prompt">&rarr;</span> No trace noise in main context<br>
+        <span class="prompt">&rarr;</span> Human reviews and decides next step
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:clamp(13px,1.15vw,17px); font-weight:700; color:var(--navy); margin-bottom:1.2vh;">Why this improves outcomes</div>
+      <div class="concept-card">
+        <h4>Less irrelevant context</h4>
+        <p>The subagent's working memory is clean. It sees only the auth module, not the last 40 messages of the main session. Signal-to-noise ratio is higher from the start.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Fewer mixed objectives</h4>
+        <p>It has one job. It cannot accidentally drift into implementation while trying to review. Bounded scope prevents the model from trying to help beyond what was asked.</p>
+      </div>
+      <div class="concept-card">
+        <h4>Clearer human review point</h4>
+        <p>A five-item ranked list is reviewable in thirty seconds. The human decides what to act on. The engineer remains the decision-maker; the subagent is the research instrument.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 7</div>
+</div>
+
+<!-- ==================== SLIDE 8: FAILURE MODES ==================== -->
+<div class="slide slide-content">
+  <div class="section-label cyan">Session 10 &nbsp;|&nbsp; Failure Modes</div>
+  <div class="action-title">The most common decomposition failures happen before the subagent runs &mdash; they are design errors, not execution errors</div>
+  <div class="title-rule"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="concept-card warn">
+        <h4>Delegating before defining inputs and outputs</h4>
+        <p>Sending a subagent without specifying what format to return, or what data to start from. The model will invent a structure &mdash; which may be completely different from what the main session expects.</p>
+      </div>
+      <div class="concept-card warn">
+        <h4>Using a subagent for work that needs constant interaction</h4>
+        <p>Trying to delegate back-and-forth planning, live decision-making, or tasks that require multiple clarification rounds. The subagent completes in isolation and can't ask for help mid-run.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="concept-card warn">
+        <h4>Giving broad permissions to a narrow task</h4>
+        <p>A read-only reviewer does not need write access. An analysis task does not need the ability to execute shell commands. Overly broad permissions expand the blast radius when the task drifts.</p>
+      </div>
+      <div class="concept-card warn">
+        <h4>Asking for a summary with no criteria</h4>
+        <p>"Summarize your findings" with no definition of what matters, what format to use, or how many items to return. The result is unpredictable and hard to use as input to the next step.</p>
+      </div>
+
+      <div style="margin-top:1.5vh;">
+        <div class="accent-band">
+          <div class="accent-band-text"><strong>Root cause:</strong> All four failures are upstream. They occur when the engineer delegates before designing the task. Decomposition quality is an engineering responsibility &mdash; not a model feature.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">Integral Dragon &nbsp;|&nbsp; 8</div>
+</div>
+
+<!-- ==================== SLIDE 9: KEY TAKEAWAY ==================== -->
+<div class="slide slide-divider">
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+  <div class="geo geo-4"></div>
+  <div class="geo geo-5"></div>
+  <div class="divider-content">
+    <div class="module-num">Session 10 &mdash; Key Takeaway</div>
+    <h2>Subagents work best when<br>the task is atomic</h2>
+    <div class="sub" style="max-width:620px; margin:0 auto;">
+      Atomic task design is an engineering responsibility &mdash; not a model feature.<br><br>
+      <span style="color:var(--cyan); font-weight:600;">Next: Session 11</span> &mdash; Session 10 is hierarchical delegation. Session 11 expands that into coordinated parallel teams with shared state and new failure modes.
+    </div>
+  </div>
+  <div class="slide-footer on-dark">Integral Dragon &nbsp;|&nbsp; 9</div>
+</div>
+
+<script>
+  document.addEventListener('keydown', (e) => {
+    const slides = document.querySelectorAll('.slide');
+    const vh = window.innerHeight;
+    const current = Math.round(window.scrollY / vh);
+    if (['ArrowDown',' ','PageDown','ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+      if (current < slides.length - 1) slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+    } else if (['ArrowUp','PageUp','ArrowLeft'].includes(e.key)) {
+      e.preventDefault();
+      if (current > 0) slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+  window.addEventListener('scroll', () => { const h = document.querySelector('.kb-hint'); if (h) h.style.display = 'none'; }, { once: true });
+</script>
+</body>
+</html>

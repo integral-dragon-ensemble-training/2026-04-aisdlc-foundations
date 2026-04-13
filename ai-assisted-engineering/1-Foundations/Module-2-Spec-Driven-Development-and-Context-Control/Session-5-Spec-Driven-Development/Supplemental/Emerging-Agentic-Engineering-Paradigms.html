@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Emerging-Agentic-Engineering-Paradigms</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<h1 id="emerging-agentic-engineering-paradigms">Emerging Agentic
+Engineering Paradigms</h1>
+<p>This is optional presenter material for Session 05.</p>
+<p>It extends the landscape overview with additional paradigms that are
+showing real traction in public materials, even if the labels are not
+all fully settled.</p>
+<h2 id="short-answer">Short answer</h2>
+<p>Yes. There are several other paradigms worth naming.</p>
+<p>The main ones I would add are:</p>
+<ul>
+<li>eval-driven agent development</li>
+<li>scenario-spec or verification-corpus development</li>
+<li>policy-as-code for agent delivery</li>
+<li>multi-agent orchestration as a delivery model</li>
+<li>background automation or always-on agent operations</li>
+</ul>
+<p>These are not all mutually exclusive with spec-driven development or
+harness engineering.</p>
+<p>The cleaner way to teach them is:</p>
+<p><code>Each paradigm places the control surface in a different place.</code></p>
+<h2 id="eval-driven-agent-development">1. Eval-driven agent
+development</h2>
+<h3 id="core-idea">Core idea</h3>
+<p>The central question is not:</p>
+<p><code>Did we write a good prompt?</code></p>
+<p>It is:</p>
+<p><code>Can we measure whether the agent is behaving correctly over time?</code></p>
+<h3 id="what-makes-it-different">What makes it different</h3>
+<ul>
+<li>the agent is judged against graders, traces, scorecards, regression
+suites, or task-level evaluations</li>
+<li>evaluation becomes part of development, not just post hoc QA</li>
+<li>the unit of quality becomes repeatable agent behavior, not isolated
+output quality</li>
+</ul>
+<h3 id="why-it-matters">Why it matters</h3>
+<p>This is one of the strongest antidotes to AI theater.</p>
+<p>If a team cannot evaluate the agent’s behavior repeatedly, the team
+does not really control the workflow.</p>
+<h3 id="best-fit">Best fit</h3>
+<ul>
+<li>production agents</li>
+<li>repeated operational tasks</li>
+<li>CI or issue-triage flows</li>
+<li>environments where trust has to be earned empirically</li>
+</ul>
+<h3 id="primary-signal">Primary signal</h3>
+<ul>
+<li>OpenAI’s public materials on agent evals, internal agents, and
+agent-building tools push strongly in this direction.</li>
+</ul>
+<h2 id="scenario-spec-or-verification-corpus-development">2.
+Scenario-spec or verification-corpus development</h2>
+<h3 id="core-idea-1">Core idea</h3>
+<p>The most important artifact is not just the implementation spec.</p>
+<p>It is the scenario set that defines correct behavior and catches
+failure modes.</p>
+<h3 id="what-makes-it-different-1">What makes it different</h3>
+<ul>
+<li>success is expressed through scenario specs, examples, failure
+cases, and verification corpora</li>
+<li>reviews validate behavior against those scenarios</li>
+<li>the test corpus becomes part of the delivery language, not just the
+implementation tail</li>
+</ul>
+<h3 id="why-it-matters-1">Why it matters</h3>
+<p>This is especially relevant when teams are worried about hidden
+regressions, business-logic misses, and shallow correctness.</p>
+<p>It shifts the discussion from:</p>
+<p><code>What should the code look like?</code></p>
+<p>to:</p>
+<p><code>What situations must the system survive?</code></p>
+<h3 id="best-fit-1">Best fit</h3>
+<ul>
+<li>high-risk workflows</li>
+<li>QA-heavy teams</li>
+<li>teams that already think in examples, fixtures, and acceptance
+tests</li>
+</ul>
+<h3 id="primary-signal-1">Primary signal</h3>
+<ul>
+<li>Dark Factory leans hard into scenario specs.</li>
+<li>Anthropic and OpenAI increasingly describe systems where checks,
+validation loops, and behavioral tests do more governing than prompt
+cleverness.</li>
+</ul>
+<h2 id="policy-as-code-for-agent-delivery">3. Policy-as-code for agent
+delivery</h2>
+<h3 id="core-idea-2">Core idea</h3>
+<p>The enduring system is not just code and not just specs.</p>
+<p>It is the set of encoded rules that determine what agents may do, how
+they are checked, and what gets blocked automatically.</p>
+<h3 id="what-makes-it-different-2">What makes it different</h3>
+<ul>
+<li>organizational rules become enforceable artifacts</li>
+<li>approval modes, sandboxes, path restrictions, hooks, and compliance
+checks are first-class</li>
+<li>governance moves from tribal memory into executable controls</li>
+</ul>
+<h3 id="why-it-matters-2">Why it matters</h3>
+<p>This is often the real enterprise unlock.</p>
+<p>Many organizations do not need more model sophistication first. They
+need stronger encoded constraints.</p>
+<h3 id="best-fit-2">Best fit</h3>
+<ul>
+<li>regulated environments</li>
+<li>healthcare, finance, enterprise platforms</li>
+<li>teams trying to scale safe usage across many developers</li>
+</ul>
+<h3 id="primary-signal-2">Primary signal</h3>
+<ul>
+<li>Anthropic’s permission and configuration model</li>
+<li>OpenAI’s harness framing</li>
+<li>Paul Duvall’s AI development patterns</li>
+</ul>
+<h2 id="multi-agent-orchestration-as-a-delivery-model">4. Multi-agent
+orchestration as a delivery model</h2>
+<h3 id="core-idea-3">Core idea</h3>
+<p>The agent is no longer one assistant in one thread.</p>
+<p>The delivery unit becomes a coordinated system of agents with
+specialized roles, isolated contexts, and explicit handoffs.</p>
+<h3 id="what-makes-it-different-3">What makes it different</h3>
+<ul>
+<li>planning, coding, review, QA, and narration can be split across
+roles</li>
+<li>work happens in parallel</li>
+<li>routing and handoff design become core engineering tasks</li>
+</ul>
+<h3 id="why-it-matters-3">Why it matters</h3>
+<p>This model changes throughput economics.</p>
+<p>The constraint becomes less “can one model do this?” and more “how
+should the work be partitioned and supervised?”</p>
+<h3 id="best-fit-3">Best fit</h3>
+<ul>
+<li>larger tasks with clean isolation boundaries</li>
+<li>teams comfortable with review workflows</li>
+<li>organizations optimizing for throughput rather than individual
+augmentation</li>
+</ul>
+<h3 id="primary-signal-3">Primary signal</h3>
+<ul>
+<li>Anthropic’s recent material on scaling agentic coding</li>
+<li>OpenAI’s Codex positioning around delegating parallel work and
+automations</li>
+</ul>
+<h2 id="background-automation-or-always-on-agent-operations">5.
+Background automation or always-on agent operations</h2>
+<h3 id="core-idea-4">Core idea</h3>
+<p>Some engineering work should not wait for a person to start a
+chat.</p>
+<p>The agent should operate continuously in the background against
+specific classes of work.</p>
+<h3 id="what-makes-it-different-4">What makes it different</h3>
+<ul>
+<li>agents monitor queues, logs, alerts, CI failures, or issue
+streams</li>
+<li>they can triage, propose fixes, summarize drift, or prepare patches
+proactively</li>
+<li>the emphasis is not code generation by request, but operational flow
+coverage</li>
+</ul>
+<h3 id="why-it-matters-4">Why it matters</h3>
+<p>This is where “agent” stops meaning “smart autocomplete” and starts
+meaning “active software-delivery participant.”</p>
+<h3 id="best-fit-4">Best fit</h3>
+<ul>
+<li>CI triage</li>
+<li>alert clustering</li>
+<li>repetitive PR preparation</li>
+<li>issue backlogs</li>
+<li>operational hygiene loops</li>
+</ul>
+<h3 id="primary-signal-4">Primary signal</h3>
+<ul>
+<li>OpenAI’s current Codex framing around automations</li>
+<li>broader movement toward persistent, monitored engineering
+agents</li>
+</ul>
+<h2 id="how-these-differ-from-the-earlier-paradigms">How these differ
+from the earlier paradigms</h2>
+<h3 id="assisted-coding">Assisted coding</h3>
+<ul>
+<li>center of gravity: human operator</li>
+<li>main value: immediate productivity</li>
+</ul>
+<h3 id="spec-driven-development">Spec-driven development</h3>
+<ul>
+<li>center of gravity: explicit intent and acceptance criteria</li>
+<li>main value: convergence and legibility</li>
+</ul>
+<h3 id="harness-engineering">Harness engineering</h3>
+<ul>
+<li>center of gravity: system design around the model</li>
+<li>main value: reliability and enforceability</li>
+</ul>
+<h3 id="dark-factory">Dark factory</h3>
+<ul>
+<li>center of gravity: high-autonomy execution pipeline</li>
+<li>main value: throughput and automation depth</li>
+</ul>
+<h3 id="the-new-additions">The new additions</h3>
+<ul>
+<li>eval-driven: center of gravity is measurement</li>
+<li>scenario-spec: center of gravity is behavioral verification</li>
+<li>policy-as-code: center of gravity is encoded governance</li>
+<li>multi-agent orchestration: center of gravity is task
+partitioning</li>
+<li>background automation: center of gravity is persistent
+operations</li>
+</ul>
+<h2 id="a-simple-way-to-present-this-live">A simple way to present this
+live</h2>
+<p>Instead of saying:</p>
+<p><code>Here are a bunch of competing buzzwords</code></p>
+<p>say:</p>
+<p><code>Here are the main places teams are trying to locate control in AI-assisted delivery.</code></p>
+<p>Then walk through these seven control surfaces:</p>
+<ol type="1">
+<li>the operator</li>
+<li>the spec</li>
+<li>the harness</li>
+<li>the eval system</li>
+<li>the policy layer</li>
+<li>the orchestration model</li>
+<li>the autonomous runtime</li>
+</ol>
+<p>That gives the audience a much stronger conceptual map.</p>
+<h2 id="my-recommendation">My recommendation</h2>
+<p>For Ensemble, I would keep the visible teaching emphasis on:</p>
+<ul>
+<li>spec-driven development</li>
+<li>harness engineering</li>
+<li>reviewability and controls</li>
+</ul>
+<p>And I would mention the others as emerging patterns so students
+understand the broader field without feeling like the course is chasing
+buzzwords.</p>
+<p>If you want one sentence:</p>
+<p><code>Spec-driven development is about making intent legible, harness engineering is about making it enforceable, and eval-driven delivery is about proving it still works.</code></p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>OpenAI, <a
+href="https://openai.com/index/harness-engineering/">Harness
+engineering: leveraging Codex in an agent-first world</a></li>
+<li>OpenAI, <a
+href="https://openai.com/index/unlocking-the-codex-harness/">Unlocking
+the Codex harness: how we built the App Server</a></li>
+<li>OpenAI, <a
+href="https://openai.com/index/inside-our-in-house-data-agent/">Inside
+our in-house data agent</a></li>
+<li>OpenAI Platform Docs, <a
+href="https://platform.openai.com/docs/guides/agent-evals">Agent
+evals</a></li>
+<li>Anthropic, <a
+href="https://resources.anthropic.com/scaling-agentic-coding">Scaling
+Agentic Coding Across Your Organization</a></li>
+<li>GitHub Blog, <a
+href="https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/">Spec-driven
+development with AI: Get started with a new open source toolkit</a></li>
+<li>Microsoft for Developers, <a
+href="https://developer.microsoft.com/blog/spec-driven-development-spec-kit">Diving
+Into Spec-Driven Development With GitHub Spec Kit</a></li>
+<li>Paul Duvall, <a
+href="https://github.com/PaulDuvall/ai-development-patterns">AI
+Development Patterns</a></li>
+<li>Dark Factory, <a href="https://godarkfactory.com/">Lights-out
+software development</a></li>
+</ul>
+</body>
+</html>
