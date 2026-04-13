@@ -2,7 +2,7 @@
 
 **Integral Dragon** · Delivered for Ensemble Health Partners · April 2026
 
-![Program Overview](assets/landing/program-value-proposition.svg)
+![Program Overview](assets/landing/program-value-proposition.png)
 
 ---
 
@@ -30,7 +30,7 @@ Foundations is not a theory block. It is the operating baseline for trustworthy,
 
 16 sessions across 4 modules — approximately 23 minutes per session.
 
-![Course Structure](assets/landing/course-structure.svg)
+![Course Structure](assets/landing/course-structure.png)
 
 | Module | Sessions | Title | Core Message |
 |---|---|---|---|
@@ -54,7 +54,7 @@ Foundations is not a theory block. It is the operating baseline for trustworthy,
 
 ## Where Foundations Fits
 
-![Maturity Model](assets/landing/maturity-model.svg)
+![Maturity Model](assets/landing/maturity-model.png)
 
 Foundations covers Levels 1 and 2 of the agentic engineering maturity model — transforming ad hoc AI usage into controlled, reviewable, enterprise-ready delivery. The exit state is readiness to enter applied lab tracks.
 
@@ -98,36 +98,36 @@ Every session follows a consistent pattern:
 
 ### Module 1 — The Agentic Paradigm and CLI Environment
 
-- [Session 01: The Agentic Engineering Shift](../ai-assisted-engineering/1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-1-The-Agentic-Engineering-Shift/Artifacts/)
-- [Session 02: LLM Internals for Orchestrators](../ai-assisted-engineering/1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-2-LLM-Internals-for-Orchestrators/Artifacts/)
-- [Session 03: Context Boundaries and Rot](../ai-assisted-engineering/1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-3-Context-Boundaries-and-Rot/Artifacts/)
-- [Session 04: Claude Code CLI Architecture and Setup](../ai-assisted-engineering/1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-4-Claude-Code-CLI-Architecture-and-Setup/Artifacts/)
+- [Session 01: The Agentic Engineering Shift](1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-1-The-Agentic-Engineering-Shift/Artifacts/)
+- [Session 02: LLM Internals for Orchestrators](1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-2-LLM-Internals-for-Orchestrators/Artifacts/)
+- [Session 03: Context Boundaries and Rot](1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-3-Context-Boundaries-and-Rot/Artifacts/)
+- [Session 04: Claude Code CLI Architecture and Setup](1-Foundations/Module-1-Agentic-Paradigm-and-CLI-Environment/Session-4-Claude-Code-CLI-Architecture-and-Setup/Artifacts/)
 
 ### Module 2 — Spec-Driven Development and Context Control
 
-- [Session 05: Spec-Driven Development](../ai-assisted-engineering/1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-5-Spec-Driven-Development/Artifacts/)
-- [Session 06: Plan Mode vs. Act Mode](../ai-assisted-engineering/1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-6-Plan-Mode-vs-Act-Mode/Artifacts/)
-- [Session 07: Context Control via CLAUDE.md](../ai-assisted-engineering/1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-7-Context-Control-via-CLAUDE-md/Artifacts/)
-- [Session 08: Extending Capabilities with MCP](../ai-assisted-engineering/1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-8-Extending-Capabilities-with-MCP/Artifacts/)
+- [Session 05: Spec-Driven Development](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-5-Spec-Driven-Development/Artifacts/)
+- [Session 06: Plan Mode vs. Act Mode](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-6-Plan-Mode-vs-Act-Mode/Artifacts/)
+- [Session 07: Context Control via CLAUDE.md](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-7-Context-Control-via-CLAUDE-md/Artifacts/)
+- [Session 08: Extending Capabilities with MCP](1-Foundations/Module-2-Spec-Driven-Development-and-Context-Control/Session-8-Extending-Capabilities-with-MCP/Artifacts/)
 
 ### Module 3 — Tooling, MCP, and Agentic Orchestration
 
-- [Session 09: Skills and Deterministic Hooks](../ai-assisted-engineering/1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-9-Skills-and-Deterministic-Hooks/Artifacts/)
-- [Session 10: Task Decomposition and Subagents](../ai-assisted-engineering/1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-10-Task-Decomposition-and-Subagents/Artifacts/)
-- [Session 11: Parallel Orchestration: Agent Teams](../ai-assisted-engineering/1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-11-Parallel-Orchestration-Agent-Teams/Artifacts/)
-- [Session 12: OWASP Top 10 for Agentic Apps](../ai-assisted-engineering/1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-12-OWASP-Top-10-for-Agentic-Apps/Artifacts/)
+- [Session 09: Skills and Deterministic Hooks](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-9-Skills-and-Deterministic-Hooks/Artifacts/)
+- [Session 10: Task Decomposition and Subagents](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-10-Task-Decomposition-and-Subagents/Artifacts/)
+- [Session 11: Parallel Orchestration: Agent Teams](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-11-Parallel-Orchestration-Agent-Teams/Artifacts/)
+- [Session 12: OWASP Top 10 for Agentic Apps](1-Foundations/Module-3-Tooling-MCP-and-Agentic-Orchestration/Session-12-OWASP-Top-10-for-Agentic-Apps/Artifacts/)
 
 ### Module 4 — Enterprise Security, Governance, and Auditability
 
-- [Session 13: Zero Trust and Permission Boundaries](../ai-assisted-engineering/1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-13-Zero-Trust-and-Permission-Boundaries/Artifacts/)
-- [Session 14: Secure MCP Governance](../ai-assisted-engineering/1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-14-Secure-MCP-Governance/Artifacts/)
-- [Session 15: Code Review and Cognitive Debt Mitigation](../ai-assisted-engineering/1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-15-Code-Review-and-Cognitive-Debt-Mitigation/Artifacts/)
-- [Session 16: Auditability and Workflow Narration](../ai-assisted-engineering/1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-16-Auditability-and-Workflow-Narration/Artifacts/)
+- [Session 13: Zero Trust and Permission Boundaries](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-13-Zero-Trust-and-Permission-Boundaries/Artifacts/)
+- [Session 14: Secure MCP Governance](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-14-Secure-MCP-Governance/Artifacts/)
+- [Session 15: Code Review and Cognitive Debt Mitigation](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-15-Code-Review-and-Cognitive-Debt-Mitigation/Artifacts/)
+- [Session 16: Auditability and Workflow Narration](1-Foundations/Module-4-Enterprise-Security-Governance-and-Auditability/Session-16-Auditability-and-Workflow-Narration/Artifacts/)
 
 ### Overview and Supplemental
 
-- [Foundations Overview Slides](../ai-assisted-engineering/1-Foundations/overview/)
-- [Supplemental: Coding Harness Example](../ai-assisted-engineering/1-Foundations/Supplemental-Coding-Harness-Example/)
+- [Foundations Overview Slides](1-Foundations/overview/)
+- [Supplemental: Coding Harness Example](1-Foundations/Supplemental-Coding-Harness-Example/)
 
 ---
 
