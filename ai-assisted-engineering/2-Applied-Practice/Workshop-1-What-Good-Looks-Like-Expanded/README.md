@@ -28,6 +28,8 @@ Workshop-1-What-Good-Looks-Like-Expanded/
   resources/
     repository-health-scorecard-skill.md
     repo-health-scorecard-template.md
+    workshop-1-expanded-flow.excalidraw
+    workshop-1-expanded-flow-talk-track.md
   _instructor-cheat-sheet/
     README.md
     claude-code-demo-script.md
