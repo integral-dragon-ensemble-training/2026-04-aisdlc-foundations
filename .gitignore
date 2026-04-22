@@ -7,6 +7,14 @@
 .DS_Store
 **/.DS_Store
 
+# Office temp lock files
+~$*.docx
+~$*.pptx
+~$*.xlsx
+**/~$*.docx
+**/~$*.pptx
+**/~$*.xlsx
+
 # Python
 __pycache__/
 *.pyc
