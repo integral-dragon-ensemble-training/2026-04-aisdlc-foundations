@@ -2,16 +2,16 @@
 
 This file defines what should and should not leave the instructor/source repository.
 
-## Copy To ai-sdlc-resources
+## Copy To aisdlc-resources
 
 ```text
 ai-assisted-engineering/2-Applied-Practice/Claude-Support/
-  -> ai-sdlc-resources/2-Applied-Practice/Claude-Support/
+  -> aisdlc-resources/2-Applied-Practice/Claude-Support/
 ```
 
 ```text
 ai-assisted-engineering/2-Applied-Practice/Workshop-1-What-Good-Looks-Like-Expanded/
-  -> ai-sdlc-resources/2-Applied-Practice/Workshop-1-What-Good-Looks-Like-Expanded/
+  -> aisdlc-resources/2-Applied-Practice/Workshop-1-What-Good-Looks-Like-Expanded/
 ```
 
 Exclude from Workshop 1 Expanded:
@@ -22,7 +22,13 @@ _instructor-cheat-sheet/
 
 ```text
 ai-assisted-engineering/2-Applied-Practice/overview/
-  -> ai-sdlc-resources/2-Applied-Practice/overview/
+  -> aisdlc-resources/2-Applied-Practice/overview/
+```
+
+## Verify Existing Skill In aisdlc-resources
+
+```text
+aisdlc-resources/skills/AISDLC-tech-diagrams/
 ```
 
 ## Copy Or Reference From course-work
@@ -55,4 +61,3 @@ __research/
 ```
 
 Do not copy generated lock files, local metadata, private notes, or raw research material.
-

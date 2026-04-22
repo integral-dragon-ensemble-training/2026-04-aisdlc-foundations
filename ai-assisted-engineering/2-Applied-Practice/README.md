@@ -42,7 +42,7 @@ See [`./Claude-Support/`](./Claude-Support/) for shared Claude Code support mate
 
 - participant teaching assistant skill
 - participant branch and group review workflow
-- ADO deployment instructions for `ai-sdlc-resources` and `course-work`
+- ADO deployment instructions for `aisdlc-resources` and `course-work`
 - placeholder for the customized architecture skill
 - TBD sandboxing guidance
 

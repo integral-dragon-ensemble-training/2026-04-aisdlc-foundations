@@ -26,7 +26,7 @@ Claude-Support/
 ## Current Support Areas
 
 - `Skills/Claude-Teaching-Assistant/` contains the reusable participant assistant skill for guided workshop work.
-- `Skills/Architecture-Clarity-And-Diagrams/` is the planned home for the customized architecture skill.
+- `Skills/Architecture-Clarity-And-Diagrams/` documents the architecture diagram skill dependency.
 - `Branching-And-Group-Review/` defines the participant branch and team review model.
 - `Claude-Sandboxing/` is a placeholder for sandboxing and execution-environment guidance.
 - `ADO-Deployment/` tells the Ensemble-side Claude how to deploy approved material to ADO.
@@ -54,16 +54,22 @@ Participants use Claude Code to inspect and improve real project repositories, b
 Expected ADO destinations:
 
 ```text
-ai-sdlc-resources/
+aisdlc-resources/
 course-work/
 ```
 
-`ai-sdlc-resources` gets course-facing resources.
+`aisdlc-resources` gets course-facing resources.
 
 `course-work` gets participant work under:
 
 ```text
 course-work/participant-work/<FirstName LastName>/
+```
+
+The architecture diagram skill is expected to already exist in ADO at:
+
+```text
+aisdlc-resources/skills/AISDLC-tech-diagrams/
 ```
 
 ## Naming

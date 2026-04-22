@@ -5,21 +5,31 @@ Instructions for the Claude Code instance running inside Ensemble to deploy cour
 ## Target ADO Repositories
 
 ```text
-ai-sdlc-resources/
+aisdlc-resources/
 course-work/
+```
+
+## Primary Handoff
+
+After pulling this GitHub repository inside Ensemble, give the Ensemble-side Claude:
+
+```text
+Claude-Support/ADO-Deployment/post-pull-handoff-for-ensemble-claude.md
 ```
 
 ## Target Layout
 
-`ai-sdlc-resources` is the main course resource repository.
+`aisdlc-resources` is the main course resource repository.
 
 Deploy participant-facing course support material there:
 
 ```text
-ai-sdlc-resources/
+aisdlc-resources/
   2-Applied-Practice/
     Claude-Support/
     Workshop-1-What-Good-Looks-Like-Expanded/
+  skills/
+    AISDLC-tech-diagrams/
 ```
 
 `course-work` is the participant work repository.
@@ -38,6 +48,16 @@ The participant display folder should use the participant's first and last name.
 ```text
 workshop-1-what-good-looks-like/<first-last-kebab>
 ```
+
+## Existing Skill Dependency
+
+The architecture diagram skill should already be present in ADO:
+
+```text
+aisdlc-resources/skills/AISDLC-tech-diagrams/
+```
+
+Deployment should verify it exists and is installable. Do not overwrite it from this source repo unless explicitly instructed.
 
 ## Internal-Only Material
 
@@ -60,4 +80,3 @@ Keep these local to the instructor laptop or the private GitHub source repo unle
 Deploy only what participants or the Ensemble-side Claude assistant need.
 
 If a file is mainly for instructor planning, provenance, source reconstruction, private prompting, or internal delivery operations, do not copy it to ADO.
-

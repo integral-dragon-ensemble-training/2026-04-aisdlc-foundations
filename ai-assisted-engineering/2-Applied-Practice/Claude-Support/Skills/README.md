@@ -23,9 +23,15 @@ Skills/
 
 ## Architecture Clarity And Diagrams
 
-`Architecture-Clarity-And-Diagrams/` is the planned home for the customized architecture skill.
+`Architecture-Clarity-And-Diagrams/` documents the architecture diagram skill dependency.
 
-For now it is a placeholder that defines expected behavior so the skill can be dropped in later without changing the course structure.
+The canonical Ensemble-side skill is expected at:
+
+```text
+aisdlc-resources/skills/AISDLC-tech-diagrams/
+```
+
+The local Dex equivalent is `justin-tech-diagrams`.
 
 ## Skill Packaging Rule
 
@@ -34,4 +40,3 @@ Each skill folder should include:
 - `SKILL.md` for the core instruction
 - `README.md` for human orientation
 - optional templates, examples, or prompt blocks
-

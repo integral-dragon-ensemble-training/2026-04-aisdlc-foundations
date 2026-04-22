@@ -9,12 +9,27 @@ Your job is to copy approved course-facing material from the GitHub-sourced cour
 Ask the instructor for:
 
 1. Local path to the pulled GitHub course repository.
-2. Local path to the `ai-sdlc-resources` ADO repository.
+2. Local path to the `aisdlc-resources` ADO repository.
 3. Local path to the `course-work` ADO repository.
 4. Whether `course-work-exercises` exists as a required folder in `course-work`.
 5. Whether you should commit only, or commit and push.
 
 Do not copy anything until these paths are confirmed.
+
+## First Verification
+
+Before copying course support material, verify the architecture skill:
+
+```text
+aisdlc-resources/skills/AISDLC-tech-diagrams/
+```
+
+Report whether:
+
+- the folder exists
+- it has a `SKILL.md` or equivalent entrypoint
+- Claude Code can use it as an installed skill or only as a checked-in resource
+- any rendering dependencies are missing
 
 ## Source Path
 
@@ -24,13 +39,21 @@ The expected source inside the GitHub course repository is:
 ai-assisted-engineering/2-Applied-Practice/
 ```
 
-## Destination 1: ai-sdlc-resources
+## Destination 1: aisdlc-resources
 
 Copy participant-facing Applied Practice support into:
 
 ```text
-ai-sdlc-resources/2-Applied-Practice/
+aisdlc-resources/2-Applied-Practice/
 ```
+
+Also verify the existing architecture skill:
+
+```text
+aisdlc-resources/skills/AISDLC-tech-diagrams/
+```
+
+Do not overwrite that skill from this source repository unless explicitly instructed.
 
 Approved folders to copy:
 
@@ -115,7 +138,7 @@ Also do not copy:
 After copying, report:
 
 - source repository path used
-- destination `ai-sdlc-resources` path used
+- destination `aisdlc-resources` path used
 - destination `course-work` path used
 - exact folders copied
 - exact folders excluded
@@ -145,8 +168,7 @@ rsync -av --delete \
   --exclude '~$*.pptx' \
   --exclude '~$*.xlsx' \
   "<source>/Claude-Support/" \
-  "<ai-sdlc-resources>/2-Applied-Practice/Claude-Support/"
+  "<aisdlc-resources>/2-Applied-Practice/Claude-Support/"
 ```
 
 Do not run this blindly. Replace paths after confirmation.
-
