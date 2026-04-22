@@ -1,8 +1,8 @@
 # Course at a Glance
 
-Five sessions, sixty minutes each, delivered across one week. The pattern is consistent so you always know what to expect: a short concept framing, examples drawn from real codebases, an exercise, and a debrief.
+Five workshops. The pattern is consistent so you always know what to expect: a short concept framing, examples drawn from real codebases, an exercise, and a debrief.
 
-## The arc of the week
+## The arc of the program
 
 1. **Define what good looks like.** Establish a shared target for project health before discussing anything about AI.
 2. **Identify the debt that blocks it.** Treat technical debt as friction that makes every change more expensive — not just messy code.
@@ -12,7 +12,7 @@ Five sessions, sixty minutes each, delivered across one week. The pattern is con
 
 ---
 
-## Session 1 — What Good Looks Like
+## Workshop 1 — What Good Looks Like
 
 **Theme.** Define software project health in practical terms.
 
@@ -26,7 +26,7 @@ Five sessions, sixty minutes each, delivered across one week. The pattern is con
 
 ---
 
-## Session 2 — Technical Debt as Friction
+## Workshop 2 — Technical Debt as Friction
 
 **Theme.** See technical debt as the repeated cost your system charges on every change.
 
@@ -41,7 +41,7 @@ Five sessions, sixty minutes each, delivered across one week. The pattern is con
 
 ---
 
-## Session 3 — Using AI to Inspect and Improve
+## Workshop 3 — Using AI to Inspect and Improve
 
 **Theme.** Apply AI as a disciplined engineering tool — to inspect, explain, plan, scaffold, and clean up.
 
@@ -56,7 +56,7 @@ Five sessions, sixty minutes each, delivered across one week. The pattern is con
 
 ---
 
-## Session 4 — Validation: Tests, Observability, Security
+## Workshop 4 — Validation: Tests, Observability, Security
 
 **Theme.** Confidence beats raw speed. An improvement only counts if you can validate it.
 
@@ -71,7 +71,7 @@ Five sessions, sixty minutes each, delivered across one week. The pattern is con
 
 ---
 
-## Session 5 — Making It Repeatable
+## Workshop 5 — Making It Repeatable
 
 **Theme.** Turn one-off cleanup into normal engineering practice.
 
@@ -85,12 +85,6 @@ Five sessions, sixty minutes each, delivered across one week. The pattern is con
 
 ---
 
-## What every session looks like
+## What every workshop looks like
 
-Each 60-minute session follows the same rhythm:
-
-- **0–10 min** — concept framing
-- **10–25 min** — examples and repo inspection
-- **25–45 min** — exercise or small-group activity
-- **45–55 min** — debrief and synthesis
-- **55–60 min** — next-day setup
+Each workshop follows the same rhythm: concept framing, examples and repo inspection, an exercise or small-group activity, a debrief and synthesis, and setup for the next workshop.

@@ -2,7 +2,7 @@
 
 **Integral Dragon** · Delivered for Ensemble Health Partners
 **Phase 2 of 3** (Foundations → **Applied Practice** → Applied)
-**Five sessions, 60 minutes each, taught over one week**
+**Five workshops**
 
 ---
 
@@ -18,31 +18,31 @@
 4. **Validate improvements.** Tests, observability, and security are part of change safety.
 5. **Make it repeatable.** Staged modernization and workflow norms beat heroic rewrites.
 
-## Sessions
+## Workshops
 
 | # | Title | Theme |
 |---|---|---|
-| [01](./Session-1-What-Good-Looks-Like/) | What Good Looks Like | Define project health in practical terms. |
-| [02](./Session-2-Technical-Debt-as-Friction/) | Technical Debt as Friction | Friction is the tax the system charges on every change. |
-| [03](./Session-3-Using-AI-to-Inspect-and-Improve/) | Using AI to Inspect and Improve | Targeted, reviewable AI use on existing codebases. |
-| [04](./Session-4-Validation-Tests-Observability-Security/) | Validation: Tests, Observability, Security | Confidence beats raw speed. |
-| [05](./Session-5-Making-It-Repeatable/) | Making It Repeatable | Cleanup becomes a team habit, not a sprint. |
+| [01](./Workshop-1-What-Good-Looks-Like/) | What Good Looks Like | Define project health in practical terms. |
+| [02](./Workshop-2-Technical-Debt-as-Friction/) | Technical Debt as Friction | Friction is the tax the system charges on every change. |
+| [03](./Workshop-3-Using-AI-to-Inspect-and-Improve/) | Using AI to Inspect and Improve | Targeted, reviewable AI use on existing codebases. |
+| [04](./Workshop-4-Validation-Tests-Observability-Security/) | Validation: Tests, Observability, Security | Confidence beats raw speed. |
+| [05](./Workshop-5-Making-It-Repeatable/) | Making It Repeatable | Cleanup becomes a team habit, not a sprint. |
 
 ## Overview materials
 
 See [`./overview/`](./overview/) for:
 - Course thesis and storyline
-- Five-day course map
+- Course map across the five workshops
 - Topic bank and cut list
 - Course-overview slide deck (HTML + PDF)
 
-## Per-session structure
+## Per-workshop structure
 
-Every session folder follows this layout:
+Every workshop folder follows this layout:
 
 ```
-Session-N-<Title>/
-├── README.md                        — session summary and asset index
+Workshop-N-<Title>/
+├── README.md                        — workshop summary and asset index
 ├── slides/                          — .md source, .html deck, .pdf render
 ├── exercises/                       — exercises + rubrics (.md + .docx)
 ├── resources/                       — curated readings + repos (.md + .docx)
@@ -56,7 +56,7 @@ Everything needed to rebuild these decks lives under [`./_template/`](./_templat
 - `slide-template.html` — reference HTML template (McKinsey-blue Integral Dragon style)
 - `render-pdf.sh` — HTML → PDF via headless Chrome (1280×720)
 - `render-docx.sh` — Markdown → DOCX via pandoc
-- `AGENT-BRIEF.md` — instructions for LLM agents building new sessions
+- `AGENT-BRIEF.md` — instructions for LLM agents building new workshops
 
 ## Brand tokens (quick reference)
 

@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280,initial-scale=1">
+<title>Workshop 1 — What Good Looks Like</title>
+<style>
+/* =======================================================================
+   INTEGRAL DRAGON · Slide deck — Workshop 1 (McKinsey-blue)
+======================================================================= */
+
+:root {
+    --bg:          #0b1429;
+    --bg-2:        #0f1a33;
+    --surface:     #17233f;
+    --surface-2:   #1e2d4f;
+    --line:        #26355a;
+    --line-soft:   #1a2340;
+    --text:        #f7f9fc;
+    --muted:       #cfd6e6;
+    --soft:        #92a1c0;
+    --accent:      #3ab5cc;
+    --accent-2:    #4fc1d8;
+    --accent-soft: rgba(58, 181, 204, 0.18);
+    --card-bg:     #f6f9fc;
+    --card-text:   #0b1429;
+    --card-muted:  #3f4a64;
+    --good:        #6ed2a5;
+    --warn:        #f3c879;
+    --danger:      #ff8d8d;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+body {
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+}
+
+.slide {
+    width: 1280px;
+    height: 720px;
+    padding: 48px 64px;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+    background:
+        radial-gradient(circle at 110% -10%, rgba(58, 181, 204, 0.18), transparent 32%),
+        radial-gradient(circle at -10% 110%, rgba(58, 181, 204, 0.10), transparent 36%),
+        linear-gradient(160deg, var(--bg) 0%, #0d1831 100%);
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; break-after: auto; }
+
+.slide-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    color: var(--text);
+    text-transform: uppercase;
+}
+.eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.eyebrow .sep { color: var(--soft); }
+.eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--accent);
+    display: inline-block;
+}
+
+.slide-body { display: grid; align-content: start; gap: 22px; min-height: 0; overflow: hidden; }
+
+h1, h2, h3, h4, p, ul, ol { margin: 0; }
+.display {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    color: var(--text);
+    max-width: 22ch;
+}
+.headline {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--text);
+}
+.sub {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 72ch;
+}
+.accent-line {
+    width: 72px; height: 3px; background: var(--accent); border-radius: 2px;
+}
+.rule {
+    height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--accent) 0, var(--accent) 120px, var(--line) 120px, var(--line) 100%);
+}
+
+ul.arrows { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+ul.arrows li {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+ul.arrows li .bullet {
+    flex: 0 0 auto;
+    width: 22px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.45;
+}
+ul.arrows li .text { flex: 1 1 auto; min-width: 0; }
+ul.arrows li strong { color: var(--text); font-weight: 600; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; }
+.grid-3x3 { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 12px; }
+
+.card {
+    background: var(--card-bg);
+    color: var(--card-text);
+    border-radius: 10px;
+    padding: 22px 24px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    display: grid;
+    gap: 8px;
+    align-content: start;
+}
+.card h3 {
+    color: var(--card-text);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+}
+.card p, .card li {
+    color: var(--card-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+.card ul { padding-left: 18px; display: grid; gap: 4px; }
+.card .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+/* Compact cards for 3x3 grid */
+.grid-3x3 .card {
+    padding: 12px 14px;
+    gap: 4px;
+    border-left-width: 3px;
+    border-radius: 8px;
+}
+.grid-3x3 .card h3 {
+    font-size: 14px;
+    line-height: 1.2;
+}
+.grid-3x3 .card p {
+    font-size: 12px;
+    line-height: 1.35;
+}
+.grid-3x3 .card .tag {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+}
+
+.panel {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: grid;
+    gap: 10px;
+}
+.panel h3 { color: var(--text); font-size: 17px; font-weight: 600; }
+.panel p, .panel li { color: var(--muted); font-size: 15px; line-height: 1.5; }
+.panel ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+.panel ul li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+.panel ul li::before { content: "■"; color: var(--accent); font-size: 10px; line-height: 1.7; }
+
+/* Two-column checklist layout */
+.checklist-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 28px;
+}
+.checklist-2col .check-item {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--muted);
+}
+.checklist-2col .check-item .num {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+.checklist-2col .check-item strong { color: var(--text); font-weight: 600; }
+
+.slide.title {
+    grid-template-rows: auto 1fr auto;
+    padding-right: 64px;
+}
+.slide.title .title-art {
+    position: absolute;
+    right: -80px;
+    top: 40px;
+    width: 620px;
+    height: 620px;
+    pointer-events: none;
+    opacity: 0.9;
+}
+.title-meta {
+    display: flex; align-items: center; gap: 14px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+}
+.title-program {
+    margin-top: 16px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+.slide.close {
+    background:
+        radial-gradient(circle at 50% -20%, rgba(58, 181, 204, 0.22), transparent 50%),
+        linear-gradient(180deg, var(--bg) 0%, #0a1225 100%);
+    text-align: center;
+    align-items: center;
+}
+.slide.close .slide-body { align-content: center; justify-items: center; text-align: center; }
+.slide.close .display { text-align: center; max-width: 28ch; }
+
+.slide-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+hr.hair { border: none; height: 1px; background: var(--line-soft); margin: 4px 0; }
+
+@page {
+    size: 1280px 720px;
+    margin: 0;
+}
+@media print {
+    html, body { background: var(--bg); }
+    .slide {
+        margin: 0 !important;
+        width: 1280px !important;
+        height: 720px !important;
+        page-break-after: always;
+    }
+    .slide:last-child { page-break-after: auto; }
+}
+
+@media screen {
+    body { padding: 24px; }
+    .slide { margin: 0 auto 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); border-radius: 6px; }
+}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     SLIDE 1 — TITLE
+====================================================================== -->
+<section class="slide title">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <svg class="title-art" viewBox="0 0 620 620" aria-hidden="true">
+        <defs>
+            <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#3ab5cc" stop-opacity="0.28" />
+                <stop offset="100%" stop-color="#3ab5cc" stop-opacity="0.02" />
+            </radialGradient>
+        </defs>
+        <rect x="80" y="40" width="500" height="500" rx="28" fill="url(#g1)" />
+        <circle cx="360" cy="300" r="190" fill="none" stroke="#3ab5cc" stroke-width="1.5" opacity="0.55" />
+        <circle cx="360" cy="300" r="120" fill="#3ab5cc" opacity="0.18" />
+        <circle cx="360" cy="300" r="60" fill="#3ab5cc" opacity="0.32" />
+    </svg>
+    <div class="slide-body">
+        <div>
+            <div class="title-meta">MODULE 02 &nbsp;·&nbsp; WORKSHOP 01</div>
+            <h1 class="display" style="margin-top: 18px;">What Good Looks Like</h1>
+            <div class="accent-line" style="margin-top: 22px;"></div>
+            <p class="sub" style="margin-top: 18px;">Define project health in practical terms.</p>
+            <p class="title-program">AI-Accelerated Software Development &nbsp;|&nbsp; Applied Practice</p>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>01</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 2 — Why start here
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>WORKSHOP 01 <span class="sep">|</span> FRAMING</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Why this course starts with "what good looks like"</h2>
+        <div class="rule"></div>
+        <ul class="arrows">
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>You need a quality target first.</strong> If you cannot define healthy project qualities, AI will optimize the wrong thing.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>More code is not automatically progress.</strong> AI amplifies both clarity and confusion.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>A good project is easier to change.</strong> Understandable, testable, debuggable, observable, operable.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Debt comes next.</strong> You cannot diagnose friction without a picture of what "healthy" looks like.</span></li>
+        </ul>
+    </div>
+    <div class="slide-foot">
+        <span>Workshop 01 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>02</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 3 — Healthy project > clean code
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>WORKSHOP 01 <span class="sep">|</span> MENTAL MODEL</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">A healthy project has more than clean code</h2>
+        <div class="rule"></div>
+        <div class="grid-2">
+            <div class="panel">
+                <h3>Clean code is one slice</h3>
+                <p>Style, naming, and internal hygiene matter — but they are a small fraction of how changeable a system really is.</p>
+                <ul>
+                    <li>readable modules</li>
+                    <li>reasonable names</li>
+                    <li>low duplication</li>
+                </ul>
+            </div>
+            <div class="panel">
+                <h3>Project health is broader</h3>
+                <p>Docs, environment setup, release process, and operational visibility are all part of software quality.</p>
+                <ul>
+                    <li>docs you can trust</li>
+                    <li>setup that reproduces</li>
+                    <li>runtime you can see</li>
+                    <li>releases you can verify</li>
+                </ul>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 4px;">Teams suffer when these are weak even if the code style looks decent.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Workshop 01 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>03</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 4 — Nine categories of project health
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>WORKSHOP 01 <span class="sep">|</span> FRAMEWORK</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Nine categories of project health</h2>
+        <div class="rule"></div>
+        <div class="grid-3x3" style="flex: 1;">
+            <div class="card">
+                <span class="tag">Category 01</span>
+                <h3>Documentation &amp; discoverability</h3>
+                <p>A repo that tells the next engineer how to understand, run, and change it.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 02</span>
+                <h3>Architecture clarity &amp; boundaries</h3>
+                <p>Clear responsibilities, dependency direction, useful diagrams.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 03</span>
+                <h3>Reproducible developer setup</h3>
+                <p>Clean-machine onboarding with bounded effort and no oral tradition.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 04</span>
+                <h3>Testability &amp; quality confidence</h3>
+                <p>Tests that help you move, not vanity coverage. Confidence, not theater.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 05</span>
+                <h3>Build, deploy &amp; release discipline</h3>
+                <p>Repeatable builds, clear versions, verifiable deployments.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 06</span>
+                <h3>Data, schema &amp; environment</h3>
+                <p>Reviewable migrations, trustworthy seed data, reversible changes.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 07</span>
+                <h3>Observability &amp; operability</h3>
+                <p>Logs, traces, metrics, and deploy visibility that support diagnosis.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 08</span>
+                <h3>Security &amp; supply chain</h3>
+                <p>Secrets managed, dependencies scanned, secure defaults deliberate.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 09</span>
+                <h3>Workflow &amp; collaboration</h3>
+                <p>Small reviewable changes, clear ownership, AI output reviewed like any diff.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Workshop 01 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>04</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 5 — Top 12 checklist
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>WORKSHOP 01 <span class="sep">|</span> CHECKLIST</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">The top 12 "what good looks like" checks</h2>
+        <div class="rule"></div>
+        <div class="checklist-2col">
+            <div class="check-item"><span class="num">01</span><span><strong>README is trustworthy.</strong></span></div>
+            <div class="check-item"><span class="num">07</span><span><strong>Test data is intentional,</strong> not accidental.</span></div>
+            <div class="check-item"><span class="num">02</span><span><strong>Architecture is understandable</strong> at a glance.</span></div>
+            <div class="check-item"><span class="num">08</span><span><strong>Versions and releases are visible.</strong></span></div>
+            <div class="check-item"><span class="num">03</span><span><strong>Local setup is reproducible.</strong></span></div>
+            <div class="check-item"><span class="num">09</span><span><strong>Deployments can be verified.</strong></span></div>
+            <div class="check-item"><span class="num">04</span><span><strong>Project builds</strong> in a clean environment.</span></div>
+            <div class="check-item"><span class="num">10</span><span><strong>Logs, metrics, and traces</strong> explain behavior.</span></div>
+            <div class="check-item"><span class="num">05</span><span><strong>Tests provide real confidence.</strong></span></div>
+            <div class="check-item"><span class="num">11</span><span><strong>Secrets and dependency risk</strong> are managed deliberately.</span></div>
+            <div class="check-item"><span class="num">06</span><span><strong>Schema changes</strong> are versioned and reviewable.</span></div>
+            <div class="check-item"><span class="num">12</span><span><strong>Workflow supports</strong> small, repeatable improvements.</span></div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Workshop 01 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>05</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 6 — Important nuances
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>WORKSHOP 01 <span class="sep">|</span> NUANCES</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Four nuances to teach in the first workshop</h2>
+        <div class="rule"></div>
+        <div class="grid-2x2" style="flex: 1;">
+            <div class="card">
+                <span class="tag">Testability</span>
+                <h3>Not "run the full system locally"</h3>
+                <p>For distributed systems, the better standard is <strong>meaningful local or isolated testability</strong> — not perfect local parity.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Confidence</span>
+                <h3>Not "high coverage"</h3>
+                <p>Coverage is a count. Confidence is a capability. Teach <strong>risk-relevant testing</strong>, not number-chasing.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Security</span>
+                <h3>Not "no passwords in code"</h3>
+                <p>Teach <strong>secrets management and secure default handling</strong> — including dependency and supply-chain hygiene.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Observability</span>
+                <h3>Not "just logs"</h3>
+                <p>Teach <strong>logs + traces + metrics + deploy visibility + debugging usefulness</strong>. It is part of maintainability.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Workshop 01 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>06</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 7 — Exercise: Repository Health Scorecard
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>WORKSHOP 01 <span class="sep">|</span> EXERCISE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Exercise: Repository Health Scorecard</h2>
+        <div class="rule"></div>
+        <div class="grid-2">
+            <div class="panel">
+                <h3>What you will do</h3>
+                <ul>
+                    <li>Review a real repo: README, structure, workflows, visible docs.</li>
+                    <li>Score each of the nine categories from 1 to 5.</li>
+                    <li>Write one sentence explaining each low score.</li>
+                    <li>Identify the three weaknesses most likely to slow future change.</li>
+                </ul>
+            </div>
+            <div class="panel">
+                <h3>How to use AI</h3>
+                <ul>
+                    <li>Ask AI to summarize repo structure and surface missing docs.</li>
+                    <li>Ask AI to list visible testing and CI signals.</li>
+                    <li>Do not let AI assign scores — humans own the judgment.</li>
+                    <li>Ground every score in actual repo evidence.</li>
+                </ul>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 4px;">Output: a scored rubric, a top-three problem list, and a one-paragraph conclusion. Time: 15–20 minutes in pairs or small groups.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Workshop 01 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>07</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 8 — CLOSING
+====================================================================== -->
+<section class="slide close">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <div class="eyebrow"><span class="dot"></span>CLOSE OUT</div>
+        <h1 class="display" style="margin-top: 14px;">The point is not more code.<br><span style="color: var(--accent);">The point is easier change.</span></h1>
+        <div class="accent-line" style="margin: 22px auto;"></div>
+        <p class="sub" style="max-width: 56ch;">Good engineering fundamentals do not compete with AI. They make AI more powerful. Tomorrow: the friction and debt that block "good" — and how to see it clearly.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>08</span>
+    </div>
+</section>
+
+</body>
+</html>
