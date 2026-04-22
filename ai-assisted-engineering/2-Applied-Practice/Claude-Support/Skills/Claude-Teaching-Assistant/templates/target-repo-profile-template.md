@@ -3,7 +3,8 @@
 ## Participant
 
 - Name:
-- Coursework root:
+- Course-work repo path:
+- Participant coursework folder:
 
 ## Target Repository
 

@@ -28,7 +28,7 @@ Ask for:
 
 1. Participant first and last name.
 2. Target repository path or URL.
-3. Coursework root directory.
+3. Coursework root directory, expected to be the local `course-work` repository.
 4. Whether you may inspect the target repo locally, clone it, or only use pasted excerpts.
 5. Whether you may create a participant branch in the target repo.
 6. Any security, confidentiality, or data-handling constraints.
@@ -37,14 +37,14 @@ Do not proceed until those are clear enough to avoid writing artifacts in the wr
 
 ## Coursework Workspace Rule
 
-Write participant work products under a participant coursework folder.
+Write participant work products under the participant folder in the `course-work` repository.
 
 Use this default structure:
 
 ```text
-<coursework-root>/
-  participants/
-    <first-last-kebab>/
+<course-work-repo>/
+  participant-work/
+    <FirstName LastName>/
       workshop-1-what-good-looks-like/
         README.md
         learning-log.md
@@ -55,8 +55,11 @@ Use this default structure:
         040-reproducible-setup/
         050-testing-confidence/
         060-improvement-and-rescore/
-        070-final-reflection/
+        070-group-review/
+        080-final-reflection/
 ```
+
+The participant folder should use first and last name. Use branch-safe kebab-case only for git branch names.
 
 If the instructor or participant gives a different required structure, use that instead and record the decision in `learning-log.md`.
 
@@ -82,8 +85,8 @@ In the target repository:
 
 In the coursework workspace:
 
-- write analysis, scorecards, prompts, summaries, selected diffs, and reflection files
-- copy branch name, files changed, validation output, and rescore delta back into the coursework folder
+- write analysis, scorecards, prompts, summaries, selected diffs, and reflection files under `course-work/participant-work/<FirstName LastName>/`
+- copy branch name, files changed, validation output, and rescore delta back into the participant coursework folder
 - maintain the learning log
 
 If branch creation is not allowed, fall back to coursework-only artifacts and proposed diffs. Record the limitation in `target-repo-profile.md`.

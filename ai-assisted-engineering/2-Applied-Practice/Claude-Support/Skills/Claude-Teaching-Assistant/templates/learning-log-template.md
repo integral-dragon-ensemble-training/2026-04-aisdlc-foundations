@@ -6,7 +6,9 @@ Workshop: Workshop 1 - What Good Looks Like
 
 Target repository:
 
-Coursework root:
+Course-work repo path:
+
+Participant coursework folder:
 
 Participant branch:
 

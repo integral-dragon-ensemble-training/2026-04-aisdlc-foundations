@@ -66,10 +66,10 @@ ai-assisted-engineering/2-Applied-Practice/Claude-Support/Skills/Claude-Teaching
 
 The intended model is:
 
-- participant starts Claude with a target repository and coursework root directory
-- Claude asks for participant name, target repo, coursework root, and safety constraints
+- participant starts Claude with a target repository and local `course-work` repository
+- Claude asks for participant name, target repo, course-work repo path, and safety constraints
 - target repo work happens on a participant branch
-- class artifacts are written to the participant coursework workspace
+- class artifacts are written to `course-work/participant-work/<FirstName LastName>/`
 - Claude maintains a visible learning log
 - nothing is merged until group review
 

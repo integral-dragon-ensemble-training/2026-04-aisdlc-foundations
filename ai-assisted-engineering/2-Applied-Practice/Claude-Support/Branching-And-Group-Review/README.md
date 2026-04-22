@@ -8,7 +8,7 @@ This defines the Applied Practice branch model for participant work.
 target repo main branch
   -> participant branch
   -> individual Claude-assisted work
-  -> coursework artifacts
+  -> course-work/participant-work/<FirstName LastName> artifacts
   -> group review
   -> selected changes merged later through normal team process
 ```
@@ -35,7 +35,7 @@ workshop-1-what-good-looks-like/carlos-rivera
 - Branches are candidate work areas, not merge instructions.
 - Do not merge into production, main, develop, or a real feature branch during individual work.
 - Do not push unless the instructor and team process allow it.
-- Preserve a coursework copy of the branch summary, validation results, and rescore delta.
+- Preserve a coursework copy of the branch summary, validation results, and rescore delta under `course-work/participant-work/<FirstName LastName>/`.
 
 ## Why This Model
 
@@ -70,4 +70,3 @@ As a team, decide:
 - what needs security, architecture, or manager review
 - what should become backlog work
 - what the new team score is after selected changes
-

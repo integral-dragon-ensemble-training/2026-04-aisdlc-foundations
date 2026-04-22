@@ -5,9 +5,9 @@ This is the recommended structure for participant work.
 ## Default Structure
 
 ```text
-<coursework-root>/
-  participants/
-    <first-last-kebab>/
+<course-work-repo>/
+  participant-work/
+    <FirstName LastName>/
       workshop-1-what-good-looks-like/
         README.md
         learning-log.md
@@ -28,7 +28,9 @@ This is the recommended structure for participant work.
           improvement-options.md
           selected-improvement.md
           rescore-delta.md
-        070-final-reflection/
+        070-group-review/
+          group-review-packet.md
+        080-final-reflection/
           reflection.md
 ```
 
@@ -54,7 +56,7 @@ Recommended branch:
 workshop-1-what-good-looks-like/<first-last-kebab>
 ```
 
-Branch work should still be summarized in the coursework folder.
+Branch work should still be summarized in the participant coursework folder.
 
 At minimum, copy back:
 
@@ -67,7 +69,7 @@ At minimum, copy back:
 
 ## Instructor Review Surface
 
-The instructor should be able to review the participant coursework folder and understand:
+The instructor should be able to review `course-work/participant-work/<FirstName LastName>/` and understand:
 
 - what repository was targeted
 - what evidence was inspected

@@ -29,7 +29,7 @@ Claude-Teaching-Assistant/
 
 ## Recommended Use
 
-Participants should start Claude Code from the target repository working copy when possible. They should also provide a separate coursework root directory where all class artifacts will be written.
+Participants should start Claude Code from the target repository working copy when possible. They should also provide the local `course-work` repository path where all class artifacts will be written.
 
 They should paste:
 
@@ -41,7 +41,7 @@ Claude should then ask for:
 
 - participant first and last name
 - target repository path or URL
-- coursework root directory
+- coursework root directory, expected to be the local `course-work` repository
 - whether Claude may create the participant branch
 - whether any security or confidentiality constraints apply
 
@@ -50,12 +50,12 @@ Claude should then ask for:
 Default mode is coursework workspace plus participant target branch:
 
 - inspect the target repo
-- write all class artifacts to the participant coursework folder
+- write all class artifacts to `course-work/participant-work/<FirstName LastName>/`
 - create or request a participant branch before candidate changes
 - do not merge into the production branch
 - do not push unless explicitly approved
 
-All branch summaries, diffs, validation results, and rescore deltas still get copied back into the coursework folder.
+All branch summaries, diffs, validation results, and rescore deltas still get copied back into the participant coursework folder.
 
 Recommended branch name:
 

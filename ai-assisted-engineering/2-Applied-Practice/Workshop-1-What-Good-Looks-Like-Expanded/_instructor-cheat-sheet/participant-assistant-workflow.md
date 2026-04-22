@@ -21,14 +21,14 @@ Claude's role is to:
 
 Default to coursework workspace plus participant branch.
 
-Participants inspect a target repo and create candidate work on their own branch, but workshop outputs live in a separate coursework folder.
+Participants inspect a target repo and create candidate work on their own branch, but workshop outputs live in the `course-work` repo.
 
 Recommended participant workspace:
 
 ```text
-<coursework-root>/
-  participants/
-    <first-last-kebab>/
+course-work/
+  participant-work/
+    <FirstName LastName>/
       workshop-1-what-good-looks-like/
 ```
 
@@ -48,7 +48,7 @@ Rules:
 
 - do not merge into production or a real feature branch during individual work
 - do not push unless explicitly approved
-- copy branch name, diff summary, validation, and rescore delta back into the coursework folder
+- copy branch name, diff summary, validation, and rescore delta back into `course-work/participant-work/<FirstName LastName>/`
 - compare branches as a group before deciding what should be merged
 
 ## Learning Log Positioning
@@ -108,6 +108,6 @@ You are going to use Claude Code as a teaching assistant, not as an answer machi
 It will help you inspect the repo, collect evidence, and generate prompts for the next step.
 Your job is to review the evidence, make the scoring decision, and choose a small improvement.
 
-Keep class artifacts in your coursework folder. Use your own target-project branch for candidate changes, but do not merge anything yet.
+Keep class artifacts in your `course-work/participant-work/<FirstName LastName>/` folder. Use your own target-project branch for candidate changes, but do not merge anything yet.
 Claude will keep a short learning log so you can resume work and so I can see where the class needs more support.
 ```

@@ -18,13 +18,13 @@ Important boundaries:
 - Use a participant branch in the target repository for candidate changes.
 - Do not merge into the production branch or a real feature branch.
 - Do not push, install global tools, run destructive commands, or contact external services unless I approve.
-- Keep all class artifacts in my coursework root directory.
+- Keep all class artifacts in the `course-work/participant-work/<FirstName LastName>/` folder.
 - Maintain a visible learning log so I can resume work and the instructor can understand where I need help.
 
 Start by briefly explaining the workflow, then ask me for:
 1. my first and last name
 2. the target repository path or URL
-3. my coursework root directory
+3. my coursework root directory, expected to be the local `course-work` repository
 4. whether you can inspect or clone the target repo
 5. whether you may create the participant branch
 6. any security or confidentiality constraints

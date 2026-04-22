@@ -9,6 +9,10 @@ It is intentionally not workshop-specific. Workshop folders can point here inste
 ```text
 Claude-Support/
   README.md
+  ADO-Deployment/
+    README.md
+    deployment-instructions-for-claude.md
+    export-map.md
   Skills/
     README.md
     Claude-Teaching-Assistant/
@@ -25,13 +29,14 @@ Claude-Support/
 - `Skills/Architecture-Clarity-And-Diagrams/` is the planned home for the customized architecture skill.
 - `Branching-And-Group-Review/` defines the participant branch and team review model.
 - `Claude-Sandboxing/` is a placeholder for sandboxing and execution-environment guidance.
+- `ADO-Deployment/` tells the Ensemble-side Claude how to deploy approved material to ADO.
 
 ## Operating Model
 
 The current Applied Practice model is:
 
 ```text
-coursework workspace
+course-work/participant-work/<FirstName LastName>
   + participant branch in target repo
   + no merge during individual work
   + group review before adoption
@@ -39,14 +44,30 @@ coursework workspace
 
 Participants use Claude Code to inspect and improve real project repositories, but the output is staged:
 
-- coursework artifacts go into the participant coursework folder
+- coursework artifacts go into `course-work/participant-work/<FirstName LastName>/`
 - candidate code or docs changes go onto the participant branch
 - team decisions happen later in group review
 - production branches are not updated automatically
+
+## ADO Repositories
+
+Expected ADO destinations:
+
+```text
+ai-sdlc-resources/
+course-work/
+```
+
+`ai-sdlc-resources` gets course-facing resources.
+
+`course-work` gets participant work under:
+
+```text
+course-work/participant-work/<FirstName LastName>/
+```
 
 ## Naming
 
 Use `Claude Support`, not `cloud support`.
 
 Use non-underscore folders for participant-facing support material. Keep underscore prefixes for private/internal instructor or pipeline material.
-
