@@ -3,7 +3,7 @@
 ## Participant
 
 - Name:
-- Workspace:
+- Coursework root:
 
 ## Target Repository
 
@@ -11,8 +11,9 @@
 - Repo path or URL:
 - Local clone path:
 - Primary language or stack:
-- Access mode: artifact-only / patch-allowed
-- Branch name, if patch-allowed:
+- Participant branch:
+- Branch creation allowed: yes / no
+- Merge allowed during workshop: no
 
 ## Safety And Confidentiality
 
@@ -20,7 +21,7 @@
 - Secrets or credentials present:
 - External service restrictions:
 - Commands that should not be run:
-- Files or directories to avoid copying into homework artifacts:
+- Files or directories to avoid copying into coursework artifacts:
 
 ## Workshop Scope
 
@@ -31,4 +32,3 @@
 ## Notes
 
 -
-

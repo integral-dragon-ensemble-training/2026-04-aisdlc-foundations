@@ -47,13 +47,13 @@ Then we measure again.
 
 ## Participant Assistant Layer
 
-`claude-teaching-assistant/` supports independent participant work between instructor touchpoints.
+`../Claude-Support/Skills/Claude-Teaching-Assistant/` supports independent participant work between instructor touchpoints.
 
 It gives Claude Code instructions to:
 
 - collect participant and target repo setup details
-- create a participant workspace
-- keep target repo changes off by default
+- create a participant coursework workspace
+- use a participant target-repo branch for candidate changes
 - guide each exercise step in order
 - maintain a visible learning log
 - produce artifacts the instructor can review

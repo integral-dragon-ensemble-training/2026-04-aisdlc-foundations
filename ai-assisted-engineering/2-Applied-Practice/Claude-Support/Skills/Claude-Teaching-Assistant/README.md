@@ -15,9 +15,9 @@ The assistant's job is not to do the assignment for the participant. Its job is 
 ## Files
 
 ```text
-claude-teaching-assistant/
+Claude-Teaching-Assistant/
   README.md
-  CLAUDE.md
+  SKILL.md
   participant-startup-prompt.md
   workspace-model.md
   artifact-checklist.md
@@ -29,7 +29,7 @@ claude-teaching-assistant/
 
 ## Recommended Use
 
-Participants should start Claude Code in their homework/workspace repository or directory, not in the production target repo.
+Participants should start Claude Code from the target repository working copy when possible. They should also provide a separate coursework root directory where all class artifacts will be written.
 
 They should paste:
 
@@ -41,26 +41,26 @@ Claude should then ask for:
 
 - participant first and last name
 - target repository path or URL
-- homework/workspace root
-- whether target repo access is read-only or patch-allowed
+- coursework root directory
+- whether Claude may create the participant branch
 - whether any security or confidentiality constraints apply
 
 ## Default Safety Model
 
-Default mode is artifact-only:
+Default mode is coursework workspace plus participant target branch:
 
 - inspect the target repo
-- write all work products to the participant homework folder
-- do not modify the target repo
-- do not commit to the target repo
-- do not push branches
+- write all class artifacts to the participant coursework folder
+- create or request a participant branch before candidate changes
+- do not merge into the production branch
+- do not push unless explicitly approved
 
-If patch work is allowed, use a separate branch and still copy the relevant summaries, diffs, and results into the homework folder.
+All branch summaries, diffs, validation results, and rescore deltas still get copied back into the coursework folder.
 
 Recommended branch name:
 
 ```text
-workshop-1-what-good-looks-like/<first-last>
+workshop-1-what-good-looks-like/<first-last-kebab>
 ```
 
 ## Transparency Note
@@ -76,3 +76,9 @@ It is framed as a working journal:
 - what remains confusing
 
 This gives the instructor enough signal to see whether the participant is engaging and understanding the material without turning the exercise into covert monitoring.
+
+## Group Review Model
+
+Multiple participants on the same team may produce different branches and different improvement proposals.
+
+That is intentional. The team should compare the candidate branches and coursework artifacts, decide which ideas are actually worth merging, and then rescore together.

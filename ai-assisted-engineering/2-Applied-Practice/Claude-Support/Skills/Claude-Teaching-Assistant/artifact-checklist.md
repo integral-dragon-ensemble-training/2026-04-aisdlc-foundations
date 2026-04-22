@@ -7,7 +7,8 @@ Use this checklist to verify that participant work is reviewable.
 - [ ] `README.md` exists in the participant workshop folder.
 - [ ] `learning-log.md` exists and has at least one entry.
 - [ ] `target-repo-profile.md` identifies the target repository and access mode.
-- [ ] Target repo mode is clear: artifact-only or patch-allowed.
+- [ ] Coursework root directory is clear.
+- [ ] Participant branch is named, or branch limitation is documented.
 - [ ] Security or confidentiality constraints are noted.
 
 ## Required Workshop Artifacts
@@ -24,7 +25,9 @@ Use this checklist to verify that participant work is reviewable.
 - [ ] Testing findings distinguish coverage from confidence.
 - [ ] Candidate lockdown tests are identified.
 - [ ] One small improvement option is selected.
+- [ ] Branch summary or proposed-diff summary exists.
 - [ ] Rescore delta exists, or the reason no rescore was possible is documented.
+- [ ] Group review recommendation exists.
 - [ ] Final reflection exists.
 
 ## Review Questions
@@ -37,4 +40,3 @@ Use these to assess understanding:
 - Did the participant choose a small, reviewable improvement?
 - Did the participant understand why the improvement would reduce change friction?
 - Did the participant capture what remains unproven?
-

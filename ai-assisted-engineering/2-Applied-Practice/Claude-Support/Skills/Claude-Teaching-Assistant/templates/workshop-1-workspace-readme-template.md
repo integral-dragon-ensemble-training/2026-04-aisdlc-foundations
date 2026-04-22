@@ -4,7 +4,9 @@ Participant:
 
 Target repository:
 
-Access mode:
+Coursework root:
+
+Participant branch:
 
 ## Goal
 
@@ -27,4 +29,3 @@ Use Claude Code to assess repository health, identify change friction, make or p
 - Current step:
 - Last updated:
 - Next step:
-

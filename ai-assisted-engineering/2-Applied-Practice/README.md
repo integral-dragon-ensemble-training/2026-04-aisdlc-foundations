@@ -36,6 +36,15 @@ See [`./overview/`](./overview/) for:
 - Topic bank and cut list
 - Course-overview slide deck (HTML + PDF)
 
+## Claude support
+
+See [`./Claude-Support/`](./Claude-Support/) for shared Claude Code support material:
+
+- participant teaching assistant skill
+- participant branch and group review workflow
+- placeholder for the customized architecture skill
+- TBD sandboxing guidance
+
 ## Per-workshop structure
 
 Every workshop folder follows this layout:

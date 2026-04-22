@@ -42,15 +42,15 @@ We are not committing, deploying, or running destructive commands.
 
 ## Participant Assistant Model
 
-Participants can use the materials in `../claude-teaching-assistant/` to have Claude Code guide them when the instructor is not present.
+Participants can use the shared materials in `../../Claude-Support/Skills/Claude-Teaching-Assistant/` to have Claude Code guide them when the instructor is not present.
 
 The default model is:
 
 ```text
-target repo: inspect only
-homework folder: write class artifacts
+target repo: participant branch for candidate changes
+coursework folder: write class artifacts
 learning log: visible working journal
-patches: optional, branch-based, instructor-approved
+merge: group review only, not during individual work
 ```
 
 Use `participant-assistant-workflow.md` for the instructor explanation and review criteria.

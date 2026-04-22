@@ -16,11 +16,6 @@ The central teaching move is simple:
 Workshop-1-What-Good-Looks-Like-Expanded/
   README.md
   000-expansion-map.md
-  claude-teaching-assistant/
-    CLAUDE.md
-    participant-startup-prompt.md
-    workspace-model.md
-    artifact-checklist.md
   narrative/
     workshop-1-expanded-narrative.md
   exercises/
@@ -63,16 +58,20 @@ define quality target
 
 ## Claude Teaching Assistant
 
-`claude-teaching-assistant/` contains participant-facing instructions for using Claude Code as a guided teaching assistant.
+The reusable participant-facing Claude assistant now lives in:
+
+```text
+ai-assisted-engineering/2-Applied-Practice/Claude-Support/Skills/Claude-Teaching-Assistant/
+```
 
 The intended model is:
 
-- participant starts Claude in a homework/workspace directory
-- Claude asks for participant name, target repo, workspace root, and safety constraints
-- target repo is read-only by default
-- class artifacts are written to the participant workspace
+- participant starts Claude with a target repository and coursework root directory
+- Claude asks for participant name, target repo, coursework root, and safety constraints
+- target repo work happens on a participant branch
+- class artifacts are written to the participant coursework workspace
 - Claude maintains a visible learning log
-- optional patches use a separate branch and are still summarized in the homework folder
+- nothing is merged until group review
 
 ## Recommended Delivery
 

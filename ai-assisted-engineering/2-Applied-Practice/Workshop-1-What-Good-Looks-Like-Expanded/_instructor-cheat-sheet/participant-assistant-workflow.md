@@ -19,14 +19,14 @@ Claude's role is to:
 
 ## Recommended Operating Model
 
-Default to artifact-only work.
+Default to coursework workspace plus participant branch.
 
-Participants inspect a target repo, but their workshop outputs live in a separate homework/workspace folder.
+Participants inspect a target repo and create candidate work on their own branch, but workshop outputs live in a separate coursework folder.
 
 Recommended participant workspace:
 
 ```text
-<homework-root>/
+<coursework-root>/
   participants/
     <first-last-kebab>/
       workshop-1-what-good-looks-like/
@@ -36,21 +36,20 @@ This avoids filling production repos with early training artifacts while still g
 
 ## Target Repo Branch Advice
 
-Do not make target repo branches mandatory.
-
-Use this default:
-
-- analysis artifacts go into the homework folder
-- target repo remains read-only
-- patch work is optional and instructor-approved
-
-If a patch is allowed, use:
+Use a participant branch for candidate project changes:
 
 ```text
 workshop-1-what-good-looks-like/<first-last-kebab>
 ```
 
-Even then, the participant should copy the branch name, diff summary, validation, and rescore delta back into the homework folder.
+The branch is a candidate work area, not a merge instruction.
+
+Rules:
+
+- do not merge into production or a real feature branch during individual work
+- do not push unless explicitly approved
+- copy branch name, diff summary, validation, and rescore delta back into the coursework folder
+- compare branches as a group before deciding what should be merged
 
 ## Learning Log Positioning
 
@@ -81,11 +80,11 @@ Avoid framing it as surveillance. Also do not hide that it includes timestamps.
 Several risks need management:
 
 - Participants may let Claude score without reviewing evidence.
-- Participants may accidentally write artifacts into the target repo.
+- Participants may accidentally write coursework artifacts into the target repo.
 - Participants may produce polished but unsupported analysis.
 - Some target repos may be too locked down for local inspection.
 - Sensitive repos may require redaction rules before artifacts are copied.
-- Patch work can distract from the core learning loop.
+- Branch work can distract from the core learning loop if the branch becomes a refactor playground.
 
 ## Instructor Checks
 
@@ -109,7 +108,6 @@ You are going to use Claude Code as a teaching assistant, not as an answer machi
 It will help you inspect the repo, collect evidence, and generate prompts for the next step.
 Your job is to review the evidence, make the scoring decision, and choose a small improvement.
 
-Keep your work in your class workspace, not in the production repo by default.
+Keep class artifacts in your coursework folder. Use your own target-project branch for candidate changes, but do not merge anything yet.
 Claude will keep a short learning log so you can resume work and so I can see where the class needs more support.
 ```
-

@@ -1,11 +1,11 @@
-# Participant Workspace Model
+# Participant Coursework And Branch Model
 
 This is the recommended structure for participant work.
 
 ## Default Structure
 
 ```text
-<homework-root>/
+<coursework-root>/
   participants/
     <first-last-kebab>/
       workshop-1-what-good-looks-like/
@@ -32,9 +32,9 @@ This is the recommended structure for participant work.
           reflection.md
 ```
 
-## Why Work Outside The Target Repo
+## Why Keep Coursework Artifacts Outside The Target Repo
 
-Most participants should not check workshop artifacts directly into the production project.
+Participants should not check workshop artifacts directly into the production project.
 
 Reasons:
 
@@ -44,9 +44,9 @@ Reasons:
 - the instructor needs a consistent place to review participant work
 - analysis artifacts may include uncertainty, drafts, or proposed changes that are not ready for the main project
 
-## When Target Repo Branches Make Sense
+## Target Repo Branch
 
-Use a target repo branch only when the exercise explicitly creates a patch.
+Use a target repo branch for candidate project changes.
 
 Recommended branch:
 
@@ -54,7 +54,7 @@ Recommended branch:
 workshop-1-what-good-looks-like/<first-last-kebab>
 ```
 
-Branch work should still be summarized in the homework folder.
+Branch work should still be summarized in the coursework folder.
 
 At minimum, copy back:
 
@@ -67,7 +67,7 @@ At minimum, copy back:
 
 ## Instructor Review Surface
 
-The instructor should be able to review only the participant workspace and understand:
+The instructor should be able to review the participant coursework folder and understand:
 
 - what repository was targeted
 - what evidence was inspected
@@ -77,3 +77,15 @@ The instructor should be able to review only the participant workspace and under
 - what improvement was attempted
 - whether the participant understood the workflow
 
+## Group Review Surface
+
+At group review time, the team should compare:
+
+- participant branches
+- baseline scorecards
+- proposed changes
+- validation results
+- rescore deltas
+- merge recommendations
+
+Nothing should be merged automatically. The team chooses what belongs in the real project.

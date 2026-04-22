@@ -6,7 +6,9 @@ Workshop: Workshop 1 - What Good Looks Like
 
 Target repository:
 
-Workspace:
+Coursework root:
+
+Participant branch:
 
 ## Purpose
 
@@ -23,4 +25,3 @@ This log is a working journal. It helps the participant resume work and helps th
 - Artifacts created or updated:
 - Blockers or uncertainty:
 - Next step:
-
