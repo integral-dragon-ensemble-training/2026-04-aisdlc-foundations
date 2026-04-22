@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280,initial-scale=1">
+<title>Session 2 — Technical Debt as Friction</title>
+<style>
+/* =======================================================================
+   INTEGRAL DRAGON · Slide template (McKinsey-blue)
+======================================================================= */
+
+:root {
+    --bg:          #0b1429;
+    --bg-2:        #0f1a33;
+    --surface:     #17233f;
+    --surface-2:   #1e2d4f;
+    --line:        #26355a;
+    --line-soft:   #1a2340;
+    --text:        #f7f9fc;
+    --muted:       #cfd6e6;
+    --soft:        #92a1c0;
+    --accent:      #3ab5cc;
+    --accent-2:    #4fc1d8;
+    --accent-soft: rgba(58, 181, 204, 0.18);
+    --card-bg:     #f6f9fc;
+    --card-text:   #0b1429;
+    --card-muted:  #3f4a64;
+    --good:        #6ed2a5;
+    --warn:        #f3c879;
+    --danger:      #ff8d8d;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+body {
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+}
+
+.slide {
+    width: 1280px;
+    height: 720px;
+    padding: 48px 64px;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+    background:
+        radial-gradient(circle at 110% -10%, rgba(58, 181, 204, 0.18), transparent 32%),
+        radial-gradient(circle at -10% 110%, rgba(58, 181, 204, 0.10), transparent 36%),
+        linear-gradient(160deg, var(--bg) 0%, #0d1831 100%);
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; break-after: auto; }
+
+.slide-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    color: var(--text);
+    text-transform: uppercase;
+}
+.eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.eyebrow .sep { color: var(--soft); }
+.eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--accent);
+    display: inline-block;
+}
+
+.slide-body { display: grid; align-content: start; gap: 22px; min-height: 0; overflow: hidden; }
+
+h1, h2, h3, h4, p, ul, ol { margin: 0; }
+.display {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    color: var(--text);
+    max-width: 22ch;
+}
+.headline {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--text);
+}
+.sub {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 72ch;
+}
+.accent-line {
+    width: 72px; height: 3px; background: var(--accent); border-radius: 2px;
+}
+.rule {
+    height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--accent) 0, var(--accent) 120px, var(--line) 120px, var(--line) 100%);
+}
+
+ul.arrows { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+ul.arrows li {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+ul.arrows li .bullet {
+    flex: 0 0 auto;
+    width: 22px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.45;
+}
+ul.arrows li .text { flex: 1 1 auto; min-width: 0; }
+ul.arrows li strong { color: var(--text); font-weight: 600; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; }
+
+/* 3x3 grid for nine-category taxonomy */
+.grid-3x3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 14px;
+}
+.grid-3x3 .card { padding: 14px 16px; }
+.grid-3x3 .card h3 { font-size: 15px; }
+.grid-3x3 .card p { font-size: 12px; line-height: 1.4; }
+.grid-3x3 .card .tag { font-size: 9px; }
+
+.card {
+    background: var(--card-bg);
+    color: var(--card-text);
+    border-radius: 10px;
+    padding: 22px 24px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    display: grid;
+    gap: 8px;
+    align-content: start;
+}
+.card h3 {
+    color: var(--card-text);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+}
+.card p, .card li {
+    color: var(--card-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+.card ul { padding-left: 18px; display: grid; gap: 4px; }
+.card .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.panel {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: grid;
+    gap: 10px;
+}
+.panel h3 { color: var(--text); font-size: 17px; font-weight: 600; }
+.panel p, .panel li { color: var(--muted); font-size: 15px; line-height: 1.5; }
+.panel ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+.panel ul li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+.panel ul li::before { content: "■"; color: var(--accent); font-size: 10px; line-height: 1.7; }
+
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+}
+.stat .num {
+    font-size: 34px; font-weight: 700; color: var(--text); letter-spacing: -0.02em;
+    line-height: 1;
+}
+.stat .label {
+    margin-top: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+.timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; align-items: stretch; }
+.step {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+}
+.step .meta {
+    display: inline-block;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+.step h4 { color: var(--text); font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.step p { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.step::after {
+    content: "→";
+    position: absolute; top: 50%; right: -12px; transform: translateY(-50%);
+    color: var(--accent); font-size: 18px;
+}
+.step:last-child::after { display: none; }
+
+.quote {
+    font-size: 38px; line-height: 1.15; font-weight: 500; color: var(--text);
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+}
+.quote .accent { color: var(--accent); }
+
+/* Principal-vs-interest two-column layout */
+.pi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.pi-col { display: grid; gap: 12px; align-content: start; }
+.pi-head {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+}
+.pi-block {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 18px;
+}
+.pi-block .label {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--soft);
+    margin-bottom: 4px;
+}
+.pi-block .body { color: var(--muted); font-size: 15px; line-height: 1.45; }
+.pi-block.accent-l { border-left: 4px solid var(--accent); }
+
+/* 2x2 priority matrix cards with quadrant tag */
+.quad {
+    background: var(--card-bg);
+    color: var(--card-text);
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    display: grid;
+    gap: 6px;
+    align-content: start;
+}
+.quad .axis {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent);
+}
+.quad h3 { font-size: 18px; font-weight: 700; color: var(--card-text); }
+.quad p { font-size: 13px; line-height: 1.45; color: var(--card-muted); }
+
+.slide.title {
+    grid-template-rows: auto 1fr auto;
+    padding-right: 64px;
+}
+.slide.title .title-art {
+    position: absolute;
+    right: -80px;
+    top: 40px;
+    width: 620px;
+    height: 620px;
+    pointer-events: none;
+    opacity: 0.9;
+}
+.title-meta {
+    display: flex; align-items: center; gap: 14px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+}
+.title-program {
+    margin-top: 16px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+.slide.close {
+    background:
+        radial-gradient(circle at 50% -20%, rgba(58, 181, 204, 0.22), transparent 50%),
+        linear-gradient(180deg, var(--bg) 0%, #0a1225 100%);
+    text-align: center;
+    align-items: center;
+}
+.slide.close .slide-body { align-content: center; justify-items: center; text-align: center; }
+.slide.close .display { text-align: center; max-width: 30ch; }
+
+.slide-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+hr.hair { border: none; height: 1px; background: var(--line-soft); margin: 4px 0; }
+
+@page {
+    size: 1280px 720px;
+    margin: 0;
+}
+@media print {
+    html, body { background: var(--bg); }
+    .slide {
+        margin: 0 !important;
+        width: 1280px !important;
+        height: 720px !important;
+        page-break-after: always;
+    }
+    .slide:last-child { page-break-after: auto; }
+}
+
+@media screen {
+    body { padding: 24px; }
+    .slide { margin: 0 auto 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); border-radius: 6px; }
+}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     SLIDE 1 — TITLE
+====================================================================== -->
+<section class="slide title">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <svg class="title-art" viewBox="0 0 620 620" aria-hidden="true">
+        <defs>
+            <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#3ab5cc" stop-opacity="0.28" />
+                <stop offset="100%" stop-color="#3ab5cc" stop-opacity="0.02" />
+            </radialGradient>
+        </defs>
+        <rect x="80" y="40" width="500" height="500" rx="28" fill="url(#g1)" />
+        <circle cx="360" cy="300" r="190" fill="none" stroke="#3ab5cc" stroke-width="1.5" opacity="0.55" />
+        <circle cx="360" cy="300" r="120" fill="#3ab5cc" opacity="0.18" />
+        <circle cx="360" cy="300" r="60" fill="#3ab5cc" opacity="0.32" />
+    </svg>
+    <div class="slide-body">
+        <div>
+            <div class="title-meta">MODULE 02 · SESSION 02</div>
+            <h1 class="display" style="margin-top: 18px;">Technical Debt<br>as Friction</h1>
+            <div class="accent-line" style="margin-top: 22px;"></div>
+            <p class="sub" style="margin-top: 18px;">Treat debt as the repeated tax the system charges on every change.</p>
+            <p class="title-program">AI-Accelerated Software Development &nbsp;|&nbsp; Applied Practice</p>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>01</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 2 — Debt is friction
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 02 <span class="sep">|</span> FRAMING</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Debt is friction, not just ugly code</h2>
+        <div class="rule"></div>
+        <ul class="arrows">
+            <li><span class="bullet">→</span><span class="text"><strong>Any deficiency</strong> that increases the cost, risk, or time of future changes — in code, docs, environment, data, release, or operations.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Principal vs. interest.</strong> Principal is the underlying deficiency. Interest is the repeated extra effort the team keeps paying.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Code style is one slice.</strong> Environment, data, release, observability, and workflow debt are usually larger.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Classroom rule.</strong> It counts as serious debt when it slows routine change, raises regression risk, or hides whether the system is healthy.</span></li>
+        </ul>
+    </div>
+    <div class="slide-foot">
+        <span>Session 02 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>02</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 3 — Nine categories (3x3 grid)
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 02 <span class="sep">|</span> TAXONOMY</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">The nine debt categories in this course</h2>
+        <div class="rule"></div>
+        <div class="grid-3x3">
+            <div class="card">
+                <span class="tag">01 · KNOWLEDGE</span>
+                <h3>Knowledge debt</h3>
+                <p>Stale docs, no architecture map, unclear ownership, hidden ops steps.</p>
+            </div>
+            <div class="card">
+                <span class="tag">02 · DESIGN</span>
+                <h3>Design debt</h3>
+                <p>Tangled dependencies, mixed responsibilities, weak boundaries.</p>
+            </div>
+            <div class="card">
+                <span class="tag">03 · ENVIRONMENT</span>
+                <h3>Environment debt</h3>
+                <p>Snowflake machines, missing setup automation, dependency chaos.</p>
+            </div>
+            <div class="card">
+                <span class="tag">04 · QUALITY</span>
+                <h3>Quality-confidence debt</h3>
+                <p>Missing tests, flaky tests, meaningless coverage, no regression confidence.</p>
+            </div>
+            <div class="card">
+                <span class="tag">05 · RELEASE</span>
+                <h3>Release debt</h3>
+                <p>Manual release steps, unknown deployed version, weak traceability.</p>
+            </div>
+            <div class="card">
+                <span class="tag">06 · DATA</span>
+                <h3>Data &amp; schema debt</h3>
+                <p>Untracked schema changes, fragile migrations, impossible seed data.</p>
+            </div>
+            <div class="card">
+                <span class="tag">07 · OBSERVABILITY</span>
+                <h3>Observability debt</h3>
+                <p>Noisy logs, no correlation, no traces, vanity dashboards.</p>
+            </div>
+            <div class="card">
+                <span class="tag">08 · SECURITY</span>
+                <h3>Security debt</h3>
+                <p>Hardcoded secrets, unreviewed dependencies, unclear provenance.</p>
+            </div>
+            <div class="card">
+                <span class="tag">09 · WORKFLOW</span>
+                <h3>Workflow debt</h3>
+                <p>Huge PRs, weak review norms, cleanup never scheduled.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 02 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>03</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 4 — Principal vs. interest
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 02 <span class="sep">|</span> METAPHOR</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Principal vs. interest</h2>
+        <div class="rule"></div>
+        <div class="pi-grid">
+            <div class="pi-col">
+                <div class="pi-head">PRINCIPAL · THE DEFICIENCY</div>
+                <div class="pi-block accent-l">
+                    <div class="label">Environment</div>
+                    <div class="body">Setup script only runs reliably on one engineer's machine.</div>
+                </div>
+                <div class="pi-block accent-l">
+                    <div class="label">Design</div>
+                    <div class="body">Module boundaries are unclear; responsibilities are mixed.</div>
+                </div>
+                <div class="pi-block accent-l">
+                    <div class="label">Release</div>
+                    <div class="body">No deployment verification path or version endpoint.</div>
+                </div>
+            </div>
+            <div class="pi-col">
+                <div class="pi-head">INTEREST · THE REPEATED TAX</div>
+                <div class="pi-block">
+                    <div class="label">Paid every onboarding</div>
+                    <div class="body">Two extra days per new engineer, every hire, indefinitely.</div>
+                </div>
+                <div class="pi-block">
+                    <div class="label">Paid every bug fix</div>
+                    <div class="body">Read five unrelated files to make one safe change, every time.</div>
+                </div>
+                <div class="pi-block">
+                    <div class="label">Paid every release</div>
+                    <div class="body">Slack archaeology and manual checks by several humans, every deploy.</div>
+                </div>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 4px; color: var(--soft); font-size: 15px;">The principal rarely shows up on the backlog. The interest is paid quietly, forever.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Session 02 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>04</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 5 — How teams pay interest
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 02 <span class="sep">|</span> SYMPTOMS</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">How teams pay interest</h2>
+        <div class="rule"></div>
+        <ul class="arrows">
+            <li><span class="bullet">→</span><span class="text"><strong>Slow onboarding</strong> because setup is unreliable — every new engineer pays.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Fearful changes</strong> because tests are weak or flaky — every PR pays.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Slack archaeology</strong> because docs are stale — every operational question pays.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Production debugging</strong> because logs and traces are poor — every incident pays.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Release uncertainty</strong> because versions and deployments are unclear — every release pays.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Heroic individuals</strong> carrying knowledge that was never written down — the team pays when they leave.</span></li>
+        </ul>
+    </div>
+    <div class="slide-foot">
+        <span>Session 02 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>05</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 6 — Priority 2x2
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 02 <span class="sep">|</span> PRIORITIZATION</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Prioritize by impact on flow vs. cost to fix</h2>
+        <div class="rule"></div>
+        <div class="grid-2x2" style="flex: 1;">
+            <div class="quad">
+                <span class="axis">HIGH FLOW IMPACT · LOW COST</span>
+                <h3>Quick wins</h3>
+                <p>Do these first. Visible relief, short feedback loop, earns trust for harder work.</p>
+            </div>
+            <div class="quad">
+                <span class="axis">HIGH FLOW IMPACT · HIGH COST</span>
+                <h3>Strategic bets</h3>
+                <p>Stage them. Never rewrite. Sequence in small reviewable steps with measurable progress.</p>
+            </div>
+            <div class="quad">
+                <span class="axis">LOW FLOW IMPACT · LOW COST</span>
+                <h3>Nice to have</h3>
+                <p>Batch opportunistically alongside related work. Not a standalone initiative.</p>
+            </div>
+            <div class="quad">
+                <span class="axis">LOW FLOW IMPACT · HIGH COST</span>
+                <h3>Avoid — this is beautification</h3>
+                <p>Theoretically elegant but expensive. Favor debt that blocks common changes instead.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 02 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>06</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 7 — Where AI helps
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 02 <span class="sep">|</span> AI LEVERAGE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Where AI helps on Day 2</h2>
+        <div class="rule"></div>
+        <div class="timeline" style="margin-top: 16px; grid-template-columns: repeat(4, 1fr);">
+            <div class="step"><span class="meta">Step 01</span><h4>Repo tour</h4><p>AI summarizes structure, docs, workflows, telemetry signals.</p></div>
+            <div class="step"><span class="meta">Step 02</span><h4>Cluster friction</h4><p>Group vague complaints into the nine debt categories.</p></div>
+            <div class="step"><span class="meta">Step 03</span><h4>Estimate interest</h4><p>Where is interest highest? Quick win or structural work?</p></div>
+            <div class="step"><span class="meta">Step 04</span><h4>Ranked backlog</h4><p>Draft a prioritized cleanup list. Humans own the tradeoffs.</p></div>
+        </div>
+        <p class="sub" style="margin-top: 14px;">AI is not deciding the tradeoffs. It is accelerating inspection so humans can prioritize with evidence.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Session 02 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>07</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 8 — Exercise
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 02 <span class="sep">|</span> EXERCISE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Exercise: friction map &amp; debt inventory</h2>
+        <div class="rule"></div>
+        <div class="grid-2" style="flex: 1;">
+            <div class="card">
+                <span class="tag">CORE · 15 MIN</span>
+                <h3>Friction map &amp; debt inventory</h3>
+                <ul>
+                    <li>List 8–10 sources of friction in your repo or workflow.</li>
+                    <li>Classify each into one of the nine debt categories.</li>
+                    <li>Estimate the interest paid per week or per change.</li>
+                    <li>Rank by practical impact; pick three for staged improvement.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <span class="tag">LIGHTWEIGHT · 10 MIN EACH</span>
+                <h3>Smell or Debt? &nbsp;·&nbsp; Highest-Interest Debt</h3>
+                <ul>
+                    <li><strong>Smell or Debt?</strong> Sort examples: smell, debt, both, or neither.</li>
+                    <li><strong>Highest-Interest Debt.</strong> Each person names one item from their environment — category, who pays, how often, why it matters.</li>
+                    <li>Leave with a ranked list, not a complaint list.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 02 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>08</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 9 — CLOSE
+====================================================================== -->
+<section class="slide close">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <div class="eyebrow"><span class="dot"></span>CLOSE OUT</div>
+        <h1 class="display" style="margin-top: 14px;">Technical debt is the repeated tax<br><span style="color: var(--accent);">paid when the system resists change.</span></h1>
+        <div class="accent-line" style="margin: 22px auto;"></div>
+        <p class="sub" style="max-width: 56ch;">Name the debt. Separate principal from interest. Fix the friction that actually blocks flow.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>09</span>
+    </div>
+</section>
+
+</body>
+</html>

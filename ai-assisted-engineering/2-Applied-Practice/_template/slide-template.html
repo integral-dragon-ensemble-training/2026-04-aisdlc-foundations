@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280,initial-scale=1">
+<title>{{ DECK_TITLE }}</title>
+<style>
+/* =======================================================================
+   INTEGRAL DRAGON · Slide template (McKinsey-blue)
+   ---------------------------------------------------------------------
+   One <section class="slide"> = one 1280x720 landscape page.
+   Prints to PDF as one slide per page via @media print.
+======================================================================= */
+
+:root {
+    --bg:          #0b1429;   /* deep navy */
+    --bg-2:        #0f1a33;
+    --surface:     #17233f;
+    --surface-2:   #1e2d4f;
+    --line:        #26355a;
+    --line-soft:   #1a2340;
+    --text:        #f7f9fc;
+    --muted:       #cfd6e6;
+    --soft:        #92a1c0;
+    --accent:      #3ab5cc;    /* cyan/teal — primary accent */
+    --accent-2:    #4fc1d8;
+    --accent-soft: rgba(58, 181, 204, 0.18);
+    --card-bg:     #f6f9fc;    /* light card on dark slide */
+    --card-text:   #0b1429;
+    --card-muted:  #3f4a64;
+    --good:        #6ed2a5;
+    --warn:        #f3c879;
+    --danger:      #ff8d8d;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+body {
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+}
+
+/* =========================== Slide frame =========================== */
+.slide {
+    width: 1280px;
+    height: 720px;
+    padding: 48px 64px;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+    background:
+        radial-gradient(circle at 110% -10%, rgba(58, 181, 204, 0.18), transparent 32%),
+        radial-gradient(circle at -10% 110%, rgba(58, 181, 204, 0.10), transparent 36%),
+        linear-gradient(160deg, var(--bg) 0%, #0d1831 100%);
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; break-after: auto; }
+
+/* Top row: wordmark + right-side eyebrow */
+.slide-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    color: var(--text);
+    text-transform: uppercase;
+}
+.eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.eyebrow .sep { color: var(--soft); }
+.eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--accent);
+    display: inline-block;
+}
+
+/* Middle content */
+.slide-body { display: grid; align-content: start; gap: 22px; min-height: 0; overflow: hidden; }
+
+h1, h2, h3, h4, p, ul, ol { margin: 0; }
+.display {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    color: var(--text);
+    max-width: 22ch;
+}
+.headline {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--text);
+}
+.sub {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 72ch;
+}
+.accent-line {
+    width: 72px; height: 3px; background: var(--accent); border-radius: 2px;
+}
+.rule {
+    height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--accent) 0, var(--accent) 120px, var(--line) 120px, var(--line) 100%);
+}
+
+/* Bulleted list with arrow bullets */
+ul.arrows { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+ul.arrows li {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+ul.arrows li .bullet {
+    flex: 0 0 auto;
+    width: 22px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.45;
+}
+ul.arrows li .text { flex: 1 1 auto; min-width: 0; }
+ul.arrows li strong { color: var(--text); font-weight: 600; }
+
+/* Card grids */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; }
+
+/* Light card on dark slide, cyan left edge */
+.card {
+    background: var(--card-bg);
+    color: var(--card-text);
+    border-radius: 10px;
+    padding: 22px 24px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    display: grid;
+    gap: 8px;
+    align-content: start;
+}
+.card h3 {
+    color: var(--card-text);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+}
+.card p, .card li {
+    color: var(--card-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+.card ul { padding-left: 18px; display: grid; gap: 4px; }
+.card .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+/* Dark panel variant (for layered dark slides) */
+.panel {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: grid;
+    gap: 10px;
+}
+.panel h3 { color: var(--text); font-size: 17px; font-weight: 600; }
+.panel p, .panel li { color: var(--muted); font-size: 15px; line-height: 1.5; }
+.panel ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+.panel ul li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+.panel ul li::before { content: "■"; color: var(--accent); font-size: 10px; line-height: 1.7; }
+
+/* Stat blocks */
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+}
+.stat .num {
+    font-size: 34px; font-weight: 700; color: var(--text); letter-spacing: -0.02em;
+    line-height: 1;
+}
+.stat .label {
+    margin-top: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+/* Timeline / step flow */
+.timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; align-items: stretch; }
+.step {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+}
+.step .meta {
+    display: inline-block;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+.step h4 { color: var(--text); font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.step p { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.step::after {
+    content: "→";
+    position: absolute; top: 50%; right: -12px; transform: translateY(-50%);
+    color: var(--accent); font-size: 18px;
+}
+.step:last-child::after { display: none; }
+
+/* Big quote slide */
+.quote {
+    font-size: 38px; line-height: 1.15; font-weight: 500; color: var(--text);
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+}
+.quote .accent { color: var(--accent); }
+
+/* Title slide (first slide of a deck) */
+.slide.title {
+    grid-template-rows: auto 1fr auto;
+    padding-right: 64px;
+}
+.slide.title .title-art {
+    position: absolute;
+    right: -80px;
+    top: 40px;
+    width: 620px;
+    height: 620px;
+    pointer-events: none;
+    opacity: 0.9;
+}
+.title-meta {
+    display: flex; align-items: center; gap: 14px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+}
+.title-program {
+    margin-top: 16px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+/* Closing slide */
+.slide.close {
+    background:
+        radial-gradient(circle at 50% -20%, rgba(58, 181, 204, 0.22), transparent 50%),
+        linear-gradient(180deg, var(--bg) 0%, #0a1225 100%);
+    text-align: center;
+    align-items: center;
+}
+.slide.close .slide-body { align-content: center; justify-items: center; text-align: center; }
+.slide.close .display { text-align: center; max-width: 28ch; }
+
+/* Footer */
+.slide-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+/* Hairline separators */
+hr.hair { border: none; height: 1px; background: var(--line-soft); margin: 4px 0; }
+
+/* =========================== PRINT ============================ */
+@page {
+    size: 1280px 720px;
+    margin: 0;
+}
+@media print {
+    html, body { background: var(--bg); }
+    .slide {
+        margin: 0 !important;
+        width: 1280px !important;
+        height: 720px !important;
+        page-break-after: always;
+    }
+    .slide:last-child { page-break-after: auto; }
+}
+
+/* screen-only spacing between slides when viewing the deck */
+@media screen {
+    body { padding: 24px; }
+    .slide { margin: 0 auto 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); border-radius: 6px; }
+}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     TITLE SLIDE TEMPLATE
+====================================================================== -->
+<section class="slide title">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <svg class="title-art" viewBox="0 0 620 620" aria-hidden="true">
+        <defs>
+            <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#3ab5cc" stop-opacity="0.28" />
+                <stop offset="100%" stop-color="#3ab5cc" stop-opacity="0.02" />
+            </radialGradient>
+        </defs>
+        <rect x="80" y="40" width="500" height="500" rx="28" fill="url(#g1)" />
+        <circle cx="360" cy="300" r="190" fill="none" stroke="#3ab5cc" stroke-width="1.5" opacity="0.55" />
+        <circle cx="360" cy="300" r="120" fill="#3ab5cc" opacity="0.18" />
+        <circle cx="360" cy="300" r="60" fill="#3ab5cc" opacity="0.32" />
+    </svg>
+    <div class="slide-body">
+        <div>
+            <div class="title-meta">MODULE · SESSION 00</div>
+            <h1 class="display" style="margin-top: 18px;">Session Title</h1>
+            <div class="accent-line" style="margin-top: 22px;"></div>
+            <p class="sub" style="margin-top: 18px;">One-line descriptor of what this session is about.</p>
+            <p class="title-program">AI-Accelerated Software Development &nbsp;|&nbsp; Applied Practice</p>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>01</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     CONTENT SLIDE · headline + arrow bullets
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 00 <span class="sep">|</span> SECTION LABEL</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Primary headline for this slide</h2>
+        <div class="rule"></div>
+        <ul class="arrows">
+            <li><span class="bullet">→</span><span class="text"><strong>First bullet</strong> · short supporting detail.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Second bullet</strong> · short supporting detail.</span></li>
+            <li><span class="bullet">→</span><span class="text"><strong>Third bullet</strong> · short supporting detail.</span></li>
+        </ul>
+    </div>
+    <div class="slide-foot">
+        <span>Session 00 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>02</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     CONTENT SLIDE · 2x2 cards
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 00 <span class="sep">|</span> FRAMEWORK</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Framework heading</h2>
+        <div class="rule"></div>
+        <div class="grid-2x2" style="flex: 1;">
+            <div class="card">
+                <span class="tag">Category 01</span>
+                <h3>Card title one</h3>
+                <p>Card body describing this part of the framework.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 02</span>
+                <h3>Card title two</h3>
+                <p>Card body describing this part of the framework.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 03</span>
+                <h3>Card title three</h3>
+                <p>Card body describing this part of the framework.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Category 04</span>
+                <h3>Card title four</h3>
+                <p>Card body describing this part of the framework.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 00 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>03</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     CONTENT SLIDE · timeline / staged flow
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 00 <span class="sep">|</span> FLOW</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">A staged sequence</h2>
+        <div class="rule"></div>
+        <div class="timeline" style="margin-top: 16px;">
+            <div class="step"><span class="meta">Step 01</span><h4>First</h4><p>Brief description.</p></div>
+            <div class="step"><span class="meta">Step 02</span><h4>Second</h4><p>Brief description.</p></div>
+            <div class="step"><span class="meta">Step 03</span><h4>Third</h4><p>Brief description.</p></div>
+            <div class="step"><span class="meta">Step 04</span><h4>Fourth</h4><p>Brief description.</p></div>
+            <div class="step"><span class="meta">Step 05</span><h4>Fifth</h4><p>Brief description.</p></div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 00 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>04</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     CLOSING SLIDE
+====================================================================== -->
+<section class="slide close">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <div class="eyebrow"><span class="dot"></span>CLOSE OUT</div>
+        <h1 class="display" style="margin-top: 14px;">Closing phrase<br><span style="color: var(--accent);">or core takeaway</span>.</h1>
+        <div class="accent-line" style="margin: 22px auto;"></div>
+        <p class="sub" style="max-width: 52ch;">Short closing statement reinforcing the session's main idea.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>05</span>
+    </div>
+</section>
+
+</body>
+</html>

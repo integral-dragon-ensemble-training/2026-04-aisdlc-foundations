@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280,initial-scale=1">
+<title>Applied Practice — Course Overview</title>
+<style>
+/* =======================================================================
+   INTEGRAL DRAGON · Slide template (McKinsey-blue)
+======================================================================= */
+
+:root {
+    --bg:          #0b1429;
+    --bg-2:        #0f1a33;
+    --surface:     #17233f;
+    --surface-2:   #1e2d4f;
+    --line:        #26355a;
+    --line-soft:   #1a2340;
+    --text:        #f7f9fc;
+    --muted:       #cfd6e6;
+    --soft:        #92a1c0;
+    --accent:      #3ab5cc;
+    --accent-2:    #4fc1d8;
+    --accent-soft: rgba(58, 181, 204, 0.18);
+    --card-bg:     #f6f9fc;
+    --card-text:   #0b1429;
+    --card-muted:  #3f4a64;
+    --good:        #6ed2a5;
+    --warn:        #f3c879;
+    --danger:      #ff8d8d;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+body {
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+}
+
+.slide {
+    width: 1280px;
+    height: 720px;
+    padding: 48px 64px;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+    background:
+        radial-gradient(circle at 110% -10%, rgba(58, 181, 204, 0.18), transparent 32%),
+        radial-gradient(circle at -10% 110%, rgba(58, 181, 204, 0.10), transparent 36%),
+        linear-gradient(160deg, var(--bg) 0%, #0d1831 100%);
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; break-after: auto; }
+
+.slide-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    color: var(--text);
+    text-transform: uppercase;
+}
+.eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.eyebrow .sep { color: var(--soft); }
+.eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--accent);
+    display: inline-block;
+}
+
+.slide-body { display: grid; align-content: start; gap: 22px; min-height: 0; overflow: hidden; }
+
+h1, h2, h3, h4, p, ul, ol { margin: 0; }
+.display {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    color: var(--text);
+    max-width: 22ch;
+}
+.headline {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--text);
+}
+.sub {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 72ch;
+}
+.accent-line {
+    width: 72px; height: 3px; background: var(--accent); border-radius: 2px;
+}
+.rule {
+    height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--accent) 0, var(--accent) 120px, var(--line) 120px, var(--line) 100%);
+}
+
+ul.arrows { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+ul.arrows li {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+ul.arrows li .bullet {
+    flex: 0 0 auto;
+    width: 22px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.45;
+}
+ul.arrows li .text { flex: 1 1 auto; min-width: 0; }
+ul.arrows li strong { color: var(--text); font-weight: 600; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; }
+
+.card {
+    background: var(--card-bg);
+    color: var(--card-text);
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    display: grid;
+    gap: 6px;
+    align-content: start;
+}
+.card h3 {
+    color: var(--card-text);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+}
+.card p, .card li {
+    color: var(--card-muted);
+    font-size: 12.5px;
+    line-height: 1.45;
+}
+.card ul { padding-left: 18px; display: grid; gap: 4px; }
+.card .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.panel {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: grid;
+    gap: 10px;
+}
+.panel h3 { color: var(--text); font-size: 17px; font-weight: 600; }
+.panel p, .panel li { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.panel ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+.panel ul li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+.panel ul li::before { content: "■"; color: var(--accent); font-size: 10px; line-height: 1.7; }
+.panel.warn ul li::before { color: var(--warn); }
+
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+}
+.stat .num {
+    font-size: 34px; font-weight: 700; color: var(--text); letter-spacing: -0.02em;
+    line-height: 1;
+}
+.stat .label {
+    margin-top: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+.timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; align-items: stretch; }
+.step {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+}
+.step .meta {
+    display: inline-block;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+.step h4 { color: var(--text); font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.step p { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.step::after {
+    content: "→";
+    position: absolute; top: 50%; right: -12px; transform: translateY(-50%);
+    color: var(--accent); font-size: 18px;
+}
+.step:last-child::after { display: none; }
+
+.quote {
+    font-size: 42px; line-height: 1.18; font-weight: 500; color: var(--text);
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+}
+.quote .accent { color: var(--accent); }
+
+.slide.title {
+    grid-template-rows: auto 1fr auto;
+    padding-right: 64px;
+}
+.slide.title .title-art {
+    position: absolute;
+    right: -80px;
+    top: 40px;
+    width: 620px;
+    height: 620px;
+    pointer-events: none;
+    opacity: 0.9;
+}
+.title-meta {
+    display: flex; align-items: center; gap: 14px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+}
+.title-program {
+    margin-top: 16px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+.slide.close {
+    background:
+        radial-gradient(circle at 50% -20%, rgba(58, 181, 204, 0.22), transparent 50%),
+        linear-gradient(180deg, var(--bg) 0%, #0a1225 100%);
+    text-align: center;
+    align-items: center;
+}
+.slide.close .slide-body { align-content: center; justify-items: center; text-align: center; }
+.slide.close .display { text-align: center; max-width: 28ch; }
+
+.slide-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+hr.hair { border: none; height: 1px; background: var(--line-soft); margin: 4px 0; }
+
+@page {
+    size: 1280px 720px;
+    margin: 0;
+}
+@media print {
+    html, body { background: var(--bg); }
+    .slide {
+        margin: 0 !important;
+        width: 1280px !important;
+        height: 720px !important;
+        page-break-after: always;
+    }
+    .slide:last-child { page-break-after: auto; }
+}
+
+@media screen {
+    body { padding: 24px; }
+    .slide { margin: 0 auto 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); border-radius: 6px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================================================================
+     SLIDE 1 — TITLE
+==================================================================== -->
+<section class="slide title">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <svg class="title-art" viewBox="0 0 620 620" aria-hidden="true">
+        <defs>
+            <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#3ab5cc" stop-opacity="0.28" />
+                <stop offset="100%" stop-color="#3ab5cc" stop-opacity="0.02" />
+            </radialGradient>
+        </defs>
+        <rect x="80" y="40" width="500" height="500" rx="28" fill="url(#g1)" />
+        <circle cx="360" cy="300" r="190" fill="none" stroke="#3ab5cc" stroke-width="1.5" opacity="0.55" />
+        <circle cx="360" cy="300" r="120" fill="#3ab5cc" opacity="0.18" />
+        <circle cx="360" cy="300" r="60" fill="#3ab5cc" opacity="0.32" />
+    </svg>
+    <div class="slide-body">
+        <div>
+            <div class="title-meta">WEEK 03 · COURSE OVERVIEW</div>
+            <h1 class="display" style="margin-top: 18px;"><span style="color: var(--accent);">Applied</span> Practice</h1>
+            <div class="accent-line" style="margin-top: 22px;"></div>
+            <p class="sub" style="margin-top: 18px;">AI-Accelerated Software Development &mdash; Week 3. Five sessions. One repeatable engineering practice.</p>
+            <p class="title-program">AI-Accelerated Software Development &nbsp;|&nbsp; Applied Practice</p>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>01</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 2 — COURSE THESIS (big quote)
+==================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>OVERVIEW <span class="sep">|</span> COURSE THESIS</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <div class="rule"></div>
+        <p class="quote" style="margin-top: 40px;">
+            AI-assisted engineering is most valuable when it helps teams
+            <span class="accent">see, reduce, and systematically pay down</span>
+            the friction and technical debt that make software hard to change.
+        </p>
+        <p class="sub" style="margin-top: 28px; max-width: 62ch;">
+            The point is not more code. The point is easier change. A bad codebase plus AI does not become a good codebase &mdash; it becomes a faster bad codebase.
+        </p>
+    </div>
+    <div class="slide-foot">
+        <span>Applied Practice &nbsp;|&nbsp; Integral Dragon</span>
+        <span>02</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 3 — FIVE-PART METHOD (timeline)
+==================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>OVERVIEW <span class="sep">|</span> THE METHOD</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">The five-part method we teach across the week</h2>
+        <div class="rule"></div>
+        <div class="timeline" style="margin-top: 20px;">
+            <div class="step">
+                <span class="meta">Step 01</span>
+                <h4>Define good</h4>
+                <p>Establish a target state for project health before discussing debt.</p>
+            </div>
+            <div class="step">
+                <span class="meta">Step 02</span>
+                <h4>Identify debt</h4>
+                <p>Name the friction that blocks the target and quantify its interest.</p>
+            </div>
+            <div class="step">
+                <span class="meta">Step 03</span>
+                <h4>Use AI</h4>
+                <p>Inspect, explain, scaffold, and propose targeted improvements.</p>
+            </div>
+            <div class="step">
+                <span class="meta">Step 04</span>
+                <h4>Validate</h4>
+                <p>Prove the change with tests, observability, and security checks.</p>
+            </div>
+            <div class="step">
+                <span class="meta">Step 05</span>
+                <h4>Repeat</h4>
+                <p>Turn one-off cleanup into a standing engineering practice.</p>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 24px; max-width: 72ch;">
+            From friction to flow. Each session rehearses one step with a working repo and a short, focused exercise.
+        </p>
+    </div>
+    <div class="slide-foot">
+        <span>Applied Practice &nbsp;|&nbsp; Integral Dragon</span>
+        <span>03</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 4 — FIVE SESSIONS AT A GLANCE (cards)
+==================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>OVERVIEW <span class="sep">|</span> FIVE SESSIONS</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Five sessions, one per day, sixty minutes each</h2>
+        <div class="rule"></div>
+        <div class="grid-5" style="margin-top: 18px;">
+            <div class="card">
+                <span class="tag">Day 01</span>
+                <h3>What Good Looks Like</h3>
+                <p>Define project health. Walk a repo with a scorecard.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Day 02</span>
+                <h3>Technical Debt as Friction</h3>
+                <p>Classify debt. Estimate the interest it charges change.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Day 03</span>
+                <h3>Using AI to Inspect &amp; Improve</h3>
+                <p>Prompt patterns for repo analysis, docs, tests, and small refactors.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Day 04</span>
+                <h3>Validation</h3>
+                <p>Tests, observability, and security as gates for AI-assisted change.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Day 05</span>
+                <h3>Making It Repeatable</h3>
+                <p>Cadence, ownership, workflow. Build a 30-day plan.</p>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 28px; max-width: 72ch;">
+            Every day follows the same shape: ten minutes of framing, fifteen of examples, twenty of exercise, ten of debrief, five of next-step setup.
+        </p>
+    </div>
+    <div class="slide-foot">
+        <span>Applied Practice &nbsp;|&nbsp; Integral Dragon</span>
+        <span>04</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 5 — WHAT GOOD LOOKS LIKE (9 categories, 3x3)
+==================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>OVERVIEW <span class="sep">|</span> PROJECT HEALTH</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">What good looks like &mdash; nine health categories</h2>
+        <div class="rule"></div>
+        <div class="grid-3" style="margin-top: 14px;">
+            <div class="card"><span class="tag">Category 01</span><h3>Documentation &amp; Discoverability</h3><p>Docs are current enough to trust; new engineers find the path from clone to running system.</p></div>
+            <div class="card"><span class="tag">Category 02</span><h3>Architecture Clarity</h3><p>Boundaries, responsibilities, and dependency direction are legible at a glance.</p></div>
+            <div class="card"><span class="tag">Category 03</span><h3>Reproducible Setup</h3><p>Any clean machine reaches a working dev state with bounded effort.</p></div>
+            <div class="card"><span class="tag">Category 04</span><h3>Testability &amp; Confidence</h3><p>Tests help the team move faster. Failing tests are actionable, not brittle.</p></div>
+            <div class="card"><span class="tag">Category 05</span><h3>Build, Deploy &amp; Release</h3><p>Versions mean something. Deployed artifacts are identifiable and verifiable.</p></div>
+            <div class="card"><span class="tag">Category 06</span><h3>Data &amp; Schema Discipline</h3><p>Schema changes are reviewable and repeatable. Test data is intentional.</p></div>
+            <div class="card"><span class="tag">Category 07</span><h3>Observability</h3><p>Logs, traces, and metrics answer what happened, where, when, and why.</p></div>
+            <div class="card"><span class="tag">Category 08</span><h3>Security &amp; Supply Chain</h3><p>Secrets managed deliberately. Vulnerable dependencies are visible.</p></div>
+            <div class="card"><span class="tag">Category 09</span><h3>Workflow &amp; Collaboration</h3><p>Small, reviewable changes land consistently. AI diffs are reviewed like any other.</p></div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Applied Practice &nbsp;|&nbsp; Integral Dragon</span>
+        <span>05</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 6 — TECHNICAL DEBT TAXONOMY (9 categories, 3x3)
+==================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>OVERVIEW <span class="sep">|</span> DEBT TAXONOMY</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Technical debt, named in nine categories</h2>
+        <div class="rule"></div>
+        <div class="grid-3" style="margin-top: 14px;">
+            <div class="card"><span class="tag">Debt 01</span><h3>Knowledge Debt</h3><p>Outdated docs, no architecture map, unclear ownership, hidden operational steps.</p></div>
+            <div class="card"><span class="tag">Debt 02</span><h3>Design Debt</h3><p>Tangled dependencies, mixed responsibilities, duplicated logic, weak boundaries.</p></div>
+            <div class="card"><span class="tag">Debt 03</span><h3>Environment Debt</h3><p>Snowflake machines, missing setup automation, dependency version chaos.</p></div>
+            <div class="card"><span class="tag">Debt 04</span><h3>Quality-Confidence Debt</h3><p>Missing tests, flaky tests, meaningless coverage, no regression confidence.</p></div>
+            <div class="card"><span class="tag">Debt 05</span><h3>Release Debt</h3><p>Manual release steps, unknown deployed version, weak artifact traceability.</p></div>
+            <div class="card"><span class="tag">Debt 06</span><h3>Data &amp; Schema Debt</h3><p>Untracked schema changes, fragile migrations, impossible test-data setup.</p></div>
+            <div class="card"><span class="tag">Debt 07</span><h3>Observability Debt</h3><p>Noisy logs, missing correlation, no traces, vanity dashboards.</p></div>
+            <div class="card"><span class="tag">Debt 08</span><h3>Security &amp; Supply Chain</h3><p>Hardcoded secrets, unreviewed dependencies, no scanning, unclear provenance.</p></div>
+            <div class="card"><span class="tag">Debt 09</span><h3>Workflow Debt</h3><p>Huge PRs, weak review norms, cleanup never scheduled, AI changes under-reviewed.</p></div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Applied Practice &nbsp;|&nbsp; Integral Dragon</span>
+        <span>06</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 7 — AI HELPS vs. AI RISKY (two-column dark panels)
+==================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>OVERVIEW <span class="sep">|</span> AI USAGE DISCIPLINE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Where AI helps &mdash; and where it is risky</h2>
+        <div class="rule"></div>
+        <div class="grid-2" style="margin-top: 18px;">
+            <div class="panel">
+                <h3 style="color: var(--accent);">AI IS STRONG WHEN</h3>
+                <ul>
+                    <li>Summarizing a codebase or long scripts</li>
+                    <li>Finding patterns, duplication, and inconsistencies</li>
+                    <li>Identifying documentation and test gaps</li>
+                    <li>Generating first-pass scaffolds and checklists</li>
+                    <li>Proposing small, scoped refactors</li>
+                    <li>Tracing cross-cutting logic and dependencies</li>
+                    <li>Turning issue patterns into cleanup plans</li>
+                </ul>
+            </div>
+            <div class="panel warn">
+                <h3 style="color: var(--warn);">AI IS RISKY WHEN</h3>
+                <ul>
+                    <li>Rewriting large parts of a system without context</li>
+                    <li>Writing tests that assert implementation trivia</li>
+                    <li>Producing documentation that sounds right but is wrong</li>
+                    <li>Making security-sensitive changes without review</li>
+                    <li>Generating more code than the team can absorb</li>
+                    <li>Normalizing insecure patterns seen in public repos</li>
+                    <li>Hiding weak reasoning behind fluent summaries</li>
+                </ul>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 22px; max-width: 78ch;">
+            Use AI to inspect, explain, propose, and scaffold. Use humans to decide, validate, and own the change. Treat AI output as draft material with a burden of proof.
+        </p>
+    </div>
+    <div class="slide-foot">
+        <span>Applied Practice &nbsp;|&nbsp; Integral Dragon</span>
+        <span>07</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 8 — 30-DAY PLAN FRAMING
+==================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 05 <span class="sep">|</span> MAKING IT REPEATABLE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">The week ends with a 30-day plan, not a rewrite</h2>
+        <div class="rule"></div>
+        <div class="stat-row" style="margin-top: 18px;">
+            <div class="stat"><div class="num">3</div><div class="label">Quick Wins</div></div>
+            <div class="stat"><div class="num">2</div><div class="label">Structural Improvements</div></div>
+            <div class="stat"><div class="num">1</div><div class="label">Workflow Change</div></div>
+            <div class="stat"><div class="num">1</div><div class="label">Measurement Change</div></div>
+        </div>
+        <ul class="arrows" style="margin-top: 24px;">
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Staged modernization beats rewrite fantasies.</strong> Small, validated improvements compound.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Improvement needs cadence and ownership.</strong> Debt backlogs live alongside feature work, not after it.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>AI usage needs policy, not just access.</strong> Review AI diffs with the same rigor as human diffs.</span></li>
+        </ul>
+    </div>
+    <div class="slide-foot">
+        <span>Applied Practice &nbsp;|&nbsp; Integral Dragon</span>
+        <span>08</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 9 — CLOSING
+==================================================================== -->
+<section class="slide close">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <div class="eyebrow"><span class="dot"></span>APPLIED PRACTICE &mdash; CLOSE OUT</div>
+        <h1 class="display" style="margin-top: 14px;">The point is not more code.<br><span style="color: var(--accent);">The point is easier change.</span></h1>
+        <div class="accent-line" style="margin: 22px auto;"></div>
+        <p class="sub" style="max-width: 58ch;">
+            Good engineering makes AI more useful. If you cannot validate the change, AI only helped you move faster in the dark.
+        </p>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>09</span>
+    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280,initial-scale=1">
+<title>Session 3 — Using AI to Inspect and Improve</title>
+<style>
+/* =======================================================================
+   INTEGRAL DRAGON · Session 3 deck
+======================================================================= */
+
+:root {
+    --bg:          #0b1429;
+    --bg-2:        #0f1a33;
+    --surface:     #17233f;
+    --surface-2:   #1e2d4f;
+    --line:        #26355a;
+    --line-soft:   #1a2340;
+    --text:        #f7f9fc;
+    --muted:       #cfd6e6;
+    --soft:        #92a1c0;
+    --accent:      #3ab5cc;
+    --accent-2:    #4fc1d8;
+    --accent-soft: rgba(58, 181, 204, 0.18);
+    --card-bg:     #f6f9fc;
+    --card-text:   #0b1429;
+    --card-muted:  #3f4a64;
+    --good:        #6ed2a5;
+    --warn:        #f3c879;
+    --danger:      #ff8d8d;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+body {
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+}
+
+.slide {
+    width: 1280px;
+    height: 720px;
+    padding: 48px 64px;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+    background:
+        radial-gradient(circle at 110% -10%, rgba(58, 181, 204, 0.18), transparent 32%),
+        radial-gradient(circle at -10% 110%, rgba(58, 181, 204, 0.10), transparent 36%),
+        linear-gradient(160deg, var(--bg) 0%, #0d1831 100%);
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; break-after: auto; }
+
+.slide-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    color: var(--text);
+    text-transform: uppercase;
+}
+.eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.eyebrow .sep { color: var(--soft); }
+.eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--accent);
+    display: inline-block;
+}
+
+.slide-body { display: grid; align-content: start; gap: 22px; min-height: 0; overflow: hidden; }
+
+h1, h2, h3, h4, p, ul, ol { margin: 0; }
+.display {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    color: var(--text);
+    max-width: 22ch;
+}
+.headline {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--text);
+}
+.sub {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 72ch;
+}
+.accent-line {
+    width: 72px; height: 3px; background: var(--accent); border-radius: 2px;
+}
+.rule {
+    height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--accent) 0, var(--accent) 120px, var(--line) 120px, var(--line) 100%);
+}
+
+ul.arrows { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+ul.arrows li {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+ul.arrows li .bullet {
+    flex: 0 0 auto;
+    width: 22px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.45;
+}
+ul.arrows li .text { flex: 1 1 auto; min-width: 0; }
+ul.arrows li strong { color: var(--text); font-weight: 600; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; }
+
+.card {
+    background: var(--card-bg);
+    color: var(--card-text);
+    border-radius: 10px;
+    padding: 20px 22px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    display: grid;
+    gap: 8px;
+    align-content: start;
+}
+.card h3 {
+    color: var(--card-text);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+}
+.card p, .card li {
+    color: var(--card-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+.card ul { padding-left: 18px; display: grid; gap: 4px; }
+.card .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.panel {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    display: grid;
+    gap: 10px;
+}
+.panel h3 { color: var(--text); font-size: 16px; font-weight: 600; letter-spacing: 0.02em; }
+.panel p, .panel li { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.panel ul { list-style: none; padding: 0; display: grid; gap: 6px; }
+.panel ul li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+.panel ul li::before { content: "■"; color: var(--accent); font-size: 10px; line-height: 1.7; }
+.panel .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.panel.warn { border-color: rgba(243, 200, 121, 0.35); }
+.panel.warn .tag { color: var(--warn); }
+.panel.warn ul li::before { color: var(--warn); }
+
+.panel.good { border-color: rgba(110, 210, 165, 0.30); }
+.panel.good .tag { color: var(--good); }
+.panel.good ul li::before { color: var(--good); }
+
+.prompt-block {
+    background: #0a1120;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--muted);
+    white-space: pre-wrap;
+}
+
+.cap-card {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    position: relative;
+}
+.cap-card .meta {
+    display: inline-block;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+}
+.cap-card h4 { color: var(--text); font-size: 16px; font-weight: 700; }
+.cap-card p { color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+.slide.title {
+    grid-template-rows: auto 1fr auto;
+    padding-right: 64px;
+}
+.slide.title .title-art {
+    position: absolute;
+    right: -80px;
+    top: 40px;
+    width: 620px;
+    height: 620px;
+    pointer-events: none;
+    opacity: 0.9;
+}
+.title-meta {
+    display: flex; align-items: center; gap: 14px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+}
+.title-program {
+    margin-top: 16px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+.slide.close {
+    background:
+        radial-gradient(circle at 50% -20%, rgba(58, 181, 204, 0.22), transparent 50%),
+        linear-gradient(180deg, var(--bg) 0%, #0a1225 100%);
+    text-align: center;
+    align-items: center;
+}
+.slide.close .slide-body { align-content: center; justify-items: center; text-align: center; }
+.slide.close .display { text-align: center; max-width: 28ch; }
+
+.slide-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+hr.hair { border: none; height: 1px; background: var(--line-soft); margin: 4px 0; }
+
+@page {
+    size: 1280px 720px;
+    margin: 0;
+}
+@media print {
+    html, body { background: var(--bg); }
+    .slide {
+        margin: 0 !important;
+        width: 1280px !important;
+        height: 720px !important;
+        page-break-after: always;
+    }
+    .slide:last-child { page-break-after: auto; }
+}
+
+@media screen {
+    body { padding: 24px; }
+    .slide { margin: 0 auto 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); border-radius: 6px; }
+}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     SLIDE 1 · TITLE
+====================================================================== -->
+<section class="slide title">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <svg class="title-art" viewBox="0 0 620 620" aria-hidden="true">
+        <defs>
+            <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#3ab5cc" stop-opacity="0.28" />
+                <stop offset="100%" stop-color="#3ab5cc" stop-opacity="0.02" />
+            </radialGradient>
+        </defs>
+        <rect x="80" y="40" width="500" height="500" rx="28" fill="url(#g1)" />
+        <circle cx="360" cy="300" r="230" fill="none" stroke="#3ab5cc" stroke-width="1.2" opacity="0.35" />
+        <circle cx="360" cy="300" r="190" fill="none" stroke="#3ab5cc" stroke-width="1.5" opacity="0.55" />
+        <circle cx="360" cy="300" r="120" fill="#3ab5cc" opacity="0.18" />
+        <circle cx="360" cy="300" r="60" fill="#3ab5cc" opacity="0.32" />
+    </svg>
+    <div class="slide-body">
+        <div>
+            <div class="title-meta">MODULE 02 · SESSION 03</div>
+            <h1 class="display" style="margin-top: 18px;">Using AI to Inspect and Improve</h1>
+            <div class="accent-line" style="margin-top: 22px;"></div>
+            <p class="sub" style="margin-top: 18px;">Targeted, reviewable AI use against a real codebase — inspect, explain, propose, and scaffold, with humans owning the architecture decisions.</p>
+            <p class="title-program">AI-Accelerated Software Development &nbsp;|&nbsp; Applied Practice</p>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>01</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 2 · CAPABILITY MAP
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 03 <span class="sep">|</span> CAPABILITY MAP</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">What AI is actually good at in existing codebases</h2>
+        <div class="rule"></div>
+        <p class="sub">Five reliable jobs. High leverage when scope is clear. None of them are "own the architecture decision."</p>
+        <div class="grid-5" style="margin-top: 4px;">
+            <div class="cap-card">
+                <span class="meta">01 · Inspect</span>
+                <h4>Inspect</h4>
+                <p>Repo summarization, structure scans, cross-file pattern detection.</p>
+            </div>
+            <div class="cap-card">
+                <span class="meta">02 · Explain</span>
+                <h4>Explain</h4>
+                <p>Module roles, call paths, legacy logic walkthroughs.</p>
+            </div>
+            <div class="cap-card">
+                <span class="meta">03 · Propose</span>
+                <h4>Propose</h4>
+                <p>Ranked findings, small refactor candidates, test ideas.</p>
+            </div>
+            <div class="cap-card">
+                <span class="meta">04 · Scaffold</span>
+                <h4>Scaffold</h4>
+                <p>First-draft docs, test skeletons, migration outlines.</p>
+            </div>
+            <div class="cap-card">
+                <span class="meta">05 · Standardize</span>
+                <h4>Standardize</h4>
+                <p>Checklists, review templates, repeatable prompts.</p>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 6px; color: var(--soft); font-size: 15px;">Framing line &mdash; <span style="color: var(--accent);">Use AI to make the hidden visible.</span></p>
+    </div>
+    <div class="slide-foot">
+        <span>Session 03 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>02</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 3 · BEFORE / AFTER PROMPT COMPARISON
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 03 <span class="sep">|</span> PROMPT SHAPE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Weak prompt vs. tightened prompt</h2>
+        <div class="rule"></div>
+        <div class="grid-2" style="margin-top: 4px;">
+            <div class="panel warn">
+                <span class="tag">Before &mdash; weak</span>
+                <h3>Generic ask, no structure, no criteria</h3>
+                <div class="prompt-block">Analyze this codebase and improve it.</div>
+                <p>Produces generic, plausible prose. No evidence trail. No ranked findings. Uncertainty hidden.</p>
+            </div>
+            <div class="panel good">
+                <span class="tag">After &mdash; tightened</span>
+                <h3>Scoped, criteria-driven, inspectable output</h3>
+                <div class="prompt-block">Act as a senior architect. Evaluate this Python/FastAPI repo against 9 project-health categories. For each: confirmable evidence, weaknesses, likely debt, 1–5 rating, confidence level. Rank the top 5 problems. Distinguish facts from inferences. Do not hallucinate architecture.</div>
+                <p>Produces structured findings with explicit uncertainty — an artifact a reviewer can check.</p>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 4px; color: var(--soft); font-size: 14px;">Five levers &mdash; scope &middot; quality criteria &middot; output structure &middot; uncertainty &middot; validation expectations.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Session 03 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>03</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 4 · DOCS + ARCHITECTURE DISCOVERY
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 03 <span class="sep">|</span> DISCOVERY</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">AI for documentation and architecture discovery</h2>
+        <div class="rule"></div>
+        <p class="sub">One of the safest high-value uses of AI is making hidden knowledge explicit — then reviewing it against the repo.</p>
+        <div class="grid-2x2" style="margin-top: 4px;">
+            <div class="card">
+                <span class="tag">Docs · 01</span>
+                <h3>README refresh candidates</h3>
+                <p>Generate draft sections grounded in the repo's actual structure. Flag what the current README claims but the code does not support.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Docs · 02</span>
+                <h3>Module role summaries</h3>
+                <p>One-paragraph summaries of each top-level module with its likely responsibilities and obvious collaborators.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Architecture · 03</span>
+                <h3>C4-style component overview</h3>
+                <p>First-pass container and component map. Treat as a draft needing human edit, not a source of truth.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Architecture · 04</span>
+                <h3>Unanswered questions list</h3>
+                <p>Explicit uncertainty — what the repo does not answer — so reviewers know where to look next.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 03 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>04</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 5 · TESTS + SMALL REFACTORS
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 03 <span class="sep">|</span> TESTS &amp; REFACTORS</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">AI for tests and small refactors</h2>
+        <div class="rule"></div>
+        <p class="sub">AI accelerates confidence-building work when the scope is constrained. Small, scoped, reviewable — always.</p>
+        <ul class="arrows">
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Candidate tests for one component</strong> &middot; generate ideas, then filter for real behavior over implementation trivia.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Seam creation</strong> &middot; propose small isolation changes before attempting bigger refactors.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Logging and error-handling improvements</strong> &middot; repetitive cleanup under clear rules you can review line by line.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Small, scoped diffs</strong> &middot; split large proposals before merging anything &mdash; oversized diffs are a failure mode, not a feature.</span></li>
+        </ul>
+    </div>
+    <div class="slide-foot">
+        <span>Session 03 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>05</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 6 · AI FAILURE MODES
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 03 <span class="sep">|</span> FAILURE MODES</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">AI failure modes — the red flags</h2>
+        <div class="rule"></div>
+        <p class="sub">The biggest risk is fluent overreach. Fluency is not evidence. Students need permission to distrust impressive-looking AI output.</p>
+        <div class="grid-3" style="margin-top: 4px;">
+            <div class="panel warn">
+                <span class="tag">Red flag 01</span>
+                <h3>Hallucinated architecture</h3>
+                <p>Confident descriptions of flows, services, or boundaries that don't exist in the repo.</p>
+            </div>
+            <div class="panel warn">
+                <span class="tag">Red flag 02</span>
+                <h3>Shallow tests</h3>
+                <p>Assertions that exercise lines without testing the behavior that actually matters.</p>
+            </div>
+            <div class="panel warn">
+                <span class="tag">Red flag 03</span>
+                <h3>Unsafe refactors</h3>
+                <p>Changes that silently expand scope beyond the stated problem.</p>
+            </div>
+            <div class="panel warn">
+                <span class="tag">Red flag 04</span>
+                <h3>Oversized diffs</h3>
+                <p>PRs too large for a reviewer to reason about in one sitting.</p>
+            </div>
+            <div class="panel warn">
+                <span class="tag">Red flag 05</span>
+                <h3>Confident summaries</h3>
+                <p>Smooth prose that hides uncertainty instead of surfacing it.</p>
+            </div>
+            <div class="panel warn">
+                <span class="tag">Red flag 06</span>
+                <h3>Unrequested complexity</h3>
+                <p>Generated abstractions, patterns, or frameworks no one asked for.</p>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 4px; color: var(--soft); font-size: 15px;">Framing line &mdash; <span style="color: var(--accent);">Trust evidence, not fluency.</span></p>
+    </div>
+    <div class="slide-foot">
+        <span>Session 03 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>06</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 7 · HUMAN REVIEW RULES
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 03 <span class="sep">|</span> HUMAN REVIEW RULES</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">The review bar should be clearer, not lower</h2>
+        <div class="rule"></div>
+        <div class="grid-2x2" style="margin-top: 4px;">
+            <div class="card">
+                <span class="tag">Rule 01</span>
+                <h3>Require explicit scope</h3>
+                <p>Name the files, the behavior, and the acceptance before the AI starts. Scope drift is the most common AI failure.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Rule 02</span>
+                <h3>Require validation steps</h3>
+                <p>Every AI change needs real tests, actual run output, or concrete verification. No evidence, no merge.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Rule 03</span>
+                <h3>Prefer small diffs</h3>
+                <p>Split large AI proposals into reviewable slices. If a human can't hold it in their head, it is not ready.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Rule 04</span>
+                <h3>Check assumptions against the repo</h3>
+                <p>Treat AI output as a draft, not as evidence. Verify every claim of "the repo does X" against the actual code.</p>
+            </div>
+        </div>
+        <p class="sub" style="margin-top: 4px; color: var(--soft); font-size: 15px;">This is where AI excitement becomes engineering discipline.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Session 03 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>07</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 8 · DAY 3 EXERCISE
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 03 <span class="sep">|</span> DAY 3 EXERCISES</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Today's exercises — produce concrete, inspectable artifacts</h2>
+        <div class="rule"></div>
+        <div class="grid-3" style="margin-top: 4px;">
+            <div class="card">
+                <span class="tag">Exercise 03</span>
+                <h3>Documentation Gap Hunt</h3>
+                <p>AI outline vs. real docs. List the missing or misleading items and draft improved README sections.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Exercise 04</span>
+                <h3>Architecture Map from the Repo</h3>
+                <p>First-pass component map with responsibilities and explicit uncertainty flags — a one-page artifact.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Exercise 05</span>
+                <h3>AI-Assisted Test Improvement</h3>
+                <p>Propose candidate tests for one risky behavior, then filter for real behavior versus implementation trivia.</p>
+            </div>
+        </div>
+        <div class="panel" style="margin-top: 8px;">
+            <span class="tag">Supporting asset</span>
+            <p><strong style="color: var(--text);">Student Prompt Template for Codebase Analysis</strong> &mdash; a reusable structured prompt against the nine project-health categories.</p>
+            <p style="color: var(--soft); font-size: 13px;">Debrief question &mdash; What AI-generated outputs would you trust after review, and which would you never trust without deeper verification?</p>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 03 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>08</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 9 · CLOSE
+====================================================================== -->
+<section class="slide close">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <div class="eyebrow"><span class="dot"></span>CLOSE OUT</div>
+        <h1 class="display" style="margin-top: 14px;">Use AI to <span style="color: var(--accent);">inspect, explain, propose, and scaffold</span>.</h1>
+        <div class="accent-line" style="margin: 22px auto;"></div>
+        <p class="sub" style="max-width: 58ch;">Leave the architecture decisions to humans who can validate them. Trust evidence, not fluency. Keep every change small, scoped, and reviewable.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Confidential. Prepared exclusively for Ensemble Health Partners.</span>
+        <span>09</span>
+    </div>
+</section>
+
+</body>
+</html>

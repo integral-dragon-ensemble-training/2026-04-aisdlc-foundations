@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280,initial-scale=1">
+<title>Session 4 — Validation: Tests, Observability, Security</title>
+<style>
+:root {
+    --bg:          #0b1429;
+    --bg-2:        #0f1a33;
+    --surface:     #17233f;
+    --surface-2:   #1e2d4f;
+    --line:        #26355a;
+    --line-soft:   #1a2340;
+    --text:        #f7f9fc;
+    --muted:       #cfd6e6;
+    --soft:        #92a1c0;
+    --accent:      #3ab5cc;
+    --accent-2:    #4fc1d8;
+    --accent-soft: rgba(58, 181, 204, 0.18);
+    --card-bg:     #f6f9fc;
+    --card-text:   #0b1429;
+    --card-muted:  #3f4a64;
+    --good:        #6ed2a5;
+    --warn:        #f3c879;
+    --danger:      #ff8d8d;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+body {
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+}
+
+.slide {
+    width: 1280px;
+    height: 720px;
+    padding: 48px 64px;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+    background:
+        radial-gradient(circle at 110% -10%, rgba(58, 181, 204, 0.18), transparent 32%),
+        radial-gradient(circle at -10% 110%, rgba(58, 181, 204, 0.10), transparent 36%),
+        linear-gradient(160deg, var(--bg) 0%, #0d1831 100%);
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; break-after: auto; }
+
+.slide-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    color: var(--text);
+    text-transform: uppercase;
+}
+.eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.eyebrow .sep { color: var(--soft); }
+.eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--accent);
+    display: inline-block;
+}
+
+.slide-body { display: grid; align-content: start; gap: 22px; min-height: 0; overflow: hidden; }
+
+h1, h2, h3, h4, p, ul, ol { margin: 0; }
+.display {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    color: var(--text);
+    max-width: 22ch;
+}
+.headline {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--text);
+}
+.sub {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 72ch;
+}
+.accent-line {
+    width: 72px; height: 3px; background: var(--accent); border-radius: 2px;
+}
+.rule {
+    height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--accent) 0, var(--accent) 120px, var(--line) 120px, var(--line) 100%);
+}
+
+ul.arrows { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+ul.arrows li {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+ul.arrows li .bullet {
+    flex: 0 0 auto;
+    width: 22px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.45;
+}
+ul.arrows li .text { flex: 1 1 auto; min-width: 0; }
+ul.arrows li strong { color: var(--text); font-weight: 600; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; }
+
+.card {
+    background: var(--card-bg);
+    color: var(--card-text);
+    border-radius: 10px;
+    padding: 22px 24px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    display: grid;
+    gap: 8px;
+    align-content: start;
+}
+.card h3 {
+    color: var(--card-text);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+}
+.card p, .card li {
+    color: var(--card-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+.card ul { padding-left: 18px; display: grid; gap: 4px; }
+.card .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.panel {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: grid;
+    gap: 10px;
+}
+.panel h3 { color: var(--text); font-size: 17px; font-weight: 600; }
+.panel p, .panel li { color: var(--muted); font-size: 15px; line-height: 1.5; }
+.panel ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+.panel ul li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+.panel ul li::before { content: "■"; color: var(--accent); font-size: 10px; line-height: 1.7; }
+
+.quote {
+    font-size: 38px; line-height: 1.15; font-weight: 500; color: var(--text);
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+}
+.quote .accent { color: var(--accent); }
+
+.equation {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    gap: 20px;
+    padding: 20px 0;
+}
+.equation .eq {
+    font-size: 46px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    max-width: 24ch;
+}
+.equation .eq .op { color: var(--accent); font-weight: 700; padding: 0 10px; }
+.equation .eq .result { color: var(--accent); }
+.equation .caption {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+.meter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.meter {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: grid;
+    gap: 14px;
+}
+.meter .tag {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+.meter .num {
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+.meter .bar {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--line);
+    overflow: hidden;
+    position: relative;
+}
+.meter .bar .fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+}
+.meter .copy { color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+.slide.title {
+    grid-template-rows: auto 1fr auto;
+    padding-right: 64px;
+}
+.slide.title .title-art {
+    position: absolute;
+    right: -80px;
+    top: 40px;
+    width: 620px;
+    height: 620px;
+    pointer-events: none;
+    opacity: 0.9;
+}
+.title-meta {
+    display: flex; align-items: center; gap: 14px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+}
+.title-program {
+    margin-top: 16px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+.slide.close {
+    background:
+        radial-gradient(circle at 50% -20%, rgba(58, 181, 204, 0.22), transparent 50%),
+        linear-gradient(180deg, var(--bg) 0%, #0a1225 100%);
+    text-align: center;
+    align-items: center;
+}
+.slide.close .slide-body { align-content: center; justify-items: center; text-align: center; }
+.slide.close .display { text-align: center; max-width: 28ch; }
+
+.slide-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--soft);
+}
+
+hr.hair { border: none; height: 1px; background: var(--line-soft); margin: 4px 0; }
+
+@page {
+    size: 1280px 720px;
+    margin: 0;
+}
+@media print {
+    html, body { background: var(--bg); }
+    .slide {
+        margin: 0 !important;
+        width: 1280px !important;
+        height: 720px !important;
+        page-break-after: always;
+    }
+    .slide:last-child { page-break-after: auto; }
+}
+
+@media screen {
+    body { padding: 24px; }
+    .slide { margin: 0 auto 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); border-radius: 6px; }
+}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     SLIDE 1 — TITLE
+====================================================================== -->
+<section class="slide title">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <svg class="title-art" viewBox="0 0 620 620" aria-hidden="true">
+        <defs>
+            <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#3ab5cc" stop-opacity="0.28" />
+                <stop offset="100%" stop-color="#3ab5cc" stop-opacity="0.02" />
+            </radialGradient>
+        </defs>
+        <rect x="80" y="40" width="500" height="500" rx="28" fill="url(#g1)" />
+        <circle cx="360" cy="300" r="190" fill="none" stroke="#3ab5cc" stroke-width="1.5" opacity="0.55" />
+        <circle cx="360" cy="300" r="120" fill="#3ab5cc" opacity="0.18" />
+        <circle cx="360" cy="300" r="60" fill="#3ab5cc" opacity="0.32" />
+    </svg>
+    <div class="slide-body">
+        <div>
+            <div class="title-meta">MODULE 02 · SESSION 04</div>
+            <h1 class="display" style="margin-top: 18px;">Validation: Tests, Observability, Security</h1>
+            <div class="accent-line" style="margin-top: 22px;"></div>
+            <p class="sub" style="margin-top: 18px;">Confidence beats speed. Validation is what turns AI-assisted cleanup into engineering.</p>
+            <p class="title-program">AI-Accelerated Software Development &nbsp;|&nbsp; Applied Practice</p>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 04 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>01</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 2 — EQUATION
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 04 <span class="sep">|</span> THE GUARDRAIL DAY</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Improvements only count if they are validated</h2>
+        <div class="rule"></div>
+        <div class="equation">
+            <div class="eq">AI-generated change <span class="op">+</span> validation <span class="op">=</span> <span class="result">trustworthy improvement</span></div>
+            <div class="caption">A plausible diff is not a safe diff</div>
+        </div>
+        <ul class="arrows" style="margin-top: 4px;">
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Validation turns cleanup into engineering</strong> &middot; tests, observability, and security each contribute a slice of confidence.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Today is the guardrail day</strong> &middot; the day we say no to fluent-but-unchecked AI output.</span></li>
+        </ul>
+    </div>
+    <div class="slide-foot">
+        <span>Session 04 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>02</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 3 — COVERAGE VS CONFIDENCE
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 04 <span class="sep">|</span> COVERAGE VS. CONFIDENCE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Coverage is a count. Confidence is a capability.</h2>
+        <div class="rule"></div>
+        <div class="meter-row">
+            <div class="meter">
+                <span class="tag">Coverage meter</span>
+                <div class="num">92%</div>
+                <div class="bar"><div class="fill" style="width: 92%;"></div></div>
+                <p class="copy">Looks great on a dashboard. Can pass with shallow assertions, mocked seams, and no real failure mode exercised.</p>
+            </div>
+            <div class="meter">
+                <span class="tag">Confidence meter</span>
+                <div class="num">Signal</div>
+                <div class="bar"><div class="fill" style="width: 48%;"></div></div>
+                <p class="copy">Tied to important behaviors. Fast feedback. Realistic fixtures. Failing tests are actionable and trusted.</p>
+            </div>
+        </div>
+        <ul class="arrows" style="margin-top: 6px;">
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Risk-relevant tests</strong> beat coverage percentages every time.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Flaky tests erode trust</strong> even when they raise the number.</span></li>
+        </ul>
+    </div>
+    <div class="slide-foot">
+        <span>Session 04 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>03</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 4 — OBSERVABILITY BREAKDOWN (4-card grid)
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 04 <span class="sep">|</span> OBSERVABILITY</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Observability is part of maintainability</h2>
+        <div class="rule"></div>
+        <p class="sub">A system that cannot explain itself in operation is hard to change safely.</p>
+        <div class="grid-4" style="margin-top: 4px;">
+            <div class="card">
+                <span class="tag">Signal 01</span>
+                <h3>Logs</h3>
+                <p>Structured enough to diagnose. Correlation IDs and request context, not walls of free text.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Signal 02</span>
+                <h3>Metrics</h3>
+                <p>Reflect real behavior and failure conditions. Not vanity uptime, not dashboards with no use case.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Signal 03</span>
+                <h3>Traces</h3>
+                <p>Matter most when control flow crosses service or team boundaries. Stitch the request path together.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Signal 04</span>
+                <h3>Deployment visibility</h3>
+                <p>What version is live, where, and is it behaving. Shortens the debug and verification loop.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 04 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>04</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 5 — SECURITY / SUPPLY CHAIN
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 04 <span class="sep">|</span> SECURITY HYGIENE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Baseline security and supply-chain hygiene</h2>
+        <div class="rule"></div>
+        <ul class="arrows">
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Secrets management</strong> &middot; not casually embedded in code, docs, or chat history.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Dependency review</strong> &middot; visible at PR time, not a quarterly ritual.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Code scanning</strong> &middot; automated baseline, wired into CI rather than a one-off audit.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Vulnerability visibility</strong> &middot; the team knows what is outstanding and who owns it.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>Safer defaults</strong> &middot; in code and configuration, so the easy path is the safe one.</span></li>
+        </ul>
+        <p class="sub" style="margin-top: 8px;">Security is baseline engineering, not optional polish. AI can reduce this debt &mdash; and it can silently add to it.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Session 04 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>05</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 6 — VALIDATION CHECKLIST (arrow bullets)
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 04 <span class="sep">|</span> VALIDATION CHECKLIST</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">A validation checklist for AI-assisted changes</h2>
+        <div class="rule"></div>
+        <ul class="arrows">
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>What behavior changed?</strong> Name it in one sentence without quoting the diff.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>What tests prove it?</strong> Which assertions would fail if the change were wrong?</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>What logs or metrics help verify it at runtime?</strong> Can we see it after deploy?</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>What security or dependency risk changed?</strong> New packages, new surfaces, new secrets.</span></li>
+            <li><span class="bullet">&rarr;</span><span class="text"><strong>What assumptions did the AI make?</strong> Are they stated, and are they correct?</span></li>
+        </ul>
+        <p class="sub" style="margin-top: 6px;">Re-use this verbatim as a PR template. The goal is to make evidence a pre-condition of merge.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Session 04 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>06</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 7 — VALIDATION GATES BY CHANGE TYPE (5-card grid)
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 04 <span class="sep">|</span> GATES BY CHANGE TYPE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Different changes need different evidence</h2>
+        <div class="rule"></div>
+        <div class="grid-5" style="margin-top: 4px;">
+            <div class="card">
+                <span class="tag">Docs</span>
+                <h3>Accuracy review</h3>
+                <p>Cross-check against the actual repo, not against a plausible-sounding README.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Refactor</span>
+                <h3>Behavior checks</h3>
+                <p>Regression tests on the boundaries that moved. Prove nothing user-visible changed.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Observability</span>
+                <h3>Signal verification</h3>
+                <p>Confirm logs, traces, and metrics actually appear, correlate, and carry useful context.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Dependency</span>
+                <h3>Scan &amp; review</h3>
+                <p>Dependency-review, code scanning, license signals. A PR-time gate, not a quarterly audit.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Migration</span>
+                <h3>Rollback thinking</h3>
+                <p>Forward plan, rollback plan, compatibility window. Schema changes are versioned.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 04 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>07</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 8 — EXERCISE
+====================================================================== -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span>SESSION 04 <span class="sep">|</span> DAY 4 EXERCISE</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Review an AI-generated change like an engineer</h2>
+        <div class="rule"></div>
+        <div class="grid-2" style="margin-top: 4px;">
+            <div class="panel">
+                <h3>The task</h3>
+                <ul>
+                    <li>Read the AI-generated plan or diff end to end.</li>
+                    <li>Identify assumptions and unknowns the model glossed over.</li>
+                    <li>Check what validation evidence actually exists.</li>
+                    <li>Decide: approve, narrow, or reject &mdash; with rationale.</li>
+                </ul>
+            </div>
+            <div class="panel">
+                <h3>Debrief question</h3>
+                <p>"What made this output look good at first, and what made it unreliable on inspection?"</p>
+                <p style="color: var(--soft); font-size: 13px;">Strong answers are specific about risk, aware of missing validation, and willing to cut scope rather than approve on vibe.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-foot">
+        <span>Session 04 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>08</span>
+    </div>
+</section>
+
+<!-- =====================================================================
+     SLIDE 9 — CLOSING
+====================================================================== -->
+<section class="slide close">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <div class="eyebrow"><span class="dot"></span>CLOSE OUT</div>
+        <h1 class="display" style="margin-top: 14px;">Coverage is a count.<br><span style="color: var(--accent);">Confidence is a capability.</span></h1>
+        <div class="accent-line" style="margin: 22px auto;"></div>
+        <p class="sub" style="max-width: 56ch;">Trust evidence, not fluency. Small validated improvements beat big speculative refactors &mdash; every time.</p>
+    </div>
+    <div class="slide-foot">
+        <span>Session 04 &nbsp;|&nbsp; Integral Dragon</span>
+        <span>09</span>
+    </div>
+</section>
+
+</body>
+</html>
