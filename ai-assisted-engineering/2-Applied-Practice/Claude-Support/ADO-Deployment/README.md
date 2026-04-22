@@ -28,6 +28,10 @@ aisdlc-resources/
   2-Applied-Practice/
     Claude-Support/
     Workshop-1-What-Good-Looks-Like-Expanded/
+    Workshop-2-Technical-Debt-as-Friction-Expanded/
+    Workshop-3-Using-AI-to-Inspect-and-Improve-Expanded/
+    Workshop-4-Validation-Tests-Observability-Security-Expanded/
+    Workshop-5-Making-It-Repeatable-Expanded/
   skills/
     AISDLC-tech-diagrams/
 ```

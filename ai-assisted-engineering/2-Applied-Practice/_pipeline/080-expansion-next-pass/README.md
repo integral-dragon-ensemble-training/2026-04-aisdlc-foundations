@@ -20,6 +20,10 @@ Current expanded reference implementation:
 ```text
 ai-assisted-engineering/2-Applied-Practice/
   Workshop-1-What-Good-Looks-Like-Expanded/
+  Workshop-2-Technical-Debt-as-Friction-Expanded/
+  Workshop-3-Using-AI-to-Inspect-and-Improve-Expanded/
+  Workshop-4-Validation-Tests-Observability-Security-Expanded/
+  Workshop-5-Making-It-Repeatable-Expanded/
 ```
 
 Current source references:
@@ -84,8 +88,8 @@ Main risks during expansion:
 1. Create an expansion map for all workshops before generating slides.
 2. Define day-level objectives for each workshop.
 3. Identify shared exercises and prevent duplicate work.
-4. Use `Workshop-1-What-Good-Looks-Like-Expanded/` as the first reference implementation.
-5. Adapt that structure for the remaining workshops after review.
+4. Use the `Workshop-*-Expanded/` folders as the current candidate expanded implementation.
+5. Review the expanded structure before replacing or deprecating the original compact workshops.
 6. Generate slides only after the expanded workshop maps are stable.
 7. Render PDFs only after markdown content has been reviewed.
 

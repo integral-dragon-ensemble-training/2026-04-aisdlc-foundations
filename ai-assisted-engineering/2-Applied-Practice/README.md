@@ -28,6 +28,16 @@
 | [04](./Workshop-4-Validation-Tests-Observability-Security/) | Validation: Tests, Observability, Security | Confidence beats raw speed. |
 | [05](./Workshop-5-Making-It-Repeatable/) | Making It Repeatable | Cleanup becomes a team habit, not a sprint. |
 
+## Expanded workshop candidates
+
+These peer folders preserve the original workshops and add 3-5 day hands-on variants:
+
+- [`Workshop-1-What-Good-Looks-Like-Expanded/`](./Workshop-1-What-Good-Looks-Like-Expanded/)
+- [`Workshop-2-Technical-Debt-as-Friction-Expanded/`](./Workshop-2-Technical-Debt-as-Friction-Expanded/)
+- [`Workshop-3-Using-AI-to-Inspect-and-Improve-Expanded/`](./Workshop-3-Using-AI-to-Inspect-and-Improve-Expanded/)
+- [`Workshop-4-Validation-Tests-Observability-Security-Expanded/`](./Workshop-4-Validation-Tests-Observability-Security-Expanded/)
+- [`Workshop-5-Making-It-Repeatable-Expanded/`](./Workshop-5-Making-It-Repeatable-Expanded/)
+
 ## Overview materials
 
 See [`./overview/`](./overview/) for:

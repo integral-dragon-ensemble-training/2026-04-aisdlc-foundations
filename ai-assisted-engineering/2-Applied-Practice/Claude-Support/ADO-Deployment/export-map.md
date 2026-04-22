@@ -21,6 +21,26 @@ _instructor-cheat-sheet/
 ```
 
 ```text
+ai-assisted-engineering/2-Applied-Practice/Workshop-2-Technical-Debt-as-Friction-Expanded/
+  -> aisdlc-resources/2-Applied-Practice/Workshop-2-Technical-Debt-as-Friction-Expanded/
+```
+
+```text
+ai-assisted-engineering/2-Applied-Practice/Workshop-3-Using-AI-to-Inspect-and-Improve-Expanded/
+  -> aisdlc-resources/2-Applied-Practice/Workshop-3-Using-AI-to-Inspect-and-Improve-Expanded/
+```
+
+```text
+ai-assisted-engineering/2-Applied-Practice/Workshop-4-Validation-Tests-Observability-Security-Expanded/
+  -> aisdlc-resources/2-Applied-Practice/Workshop-4-Validation-Tests-Observability-Security-Expanded/
+```
+
+```text
+ai-assisted-engineering/2-Applied-Practice/Workshop-5-Making-It-Repeatable-Expanded/
+  -> aisdlc-resources/2-Applied-Practice/Workshop-5-Making-It-Repeatable-Expanded/
+```
+
+```text
 ai-assisted-engineering/2-Applied-Practice/overview/
   -> aisdlc-resources/2-Applied-Practice/overview/
 ```
