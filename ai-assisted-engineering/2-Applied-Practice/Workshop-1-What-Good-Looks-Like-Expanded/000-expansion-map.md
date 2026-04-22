@@ -45,6 +45,19 @@ Then we measure again.
 | `050-testing-confidence-and-lockdown-tests` | Use AI to identify confidence gaps and create characterization tests. | Test strategy notes and candidate lockdown tests. |
 | `060-improvement-loop-and-rescore` | Apply one small improvement and rerun the scorecard. | Before/after delta and next action list. |
 
+## Participant Assistant Layer
+
+`claude-teaching-assistant/` supports independent participant work between instructor touchpoints.
+
+It gives Claude Code instructions to:
+
+- collect participant and target repo setup details
+- create a participant workspace
+- keep target repo changes off by default
+- guide each exercise step in order
+- maintain a visible learning log
+- produce artifacts the instructor can review
+
 ## Day-Level Option
 
 ### Day 1 - Scorecard And Baseline
@@ -90,4 +103,3 @@ Then we measure again.
 - Do not let diagram generation become the deliverable; the deliverable is shared understanding.
 - Lockdown tests should protect current known behavior before refactoring.
 - If a repo contains sensitive code or secrets, run in an approved environment only.
-

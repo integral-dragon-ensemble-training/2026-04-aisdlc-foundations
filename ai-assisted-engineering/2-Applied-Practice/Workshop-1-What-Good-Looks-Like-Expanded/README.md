@@ -16,6 +16,11 @@ The central teaching move is simple:
 Workshop-1-What-Good-Looks-Like-Expanded/
   README.md
   000-expansion-map.md
+  claude-teaching-assistant/
+    CLAUDE.md
+    participant-startup-prompt.md
+    workspace-model.md
+    artifact-checklist.md
   narrative/
     workshop-1-expanded-narrative.md
   exercises/
@@ -31,6 +36,7 @@ Workshop-1-What-Good-Looks-Like-Expanded/
   _instructor-cheat-sheet/
     README.md
     claude-code-demo-script.md
+    participant-assistant-workflow.md
     prompt-blocks.md
 ```
 
@@ -55,6 +61,19 @@ define quality target
   -> capture the delta
 ```
 
+## Claude Teaching Assistant
+
+`claude-teaching-assistant/` contains participant-facing instructions for using Claude Code as a guided teaching assistant.
+
+The intended model is:
+
+- participant starts Claude in a homework/workspace directory
+- Claude asks for participant name, target repo, workspace root, and safety constraints
+- target repo is read-only by default
+- class artifacts are written to the participant workspace
+- Claude maintains a visible learning log
+- optional patches use a separate branch and are still summarized in the homework folder
+
 ## Recommended Delivery
 
 Use a three-day core workshop, with optional day-four and day-five deepening if the cohort has enough real project access.
@@ -72,4 +91,3 @@ This folder expands the existing baseline:
 - `ai-assisted-engineering/2-Applied-Practice/Workshop-1-What-Good-Looks-Like/`
 
 It does not replace the original workshop. Treat this as the candidate expanded version until it is reviewed and promoted.
-
