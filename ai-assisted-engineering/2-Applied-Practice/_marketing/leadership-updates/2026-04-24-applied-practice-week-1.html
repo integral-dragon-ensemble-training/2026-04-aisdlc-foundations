@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280,initial-scale=1">
+<title>AI-SDLC Progress — Applied Practice Week 1</title>
+<style>
+:root {
+    --bg:          #0b1429;
+    --bg-2:        #0f1a33;
+    --surface:     #17233f;
+    --surface-2:   #1e2d4f;
+    --line:        #26355a;
+    --line-soft:   #1a2340;
+    --text:        #f7f9fc;
+    --muted:       #cfd6e6;
+    --soft:        #92a1c0;
+    --accent:      #3ab5cc;
+    --accent-2:    #4fc1d8;
+    --accent-soft: rgba(58, 181, 204, 0.18);
+    --card-bg:     #f6f9fc;
+    --card-text:   #0b1429;
+    --card-muted:  #3f4a64;
+    --good:        #6ed2a5;
+    --warn:        #f3c879;
+    --danger:      #ff8d8d;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+body {
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+}
+
+.slide {
+    width: 1280px;
+    height: 720px;
+    padding: 48px 64px;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+    background:
+        radial-gradient(circle at 110% -10%, rgba(58, 181, 204, 0.18), transparent 32%),
+        radial-gradient(circle at -10% 110%, rgba(58, 181, 204, 0.10), transparent 36%),
+        linear-gradient(160deg, var(--bg) 0%, #0d1831 100%);
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; break-after: auto; }
+
+.slide-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    color: var(--text);
+    text-transform: uppercase;
+}
+.eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.eyebrow .sep { color: var(--soft); }
+.eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--accent);
+    display: inline-block;
+}
+
+.slide-body { display: grid; align-content: start; gap: 22px; min-height: 0; overflow: hidden; }
+
+h1, h2, h3, h4, p, ul, ol { margin: 0; }
+.display {
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--text);
+    max-width: 24ch;
+}
+.headline {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.18;
+    color: var(--text);
+}
+.sub {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 72ch;
+}
+.accent-line {
+    width: 72px; height: 3px; background: var(--accent); border-radius: 2px;
+}
+.rule {
+    height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--accent) 0, var(--accent) 120px, var(--line) 120px, var(--line) 100%);
+}
+
+ul.arrows { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+ul.arrows li {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+ul.arrows li .bullet {
+    flex: 0 0 auto; width: 22px;
+    color: var(--accent); font-weight: 600;
+    font-size: 18px; line-height: 1.45;
+}
+ul.arrows li .text { flex: 1 1 auto; min-width: 0; }
+ul.arrows li strong { color: var(--text); font-weight: 600; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+
+.card {
+    background: var(--card-bg);
+    color: var(--card-text);
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    display: grid;
+    gap: 6px;
+    align-content: start;
+}
+.card h3 {
+    color: var(--card-text);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+}
+.card p, .card li {
+    color: var(--card-muted);
+    font-size: 12.5px;
+    line-height: 1.45;
+}
+.card .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.panel {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: grid;
+    gap: 10px;
+}
+.panel h3 { color: var(--text); font-size: 17px; font-weight: 600; }
+.panel p, .panel li { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.panel ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+.panel ul li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+.panel ul li::before { content: "■"; color: var(--accent); font-size: 10px; line-height: 1.7; }
+.panel .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; align-items: stretch; }
+.step {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+}
+.step .meta {
+    display: inline-block;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+.step h4 { color: var(--text); font-size: 14.5px; font-weight: 600; margin-bottom: 6px; }
+.step p { color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+.step::after {
+    content: "→";
+    position: absolute; top: 50%; right: -12px; transform: translateY(-50%);
+    color: var(--accent); font-size: 18px;
+}
+.step:last-child::after { display: none; }
+
+.quote {
+    font-size: 40px; line-height: 1.2; font-weight: 500; color: var(--text);
+    letter-spacing: -0.02em;
+    max-width: 26ch;
+}
+.quote .accent { color: var(--accent); }
+
+.foot {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--soft);
+}
+
+.pull {
+    font-size: 54px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+.pull-unit {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: 8px;
+    letter-spacing: 0.02em;
+}
+
+.stat-mock {
+    background: var(--card-bg);
+    color: var(--card-text);
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+.stat-mock .k {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 9.5px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--card-muted);
+}
+.stat-mock .v {
+    font-size: 22px; font-weight: 700;
+    color: var(--card-text); letter-spacing: -0.01em;
+    margin-top: 4px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+}
+.stat-mock .u {
+    font-size: 11px; color: var(--card-muted);
+    font-weight: 500; margin-left: 4px;
+}
+
+.sample-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+
+.wip-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    color: var(--accent-2);
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px;
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+
+<!-- ============ Slide 1: Title ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body" style="align-content:center;">
+        <div class="eyebrow"><span class="dot"></span> AI-Accelerated Software Development <span class="sep">|</span> Ensemble Health Partners</div>
+        <h1 class="display">Applied Practice —<br>Week 1 Update</h1>
+        <div class="accent-line"></div>
+        <p class="sub">What we built this week, how Applied Practice works in front of participants, and a preview of the quality-signals work that's taking shape alongside it.</p>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Week 1 · Senior Leadership Update</span>
+        <span>24 April 2026</span>
+    </div>
+</section>
+
+<!-- ============ Slide 2: What we did this week ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> Week 1 progress <span class="sep">|</span> Applied Practice</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">What we shipped this week</h2>
+        <div class="rule"></div>
+        <p class="sub">Week 1 of Applied Practice is in hand. The expanded curriculum for Workshop&nbsp;1 — "What Good Looks Like" — is complete, reviewable, and ready to stand in front of participants.</p>
+
+        <div class="grid-2" style="margin-top:8px;">
+            <div class="card">
+                <span class="tag">Delivered · Workshop 1 Expanded</span>
+                <h3>Full hands-on curriculum</h3>
+                <p>Six exercises, instructor notes, participant handout, talk-track, and a workshop-flow diagram. Rewritten around a repeatable inspect-score-improve-rescore loop instead of a one-off scorecard exercise.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Delivered · Reusable</span>
+                <h3>Claude-assisted scorecard skill</h3>
+                <p>A repo-local skill participants invoke during the workshop. Claude gathers evidence from the codebase; participants score against nine health categories; the skill is reusable on any project afterward.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Delivered · Scaffolding</span>
+                <h3>Structure for Workshops 2–5</h3>
+                <p>Expansion maps for all four remaining workshops drafted, so the week-over-week build is incremental rather than a ground-up restart each time.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Delivered · Supporting</span>
+                <h3>Operating-model instructions</h3>
+                <p>Standing instructions for "Ensemble Claude" — the instance used inside Ensemble's environment — covering the scorecard workflow, provenance requirements, and a policy-compliant permission configuration.</p>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Week 1 | Integral Dragon</span>
+        <span>2</span>
+    </div>
+</section>
+
+<!-- ============ Slide 3: How Applied Practice works ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> The approach <span class="sep">|</span> Applied Practice</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">How Applied Practice works in front of participants</h2>
+        <div class="rule"></div>
+        <p class="sub">Every workshop follows the same shape. It's deliberately repeatable — the muscle we're building is the loop, not any single exercise.</p>
+
+        <div class="timeline" style="margin-top:8px;">
+            <div class="step">
+                <span class="meta">Step 01</span>
+                <h4>Define good</h4>
+                <p>Participants start from a shared definition of project health — not opinions.</p>
+            </div>
+            <div class="step">
+                <span class="meta">Step 02</span>
+                <h4>Inspect</h4>
+                <p>Claude Code gathers evidence against the definition, from their actual codebase.</p>
+            </div>
+            <div class="step">
+                <span class="meta">Step 03</span>
+                <h4>Score</h4>
+                <p>Humans — not AI — decide what the evidence means and how to score it.</p>
+            </div>
+            <div class="step">
+                <span class="meta">Step 04</span>
+                <h4>Improve</h4>
+                <p>One small, reviewable change is made — validated by tests and review.</p>
+            </div>
+            <div class="step">
+                <span class="meta">Step 05</span>
+                <h4>Rescore</h4>
+                <p>Run the scorecard again. Capture the delta. Move to the next priority.</p>
+            </div>
+        </div>
+
+        <div class="panel" style="margin-top:10px;">
+            <span class="tag">Guardrails we teach on day one</span>
+            <ul>
+                <li>Claude collects evidence. Humans own scoring and improvement decisions.</li>
+                <li>Improvements must be small enough to review — no speculative rewrites.</li>
+                <li>Every improvement is validated before it counts.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Week 1 | Integral Dragon</span>
+        <span>3</span>
+    </div>
+</section>
+
+<!-- ============ Slide 4: Five-workshop arc ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> The arc <span class="sep">|</span> Applied Practice</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">The five-workshop arc</h2>
+        <div class="rule"></div>
+        <p class="sub">Each workshop builds on the last. Outputs from one become inputs to the next — scorecards become friction maps become candidate changes become validated improvements become a team operating model.</p>
+
+        <div class="grid-5" style="margin-top:8px;">
+            <div class="card">
+                <span class="tag">Workshop 01 · Done</span>
+                <h3>What Good Looks Like</h3>
+                <p>Establish the quality target. Build the scorecard skill. Produce the baseline.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Workshop 02 · Queued</span>
+                <h3>Technical Debt as Friction</h3>
+                <p>Turn the baseline into a friction map. Prioritize by cost-of-change, not opinions.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Workshop 03 · Queued</span>
+                <h3>AI Inspect &amp; Improve</h3>
+                <p>Aim Claude at the top friction items. Produce reviewable candidate changes.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Workshop 04 · Queued</span>
+                <h3>Validation</h3>
+                <p>Tests, observability, security. A change only counts when it's validated.</p>
+            </div>
+            <div class="card">
+                <span class="tag">Workshop 05 · Queued</span>
+                <h3>Make It Repeatable</h3>
+                <p>Turn one-off cleanup into a 30-day team practice and working agreements.</p>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Week 1 | Integral Dragon</span>
+        <span>4</span>
+    </div>
+</section>
+
+<!-- ============ Slide 5: Quality Signals Assessment Module ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> Parallel build <span class="sep">|</span> Quality signals</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Quality Signals Assessment Module</h2>
+        <div class="rule"></div>
+        <p class="sub">Running in parallel to the workshop build: a module that turns what the workshops teach into an ongoing quality read on any codebase. Designed to produce <strong style="color:var(--text);">signals</strong>, not scoreboards.</p>
+
+        <div class="grid-2" style="margin-top:6px;">
+            <div class="panel">
+                <span class="tag">What it is</span>
+                <h3>A module — not a dashboard product</h3>
+                <p>The module gathers evidence from a repository and its delivery systems, and surfaces stable patterns: which files always show up in rework, which cycle-time segments are dragging, which review-discipline habits are slipping. The output can be rendered as a report, a dashboard, or fed into an existing tool.</p>
+            </div>
+            <div class="panel">
+                <span class="tag">Why signals, not scores</span>
+                <h3>Less political, less gameable</h3>
+                <p>Scores invite argument about what to count. Signals report what the codebase is doing, with every value sourced to a specific query. A signal that recurs across two consecutive windows is treated differently than a one-off — that consistency is the headline, not any single number.</p>
+            </div>
+        </div>
+
+        <div class="panel" style="margin-top:10px;">
+            <span class="tag">Where this sits in the program</span>
+            <p>Workshops teach the practice. The Quality Signals module is the artifact that lets a team continue the practice after the workshops end — and lets leadership see whether the investment in engineering health is actually paying off, without asking engineers for self-reported metrics.</p>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Week 1 | Integral Dragon</span>
+        <span>5</span>
+    </div>
+</section>
+
+<!-- ============ Slide 6: Sample ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> Sample <span class="sep">|</span> Work in progress</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">A sample output <span class="wip-tag" style="vertical-align: middle; margin-left: 8px;">Work in progress · mockup</span></h2>
+        <div class="rule"></div>
+        <p class="sub">What the module's first output looks like. This is a mockup against a fictional service — we're not there yet. It shows the <em>shape</em> of what leadership would see, and the level of evidence-backing behind every number.</p>
+
+        <div class="sample-grid" style="margin-top:6px;">
+            <div class="stat-mock"><div class="k">Recurring findings</div><div class="v">8<span class="u">of 10 top items</span></div></div>
+            <div class="stat-mock"><div class="k">Top-3 churn files</div><div class="v">Same 3<span class="u">both months</span></div></div>
+            <div class="stat-mock"><div class="k">Median PR cycle</div><div class="v">18h / 21h<span class="u">m1 / m2</span></div></div>
+            <div class="stat-mock"><div class="k">Prod rollbacks</div><div class="v">2 / 2<span class="u">m1 / m2</span></div></div>
+            <div class="stat-mock"><div class="k">Trace coverage</div><div class="v">3 of 11<span class="u">hot paths</span></div></div>
+            <div class="stat-mock"><div class="k">Consistency</div><div class="v">Strong<span class="u">across two windows</span></div></div>
+        </div>
+
+        <div class="panel" style="margin-top:14px;">
+            <span class="tag">The posture we're taking</span>
+            <ul>
+                <li>Every number resolves to an ADO query, a git command, or a scheduled scan — not to an opinion.</li>
+                <li>Signals that recur across two consecutive windows are treated as structural. Single-window findings are flagged as tentative.</li>
+                <li>No dollar / cost conversions in the first run. Those come later, once the signals themselves are trusted.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Week 1 | Integral Dragon</span>
+        <span>6</span>
+    </div>
+</section>
+
+<!-- ============ Slide 7: Next week ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> Next week <span class="sep">|</span> Instructor-led demo</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">What happens next week</h2>
+        <div class="rule"></div>
+        <p class="sub">Justin will run an instructor-led demo implementing part of the Quality Signals module live — in front of the cohort, against real artifacts. Not the full module. A focused slice that lets us see what lands with participants and what needs tightening.</p>
+
+        <div class="grid-2" style="margin-top:6px;">
+            <div class="panel">
+                <span class="tag">Scope of the demo</span>
+                <ul>
+                    <li>Justin implements part of the assessment module live — scoped, not the full thing.</li>
+                    <li>Participants see Claude collecting evidence in real time, with provenance captured as it happens.</li>
+                    <li>The output of the demo becomes the starting artifact Workshop&nbsp;2 consumes.</li>
+                </ul>
+            </div>
+            <div class="panel">
+                <span class="tag">What we'll learn</span>
+                <ul>
+                    <li>Whether the "signals, not scores" framing lands for engineering participants.</li>
+                    <li>Whether the provenance workflow is practical at the speed of a workshop.</li>
+                    <li>Where the module needs more scaffolding before it can run with less instructor support.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel" style="margin-top:12px;">
+            <span class="tag">What this sets up</span>
+            <p>By the end of next week we'll have Week&nbsp;1 delivered, a working demo of the Quality Signals module in front of real participants, and concrete feedback to fold into Workshops 2–5 and the module build.</p>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Week 1 | Integral Dragon</span>
+        <span>7</span>
+    </div>
+</section>
+
+<!-- ============ Slide 8: Close ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> Close <span class="sep">|</span> Status + ask</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <div class="quote">
+            Week&nbsp;1 shipped. The <span class="accent">Quality Signals module</span> is taking shape alongside the workshops. Next week we put a slice of it in front of real participants.
+        </div>
+        <div class="accent-line" style="margin-top: 8px;"></div>
+
+        <div class="panel" style="margin-top:18px;">
+            <span class="tag">Open to align on</span>
+            <ul>
+                <li>Is the "signals, not scores" framing one leadership wants us to keep?</li>
+                <li>Anyone leadership would like us to loop in on the Quality Signals work, given where it intersects with engineering analytics already in place?</li>
+                <li>Any constraints on the data the module can touch in the next demo that we should know about before next week?</li>
+            </ul>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Week 1 | Integral Dragon</span>
+        <span>8</span>
+    </div>
+</section>
+
+</body>
+</html>

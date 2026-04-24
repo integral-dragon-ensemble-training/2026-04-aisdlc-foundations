@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280,initial-scale=1">
+<title>Applied Practice Alignment Update — Leadership Deck</title>
+<style>
+:root {
+    --bg:          #0b1429;
+    --bg-2:        #0f1a33;
+    --surface:     #17233f;
+    --surface-2:   #1e2d4f;
+    --line:        #26355a;
+    --line-soft:   #1a2340;
+    --text:        #f7f9fc;
+    --muted:       #cfd6e6;
+    --soft:        #92a1c0;
+    --accent:      #3ab5cc;
+    --accent-2:    #4fc1d8;
+    --accent-soft: rgba(58, 181, 204, 0.18);
+    --card-bg:     #f6f9fc;
+    --card-text:   #0b1429;
+    --card-muted:  #3f4a64;
+    --good:        #6ed2a5;
+    --warn:        #f3c879;
+    --danger:      #ff8d8d;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+body {
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+}
+
+.slide {
+    width: 1280px;
+    height: 720px;
+    padding: 48px 64px;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+    background:
+        radial-gradient(circle at 110% -10%, rgba(58, 181, 204, 0.18), transparent 32%),
+        radial-gradient(circle at -10% 110%, rgba(58, 181, 204, 0.10), transparent 36%),
+        linear-gradient(160deg, var(--bg) 0%, #0d1831 100%);
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; break-after: auto; }
+
+.slide-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    color: var(--text);
+    text-transform: uppercase;
+}
+.eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.eyebrow .sep { color: var(--soft); }
+.eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--accent);
+    display: inline-block;
+}
+
+.slide-body { display: grid; align-content: start; gap: 22px; min-height: 0; overflow: hidden; }
+
+h1, h2, h3, h4, p, ul, ol { margin: 0; }
+.display {
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--text);
+    max-width: 26ch;
+}
+.headline {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.18;
+    color: var(--text);
+}
+.sub {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 72ch;
+}
+.accent-line {
+    width: 72px; height: 3px; background: var(--accent); border-radius: 2px;
+}
+.rule {
+    height: 1px; width: 100%;
+    background: linear-gradient(90deg, var(--accent) 0, var(--accent) 120px, var(--line) 120px, var(--line) 100%);
+}
+
+ul.arrows { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+ul.arrows li {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+ul.arrows li .bullet {
+    flex: 0 0 auto; width: 22px;
+    color: var(--accent); font-weight: 600;
+    font-size: 18px; line-height: 1.45;
+}
+ul.arrows li .text { flex: 1 1 auto; min-width: 0; }
+ul.arrows li strong { color: var(--text); font-weight: 600; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+.panel {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: grid;
+    gap: 10px;
+}
+.panel h3 { color: var(--text); font-size: 17px; font-weight: 600; }
+.panel p, .panel li { color: var(--muted); font-size: 14px; line-height: 1.55; }
+.panel ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+.panel ul li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; }
+.panel ul li::before { content: "■"; color: var(--accent); font-size: 10px; line-height: 1.7; }
+.panel .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.foot {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--soft);
+}
+
+.chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+.chip.done {
+    color: var(--good); border-color: var(--good);
+    background: rgba(110, 210, 165, 0.15);
+}
+
+/* expansion visual — "1 week → 4 weeks" */
+.expansion {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 18px 22px;
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+}
+.expansion .old {
+    background: rgba(146, 161, 192, 0.18);
+    border: 1px solid var(--soft);
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-align: center;
+    min-width: 110px;
+}
+.expansion .old .lab {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--soft);
+}
+.expansion .old .v {
+    font-size: 20px; font-weight: 700; color: var(--soft);
+    margin-top: 4px;
+}
+.expansion .arrow {
+    font-size: 26px; color: var(--accent); font-weight: 700;
+}
+.expansion .new {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.expansion .wk {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 8px 10px;
+    text-align: center;
+}
+.expansion .wk .k {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent);
+}
+.expansion .wk .v {
+    color: var(--text);
+    font-size: 13.5px; font-weight: 600;
+    margin-top: 2px;
+}
+.expansion .wk.done {
+    background: rgba(110, 210, 165, 0.14);
+    border-color: var(--good);
+}
+.expansion .wk.done .k { color: var(--good); }
+
+</style>
+</head>
+<body>
+
+<!-- ============ Slide 1: Title ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body" style="align-content:center;">
+        <div class="eyebrow"><span class="dot"></span> Leadership alignment update <span class="sep">|</span> Ensemble Health Partners</div>
+        <h1 class="display">Applied Practice<br>Alignment Update</h1>
+        <div class="accent-line"></div>
+        <p class="sub">Foundations complete. Applied Practice expanded from one week to four — and the first of those four is now in hand.</p>
+        <p class="sub" style="color: var(--soft); font-size: 14px; margin-top: 18px;">Justin Schmidt &middot; Integral Dragon</p>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Alignment Update</span>
+        <span>24 April 2026</span>
+    </div>
+</section>
+
+<!-- ============ Slide 2: Where we are now ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> Status <span class="sep">|</span> Where we are now</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Where we are now</h2>
+        <div class="rule"></div>
+        <p class="sub">Phase&nbsp;1 <strong style="color:var(--text);">Foundations</strong> is complete. Phase&nbsp;2 <strong style="color:var(--text);">Applied Practice</strong> began as a single week — Week&nbsp;3 of the ten-week program — and we expanded that single week into four so participants can do the work deliberately instead of sprint through it.</p>
+
+        <div class="expansion" style="margin-top: 4px;">
+            <div class="old">
+                <div class="lab">Originally</div>
+                <div class="v">1 week</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="new">
+                <div class="wk done">
+                    <div class="k">Week 01 · Done</div>
+                    <div class="v">Baseline</div>
+                </div>
+                <div class="wk">
+                    <div class="k">Week 02 · Next</div>
+                    <div class="v">Inspect &amp; improve</div>
+                </div>
+                <div class="wk">
+                    <div class="k">Week 03</div>
+                    <div class="v">Validate</div>
+                </div>
+                <div class="wk">
+                    <div class="k">Week 04</div>
+                    <div class="v">Adopt &amp; review</div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="arrows" style="margin-top: 12px;">
+            <li>
+                <span class="bullet">→</span>
+                <span class="text"><strong>Week&nbsp;1 complete.</strong> Participants established a project-health baseline and identified the highest-friction risks in their codebase.</span>
+            </li>
+            <li>
+                <span class="bullet">→</span>
+                <span class="text"><strong>Three weeks remain</strong> inside Applied Practice — focused on improvement, validation, and team adoption.</span>
+            </li>
+        </ul>
+
+        <div style="display:flex; gap:10px; margin-top: 4px;">
+            <span class="chip done">Phase 1 · Foundations complete</span>
+            <span class="chip">Phase 2 · Week 1 of 4 complete</span>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Alignment | Integral Dragon</span>
+        <span>2</span>
+    </div>
+</section>
+
+<!-- ============ Slide 3: What this phase is doing ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> The phase <span class="sep">|</span> Why four weeks, not one</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">What this phase is doing — and why we expanded it</h2>
+        <div class="rule"></div>
+        <p class="sub">Applied Practice shifts the emphasis from <em>tool familiarity</em> to <em>improving project health</em> in real codebases. The original one-week compression did not give participants room to inspect, improve, validate, and review deliberately. Four weeks gives each of those moves its own week — with evidence and a concrete output at the end of each.</p>
+
+        <div class="grid-4" style="margin-top: 4px;">
+            <div class="panel" style="padding: 16px 18px;">
+                <span class="tag">Week 01</span>
+                <h3 style="font-size: 15.5px;">Inspect</h3>
+                <p style="font-size: 13px;">Establish the project-health baseline. Identify the highest-friction areas.</p>
+            </div>
+            <div class="panel" style="padding: 16px 18px;">
+                <span class="tag">Week 02</span>
+                <h3 style="font-size: 15.5px;">Improve</h3>
+                <p style="font-size: 13px;">Aim AI at one bounded improvement. Stage a reviewable candidate change.</p>
+            </div>
+            <div class="panel" style="padding: 16px 18px;">
+                <span class="tag">Week 03</span>
+                <h3 style="font-size: 15.5px;">Validate</h3>
+                <p style="font-size: 13px;">Tests, observability, and security review — a change only counts when it's validated.</p>
+            </div>
+            <div class="panel" style="padding: 16px 18px;">
+                <span class="tag">Week 04</span>
+                <h3 style="font-size: 15.5px;">Review &amp; adopt</h3>
+                <p style="font-size: 13px;">Compare results, decide what to adopt, define repeatable team practice.</p>
+            </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 10px;">
+            <div class="panel">
+                <span class="tag">What the expansion buys us</span>
+                <ul>
+                    <li>Room to do the work, not just hear it explained.</li>
+                    <li>Evidence collected and reviewed each week, not rolled up at the end.</li>
+                    <li>Structural improvement we can measure — not self-reported "felt better."</li>
+                </ul>
+            </div>
+            <div class="panel">
+                <span class="tag">The goal this serves</span>
+                <ul>
+                    <li>Systems that are easier to <strong style="color:var(--text);">understand</strong>.</li>
+                    <li>Systems that are safer to <strong style="color:var(--text);">change</strong>.</li>
+                    <li>Systems that are easier to <strong style="color:var(--text);">govern</strong>.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Alignment | Integral Dragon</span>
+        <span>3</span>
+    </div>
+</section>
+
+<!-- ============ Slide 4: Sample signals ============ -->
+<section class="slide">
+    <div class="slide-top">
+        <div class="eyebrow"><span class="dot"></span> Sample <span class="sep">|</span> Signals the analysis will produce</div>
+        <div class="wordmark">INTEGRAL DRAGON</div>
+    </div>
+    <div class="slide-body">
+        <h2 class="headline">Sample signals from the analysis</h2>
+        <div class="rule"></div>
+        <p class="sub">Both sides of the picture. <strong style="color:var(--text);">Quantitative</strong> signals answer "how much, how often." <strong style="color:var(--text);">Qualitative</strong> signals answer "what's the pattern." Each signal is sourced to a specific query or evidence pass — nothing floats.</p>
+
+        <div class="grid-2" style="margin-top: 4px;">
+            <div class="panel">
+                <span class="tag">Qualitative signals</span>
+                <ul>
+                    <li><strong style="color:var(--text);">Architecture clarity</strong> — can the team quickly explain system boundaries?</li>
+                    <li><strong style="color:var(--text);">Documentation drift</strong> — are critical rules written down, or tribal knowledge?</li>
+                    <li><strong style="color:var(--text);">Risk hotspots</strong> — where does change repeatedly cost more than estimated?</li>
+                    <li><strong style="color:var(--text);">Testing confidence</strong> — do tests protect risky behavior, or chase coverage?</li>
+                    <li><strong style="color:var(--text);">Workflow discipline</strong> — are changes reviewable, and actually reviewed?</li>
+                    <li><strong style="color:var(--text);">Highest-leverage next move</strong> — one bounded improvement worth doing first.</li>
+                </ul>
+            </div>
+            <div class="panel">
+                <span class="tag">Quantitative signals</span>
+                <ul>
+                    <li><strong style="color:var(--text);">File churn</strong> — top files by commit frequency, window over window.</li>
+                    <li><strong style="color:var(--text);">Co-change pairs</strong> — which files keep moving together.</li>
+                    <li><strong style="color:var(--text);">Cycle time</strong> — median hours from change opened to merged.</li>
+                    <li><strong style="color:var(--text);">Review depth</strong> — reviewers, comment threads, PR-size distribution.</li>
+                    <li><strong style="color:var(--text);">Release signals</strong> — CI pass rate, rollbacks, merge-to-prod latency.</li>
+                    <li><strong style="color:var(--text);">Coverage snapshots</strong> — observability on hot paths, lockdown-test presence.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel" style="margin-top: 12px;">
+            <span class="tag">How we treat any one signal</span>
+            <p>Every signal is run across <strong style="color:var(--text);">two consecutive windows</strong>. A signal that recurs across both is treated as <em>structural</em>. A signal that appears in only one window is flagged as <em>tentative</em>. That's what lets us tell leadership "this is real" versus "this was a bad week."</p>
+        </div>
+    </div>
+    <div class="foot">
+        <span>Applied Practice Alignment | Integral Dragon</span>
+        <span>4</span>
+    </div>
+</section>
+
+</body>
+</html>
