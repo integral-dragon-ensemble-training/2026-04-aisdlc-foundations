@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1400, initial-scale=1">
+<title>Engineering Insight Dashboard — Reasoning &amp; Evidence</title>
+<style>
+:root {
+    --bg:          #f7f9fc;
+    --panel:       #ffffff;
+    --panel-2:     #f1f5f9;
+    --ink:         #0b1429;
+    --ink-2:       #1e293b;
+    --muted:       #475569;
+    --soft:        #64748b;
+    --line:        #e2e8f0;
+    --navy:        #1e3a5f;
+    --navy-2:      #1e40af;
+    --accent:      #3ab5cc;
+    --accent-2:    #0891b2;
+    --good:        #059669;
+    --good-soft:   #d1fae5;
+    --warn:        #d97706;
+    --warn-soft:   #fed7aa;
+    --danger:      #dc2626;
+    --danger-soft: #fee2e2;
+    --code-bg:     #0b1429;
+    --code-ink:    #e2e8f0;
+    --code-accent: #3ab5cc;
+    --code-comment:#64748b;
+}
+* { box-sizing: border-box; }
+html, body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--ink);
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    line-height: 1.5;
+}
+.page { max-width: 1280px; margin: 0 auto; padding: 28px 32px 80px; }
+
+/* header */
+.header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 32px; align-items: center;
+    padding-bottom: 20px; border-bottom: 1px solid var(--line);
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.24em; color: var(--navy);
+    text-transform: uppercase;
+}
+.wordmark .sep { color: var(--accent); margin: 0 6px; }
+.title h1 {
+    margin: 0; font-size: 26px; font-weight: 700;
+    letter-spacing: -0.01em; color: var(--ink);
+}
+.title .meta { margin-top: 4px; font-size: 13px; color: var(--soft); }
+.watermark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; color: var(--soft);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 12px;
+}
+.breadcrumb {
+    margin-top: 16px;
+    font-size: 12px; color: var(--soft);
+}
+.breadcrumb a { color: var(--accent-2); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+
+/* intro */
+.intro {
+    margin-top: 24px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 28px 32px;
+    box-shadow: 0 18px 40px rgba(30, 58, 95, 0.18);
+}
+.intro .eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 10px;
+}
+.intro h2 {
+    margin: 0; font-size: 22px; font-weight: 600;
+    line-height: 1.35; letter-spacing: -0.005em;
+}
+.intro p {
+    margin: 14px 0 0 0;
+    font-size: 14.5px; color: #cfd6e6; line-height: 1.55;
+}
+
+/* controls */
+.controls {
+    margin: 24px 0 12px;
+    display: flex; gap: 10px; align-items: center;
+}
+.btn {
+    font-size: 12px; font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+}
+.btn:hover { background: var(--panel-2); color: var(--ink-2); }
+
+/* section label */
+.section-label {
+    margin: 32px 0 12px 4px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--navy);
+}
+.section-label .dot {
+    width: 8px; height: 8px; border-radius: 99px;
+    background: var(--accent); display: inline-block;
+}
+
+/* claim block */
+.claim {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(30, 41, 59, 0.04);
+}
+.claim > h3 {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+}
+.claim .blurb {
+    font-size: 13px; color: var(--muted);
+    margin-bottom: 14px; line-height: 1.55;
+}
+.claim-quote {
+    padding: 12px 16px;
+    background: var(--panel-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: var(--ink-2);
+    margin-bottom: 14px;
+    font-style: italic;
+}
+.claim-quote .num {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--navy-2);
+}
+
+/* evidence disclosure */
+details.evidence {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+    background: var(--panel);
+    transition: border-color 150ms;
+}
+details.evidence[open] { border-color: var(--accent); }
+details.evidence > summary {
+    cursor: pointer;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-2);
+    list-style: none;
+}
+details.evidence > summary::-webkit-details-marker { display: none; }
+details.evidence > summary::before {
+    content: "▸";
+    color: var(--accent);
+    font-size: 11px;
+    transition: transform 120ms;
+    display: inline-block;
+    width: 12px;
+}
+details.evidence[open] > summary::before { transform: rotate(90deg); }
+details.evidence .tag {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-right: 4px;
+}
+.tag.ado   { background: #dbeafe; color: #1e40af; }
+.tag.git   { background: #fef3c7; color: #92400e; }
+.tag.scan  { background: #ddd6fe; color: #6d28d9; }
+.tag.ci    { background: #a7f3d0; color: #047857; }
+.tag.inc   { background: #fee2e2; color: #b91c1c; }
+.tag.arch  { background: #e0e7ff; color: #3730a3; }
+
+details.evidence > .body {
+    padding: 4px 16px 18px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+}
+details.evidence > .body p { margin: 0 0 10px; }
+details.evidence > .body p:last-child { margin-bottom: 0; }
+details.evidence > .body code.inline {
+    background: var(--panel-2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    color: var(--ink-2);
+}
+
+pre.cmd {
+    margin: 10px 0 0;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    overflow-x: auto;
+    white-space: pre;
+}
+pre.cmd .c   { color: var(--code-comment); font-style: italic; }
+pre.cmd .k   { color: var(--code-accent); }
+pre.cmd .s   { color: #f3c879; }
+pre.cmd .v   { color: #a7f3d0; }
+pre.cmd .f   { color: #cfd6e6; }
+
+/* nested grid for friction and signals */
+.cluster { display: grid; gap: 12px; }
+
+/* footer */
+.footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--soft);
+}
+.footer .tag-f {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+    <!-- ============ header ============ -->
+    <div class="header">
+        <div class="wordmark">INTEGRAL DRAGON<span class="sep">·</span>CLAUDE ADVISOR</div>
+        <div class="title">
+            <h1>Dashboard reasoning &amp; evidence</h1>
+            <div class="meta">Every claim on the insight dashboard, mapped to the query that backs it.</div>
+        </div>
+        <div class="watermark">Proof layer</div>
+    </div>
+    <div class="breadcrumb">
+        <a href="engineering-insight-dashboard.html">← back to the insight dashboard</a>
+        &nbsp;·&nbsp;
+        <a href="evidence-sources.md">evidence-sources.md</a>
+    </div>
+
+    <!-- ============ intro ============ -->
+    <div class="intro">
+        <div class="eyebrow">How to read this page</div>
+        <h2>Every claim on the dashboard resolves to an ADO query, a git command, or a scheduled scan — not to Claude's opinion.</h2>
+        <p>Click any row below to see the actual commands that would run in production. Commands use the Azure DevOps CLI (<code>az devops</code>, <code>az boards</code>, <code>az repos</code>, <code>az pipelines</code>) and standard <code>git</code>. Values are illustrative; substitute your org, project, area path, and label scheme. If someone pushes back on a number, open the relevant row and show them the query.</p>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="document.querySelectorAll('details.evidence').forEach(d=>d.open=true)">Expand all</button>
+        <button class="btn" onclick="document.querySelectorAll('details.evidence').forEach(d=>d.open=false)">Collapse all</button>
+    </div>
+
+    <!-- ============ Hero insight ============ -->
+    <div class="section-label"><span class="dot"></span>Hero insight</div>
+
+    <div class="claim">
+        <h3>42 engineer-hours / month of onboarding + rework friction</h3>
+        <div class="blurb">A concrete cost number that executives can anchor on. Backed by three independent sources that have to agree before we publish it.</div>
+        <div class="claim-quote">"Onboarding friction is the biggest tax this codebase is paying — and most of it is fixable in two working days with targeted cleanup." — <span class="num">42</span> engineer-hours / month.</div>
+
+        <details class="evidence">
+            <summary><span class="tag ado">ADO</span> Estimate-variance on Claims Adjudication area path, last 90 days</summary>
+            <div class="body">
+                <p>Pull work items closed in the last 90 days on the target area path, then compare <code class="inline">Original Estimate</code> against <code class="inline">Completed Work</code>. Roll up the variance by epic.</p>
+<pre class="cmd"><span class="c"># list completed work items on the target area path in last 90 days</span>
+<span class="k">az</span> boards query <span class="f">--org</span> <span class="s">https://dev.azure.com/ensemble</span> <span class="f">--project</span> <span class="s">ClaimsAdjudication</span> \
+  <span class="f">--wiql</span> <span class="s">"SELECT [System.Id], [System.Title],
+              [Microsoft.VSTS.Scheduling.OriginalEstimate],
+              [Microsoft.VSTS.Scheduling.CompletedWork]
+       FROM WorkItems
+       WHERE [System.AreaPath] UNDER 'ClaimsAdjudication\\Submission'
+         AND [System.State] = 'Closed'
+         AND [System.ChangedDate] &gt;= @today-90"</span> \
+  <span class="f">--output</span> <span class="s">json</span> | jq <span class="s">'[ .[] | {id, est: .["Microsoft.VSTS.Scheduling.OriginalEstimate"],
+                  act: .["Microsoft.VSTS.Scheduling.CompletedWork"]} ]'</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag git">GIT</span> Files that repeatedly co-change on over-estimate PRs</summary>
+            <div class="body">
+                <p>For each work item with variance &gt; 50 %, fetch its linked PRs and produce a co-change matrix for the files touched.</p>
+<pre class="cmd"><span class="c"># files + commit count in the 90-day window, sorted by churn</span>
+<span class="k">git</span> log <span class="f">--since=3.months</span> <span class="f">--numstat</span> <span class="f">--pretty=</span> <span class="s">-- src/submission</span> \
+  <span class="f">|</span> awk <span class="s">'{print $3}'</span> <span class="f">|</span> sort <span class="f">|</span> uniq -c <span class="f">|</span> sort -rn <span class="f">|</span> head -20
+
+<span class="c"># co-change frequency: pairs of files that changed together in the same commit</span>
+<span class="k">git</span> log <span class="f">--since=3.months</span> <span class="f">--name-only</span> <span class="f">--pretty=format:</span><span class="s">"---%h"</span> \
+  <span class="f">|</span> awk <span class="s">'/^---/{ if (n&gt;1) for (i in f) for (j in f) if (i&lt;j) print f[i], f[j]; n=0; delete f; next } { f[++n]=$0 }'</span> \
+  <span class="f">|</span> sort <span class="f">|</span> uniq -c <span class="f">|</span> sort -rn <span class="f">|</span> head -20</pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag inc">INCIDENT DB</span> Tickets tagged rework / estimation-overrun in the same window</summary>
+            <div class="body">
+                <p>Incident / ticket labels name the friction explicitly. This source exists mainly to triangulate: if ADO variance and git churn both point at the same thing, tickets should too.</p>
+<pre class="cmd"><span class="c"># ADO work items with friction-related tags in last 90 days</span>
+<span class="k">az</span> boards query <span class="f">--wiql</span> <span class="s">"SELECT [System.Id], [System.Title], [System.Tags]
+       FROM WorkItems
+       WHERE [System.Tags] CONTAINS 'rework'
+          OR [System.Tags] CONTAINS 'estimation-overrun'
+          OR [System.Tags] CONTAINS 'scope-creep'
+         AND [System.ChangedDate] &gt;= @today-90"</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ Scorecard ============ -->
+    <div class="section-label"><span class="dot"></span>Project health scorecard</div>
+
+    <div class="claim">
+        <h3>Nine categories, scored 1–5 from codebase evidence</h3>
+        <div class="blurb">Each category has its own evidence method. Below are the queries behind the categories that most often come up in executive conversation. The same pattern applies to the other five.</div>
+
+        <details class="evidence">
+            <summary><span class="tag scan">SCAN</span> <span class="tag git">GIT</span> Documentation — drift between docs and real setup steps</summary>
+            <div class="body">
+                <p>Compare the last-modified date of the README against <code class="inline">git log</code> on the setup scripts it references. If setup scripts moved in the last 6 months but the README didn't, the doc is drifting.</p>
+<pre class="cmd"><span class="c"># when was the README last updated</span>
+<span class="k">git</span> log -1 <span class="f">--format=</span><span class="s">"%ci %H README.md"</span> <span class="f">--</span> README.md
+
+<span class="c"># when did any setup script last change</span>
+<span class="k">git</span> log -1 <span class="f">--format=</span><span class="s">"%ci %H %f"</span> <span class="f">--</span> <span class="s">'scripts/setup*'</span> <span class="s">'Makefile'</span> <span class="s">'docker-compose*.yml'</span>
+
+<span class="c"># broken links in docs (Claude uses markdown-link-check)</span>
+<span class="k">npx</span> markdown-link-check <span class="s">'docs/**/*.md'</span> README.md <span class="f">|</span> grep -E <span class="s">'ERROR|✖'</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag arch">ARCH</span> Architecture clarity — dependency graph vs. published diagrams</summary>
+            <div class="body">
+                <p>Generate a module dependency graph from the source, count modules with more than three inbound or outbound edges, and compare against the architecture diagrams in the wiki.</p>
+<pre class="cmd"><span class="c"># generate module dependency graph (example for a Python service)</span>
+<span class="k">pydeps</span> src/claims_adjudication <span class="f">--show-deps</span> <span class="f">--max-bacon</span> <span class="s">3</span> <span class="f">--noshow</span> <span class="f">-o</span> deps.svg
+
+<span class="c"># fetch the published architecture diagram's last-modified timestamp from the wiki</span>
+<span class="k">az</span> devops wiki page show <span class="f">--path</span> <span class="s">/Architecture/claims-adjudication</span> \
+  <span class="f">--wiki</span> <span class="s">ensemble.wiki</span> <span class="f">--output</span> <span class="s">json</span> | jq <span class="s">'.lastModifiedDate'</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag ci">CI</span> <span class="tag ado">ADO</span> Reproducible setup — fresh-clone time-to-first-test-pass</summary>
+            <div class="body">
+                <p>Run a container that clones the repo fresh and measures wall-clock time to green. Cross-reference with ADO onboarding tickets in the last 90 days.</p>
+<pre class="cmd"><span class="c"># fresh-clone benchmark — run weekly from CI</span>
+docker run <span class="f">--rm</span> ubuntu:24.04 bash -c <span class="s">"
+    time (git clone https://dev.azure.com/ensemble/_git/claims .
+          &amp;&amp; ./scripts/setup.sh
+          &amp;&amp; make test)
+"</span>
+
+<span class="c"># onboarding tickets blocked on environment</span>
+<span class="k">az</span> boards query <span class="f">--wiql</span> <span class="s">"SELECT [System.Id], [System.Title], [System.State],
+       [Microsoft.VSTS.Scheduling.CompletedWork]
+       FROM WorkItems
+       WHERE [System.Tags] CONTAINS 'onboarding'
+         AND ([System.Tags] CONTAINS 'environment' OR [System.Tags] CONTAINS 'local-setup')
+         AND [System.ChangedDate] &gt;= @today-90"</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag ci">CI</span> Testability — flaky-test rate and actionability</summary>
+            <div class="body">
+                <p>Pull pipeline failure history; Claude classifies each failure as a real regression, a flaky test, or an infra blip. Actionability = real / total.</p>
+<pre class="cmd"><span class="c"># list pipeline runs and their test outcomes</span>
+<span class="k">az</span> pipelines runs list <span class="f">--project</span> <span class="s">ClaimsAdjudication</span> \
+  <span class="f">--pipeline-ids</span> <span class="s">42</span> <span class="f">--top</span> <span class="s">200</span> \
+  <span class="f">--query</span> <span class="s">"[].{id:id, result:result, finished:finishTime, reason:reason}"</span> \
+  <span class="f">--output</span> <span class="s">json</span>
+
+<span class="c"># get failed test details for one run</span>
+<span class="k">az</span> pipelines runs test-result list <span class="f">--run-id</span> <span class="v">$RUN_ID</span> \
+  <span class="f">--outcomes</span> <span class="s">Failed</span> <span class="f">--output</span> <span class="s">json</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag ado">ADO</span> Release discipline — deploy frequency and rollback rate</summary>
+            <div class="body">
+                <p>Deploy frequency, mean PR-merge-to-prod latency, and rollback count come directly from the release pipelines.</p>
+<pre class="cmd"><span class="c"># release runs in the last 90 days</span>
+<span class="k">az</span> pipelines runs list <span class="f">--project</span> <span class="s">ClaimsAdjudication</span> \
+  <span class="f">--pipeline-name</span> <span class="s">"claims-prod-release"</span> <span class="f">--top</span> <span class="s">100</span> \
+  <span class="f">--query</span> <span class="s">"[].{id:id, result:result, started:startTime, finished:finishTime, reason:reason}"</span>
+
+<span class="c"># rollbacks count: runs where the reason includes 'rollback'</span>
+<span class="k">az</span> pipelines runs list <span class="f">--pipeline-name</span> <span class="s">"claims-prod-release"</span> <span class="f">--top</span> <span class="s">100</span> \
+  <span class="f">--query</span> <span class="s">"[?contains(reason, 'rollback')].id"</span> <span class="f">--output</span> <span class="s">tsv</span> | wc -l</pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag scan">SCAN</span> Observability — correlation-ID coverage on hot paths</summary>
+            <div class="body">
+                <p>List hot-path endpoints from the service catalog; grep for the correlation-ID middleware on each. Coverage = endpoints with middleware / total endpoints.</p>
+<pre class="cmd"><span class="c"># example for a Python FastAPI service using CorrelationIDMiddleware</span>
+<span class="k">rg</span> -l <span class="s">'CorrelationIdMiddleware'</span> src/ <span class="f">|</span> sort -u <span class="f">&gt;</span> with_correlation.txt
+<span class="k">rg</span> -l <span class="s">'@app.(get|post|put|patch|delete)'</span> src/ <span class="f">|</span> sort -u <span class="f">&gt;</span> all_endpoints.txt
+echo <span class="s">"$(wc -l &lt; with_correlation.txt) of $(wc -l &lt; all_endpoints.txt) hot paths instrumented"</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag scan">SCAN</span> Security — dependency scan history and remediation time</summary>
+            <div class="body">
+                <p>Pull Dependabot / Snyk findings; compute mean time from finding opened → PR merged.</p>
+<pre class="cmd"><span class="c"># Dependabot alerts via GitHub CLI (or equivalent ADO advanced security query)</span>
+<span class="k">gh</span> api <span class="f">/repos/ensemble/claims-adjudication/dependabot/alerts</span> \
+  <span class="f">--paginate</span> <span class="f">-q</span> <span class="s">'.[] | {number, state, severity, created_at, fixed_at}'</span>
+
+<span class="c"># alternatively for ADO advanced security</span>
+<span class="k">az</span> rest <span class="f">--method</span> <span class="s">GET</span> \
+  <span class="f">--url</span> <span class="s">"https://advsec.dev.azure.com/ensemble/ClaimsAdjudication/_apis/AdvancedSecurity/repositories/{repoId}/alerts?api-version=7.2-preview.1&amp;criteria.alertType=dependency"</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag ado">ADO</span> Workflow discipline — PR size distribution and review depth</summary>
+            <div class="body">
+                <p>Distribution of PR sizes, mean review turnaround, and comment density come from the PR API.</p>
+<pre class="cmd"><span class="c"># merged PRs in the last 90 days</span>
+<span class="k">az</span> repos pr list <span class="f">--status</span> <span class="s">completed</span> <span class="f">--target-branch</span> <span class="s">main</span> \
+  <span class="f">--repository</span> <span class="s">claims-adjudication</span> <span class="f">--top</span> <span class="s">500</span> \
+  <span class="f">--query</span> <span class="s">"[].{id:pullRequestId, title:title, created:creationDate, closed:closedDate,
+                    reviewers:length(reviewers), threadCount:threadCount}"</span> \
+  <span class="f">--output</span> <span class="s">json</span> <span class="f">&gt;</span> prs.json
+
+<span class="c"># get diff stats for each PR — feeds the size distribution</span>
+<span class="k">for</span> id in $(jq <span class="f">-r</span> <span class="s">'.[].id'</span> prs.json); do
+    <span class="k">az</span> repos pr show <span class="f">--id</span> <span class="v">$id</span> <span class="f">--query</span> <span class="s">"{id:pullRequestId, adds:mergeStatus.addedLines, dels:mergeStatus.deletedLines}"</span>
+done</pre>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ Friction hotspots ============ -->
+    <div class="section-label"><span class="dot"></span>Friction hotspots</div>
+
+    <div class="claim">
+        <h3>Claims submission API · validation logic entangled with persistence</h3>
+        <div class="claim-quote">"Every new feature ~<span class="num">1.5×</span> estimate · est. <span class="num">18 engineer-hours / month</span>"</div>
+
+        <details class="evidence">
+            <summary><span class="tag git">GIT</span> Co-change frequency across SubmissionService, PayerMapper, controllers</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># commits that touched any of the three entangled modules</span>
+<span class="k">git</span> log <span class="f">--since=3.months</span> <span class="f">--name-only</span> <span class="f">--pretty=format:</span><span class="s">"%h"</span> \
+  <span class="f">--</span> <span class="s">'src/submission/SubmissionService*'</span> \
+       <span class="s">'src/submission/PayerMapper*'</span> \
+       <span class="s">'src/submission/controllers/*'</span>
+
+<span class="c"># for each commit that touched ≥2 of them, record a co-change row</span>
+<span class="k">git</span> log <span class="f">--since=3.months</span> <span class="f">--name-only</span> <span class="f">--pretty=format:</span><span class="s">"---%h"</span> \
+  <span class="f">|</span> awk <span class="s">'
+      /^---/ {
+          sub=""; pay=""; ctrl="";
+          for (i in f) {
+              if (f[i] ~ /SubmissionService/) sub=1
+              if (f[i] ~ /PayerMapper/)      pay=1
+              if (f[i] ~ /controllers/)      ctrl=1
+          }
+          if (sub+pay+ctrl &gt;= 2) print h
+          h=$0; delete f; next
+      }
+      { f[++n]=$0 }'</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag ado">ADO</span> Estimate variance on PRs touching 2+ of those files</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># for each co-changing commit, find its PR and the linked work item</span>
+<span class="k">az</span> repos pr list <span class="f">--status</span> <span class="s">completed</span> <span class="f">--source-branch</span> <span class="v">$BRANCH</span> \
+  <span class="f">--repository</span> <span class="s">claims-adjudication</span> <span class="f">--query</span> <span class="s">"[0].pullRequestId"</span>
+
+<span class="k">az</span> boards work-item show <span class="f">--id</span> <span class="v">$WI</span> \
+  <span class="f">--fields</span> <span class="s">"System.Title,Microsoft.VSTS.Scheduling.OriginalEstimate,Microsoft.VSTS.Scheduling.CompletedWork"</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="claim">
+        <h3>Eligibility data pipeline · undocumented Oracle seed requirements</h3>
+        <div class="claim-quote">"~<span class="num">6 hours</span> per new engineer setup · est. <span class="num">14 engineer-hours / month</span>"</div>
+
+        <details class="evidence">
+            <summary><span class="tag ado">ADO</span> Onboarding tickets blocked on environment in last 6 months</summary>
+            <div class="body">
+<pre class="cmd"><span class="k">az</span> boards query <span class="f">--wiql</span> <span class="s">"SELECT [System.Id], [System.Title], [System.State],
+       [System.CreatedDate], [Microsoft.VSTS.Scheduling.CompletedWork]
+       FROM WorkItems
+       WHERE [System.Tags] CONTAINS 'onboarding'
+         AND [System.AreaPath] UNDER 'ClaimsAdjudication\\Eligibility'
+         AND [System.CreatedDate] &gt;= @today-180"</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag git">GIT</span> Personal forks with seed-data commits that never landed in main</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># list personal forks / branches in the repo</span>
+<span class="k">az</span> repos ref list <span class="f">--repository</span> <span class="s">claims-adjudication</span> \
+  <span class="f">--filter</span> <span class="s">"heads/"</span> <span class="f">--query</span> <span class="s">"[?!starts_with(name,'heads/main') &amp;&amp; !starts_with(name,'heads/release/')].name"</span>
+
+<span class="c"># find commits that touch seed scripts but aren't ancestors of main</span>
+<span class="k">git</span> log <span class="f">--all</span> <span class="f">--not</span> main <span class="f">--name-only</span> <span class="f">--pretty=format:</span><span class="s">"%h %ae %s"</span> \
+  <span class="f">--</span> <span class="s">'db/seed/*'</span> <span class="s">'scripts/seed_eligibility*'</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag ci">CI</span> Fresh-clone behavior test — eligibility endpoint returns empty for 30% of codes</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># scheduled weekly job inside a clean container</span>
+docker run <span class="f">--rm</span> ubuntu:24.04 bash -c <span class="s">'
+    git clone https://dev.azure.com/ensemble/_git/claims .
+    ./scripts/setup.sh
+    ./scripts/smoke-eligibility.sh       # hits known-good codes
+    # reports % codes that returned a valid response
+'</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="claim">
+        <h3>Denial-letter templates · release required for every legal copy change</h3>
+        <div class="claim-quote">"<span class="num">3 legal changes / month</span> · est. <span class="num">10 engineer-hours / month</span>"</div>
+
+        <details class="evidence">
+            <summary><span class="tag git">GIT</span> Templates are compiled artifacts, not data</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># confirm templates live in source, not in a runtime-editable store</span>
+<span class="k">rg</span> -l <span class="s">'DenialLetter|\.denial-template'</span> src/ resources/
+<span class="k">rg</span> <span class="s">'package\|include.*denial'</span> build.gradle pyproject.toml
+
+<span class="c"># confirm the build bundles them</span>
+<span class="k">az</span> pipelines show <span class="f">--name</span> <span class="s">"claims-build"</span> <span class="f">--query</span> <span class="s">"process.yamlFilename"</span>
+<span class="k">cat</span> <span class="v">$(az pipelines show --name "claims-build" --query "process.yamlFilename" -o tsv)</span> \
+  <span class="f">|</span> grep <span class="s">-E</span> <span class="s">'denial|template'</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag ado">ADO</span> Legal-copy tickets and their cycle time</summary>
+            <div class="body">
+<pre class="cmd"><span class="k">az</span> boards query <span class="f">--wiql</span> <span class="s">"SELECT [System.Id], [System.Title],
+       [System.CreatedDate], [Microsoft.VSTS.Common.ClosedDate]
+       FROM WorkItems
+       WHERE [System.Tags] CONTAINS 'legal-copy-change'
+         AND [System.CreatedDate] &gt;= @today-180
+       ORDER BY [System.CreatedDate] DESC"</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ AI pipeline ============ -->
+    <div class="section-label"><span class="dot"></span>AI-assisted change pipeline</div>
+
+    <div class="claim">
+        <h3>127 inspection questions → 9 merged changes</h3>
+        <div class="claim-quote">"Claude asked a lot of questions; the team ran them down to 34 packets of evidence; only 9 changes got merged. This ratio is the point — not how much AI wrote, but how much got validated by a human and accepted."</div>
+
+        <details class="evidence">
+            <summary><span class="tag scan">SCAN</span> Claude-side log — questions and evidence packets per participant</summary>
+            <div class="body">
+                <p>Participants work in a local <code class="inline">course-work</code> repo. Claude writes every inspection question and evidence packet to disk there. Counts are a simple <code class="inline">find</code>.</p>
+<pre class="cmd"><span class="k">find</span> course-work/participant-work <span class="f">-name</span> <span class="s">'*.question.md'</span> <span class="f">|</span> wc -l
+<span class="k">find</span> course-work/participant-work <span class="f">-name</span> <span class="s">'*.evidence.md'</span> <span class="f">|</span> wc -l
+<span class="k">find</span> course-work/participant-work <span class="f">-name</span> <span class="s">'*.candidate.md'</span> <span class="f">|</span> wc -l</pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag git">GIT</span> <span class="tag ado">ADO</span> Candidate branches and merged PRs</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># count workshop branches (candidate changes)</span>
+<span class="k">az</span> repos ref list <span class="f">--repository</span> <span class="s">claims-adjudication</span> \
+  <span class="f">--filter</span> <span class="s">"heads/workshop-"</span> <span class="f">--query</span> <span class="s">"length(@)"</span>
+
+<span class="c"># merged PRs labeled ai-assisted in the workshop window</span>
+<span class="k">az</span> repos pr list <span class="f">--status</span> <span class="s">completed</span> <span class="f">--target-branch</span> <span class="s">main</span> \
+  <span class="f">--query</span> <span class="s">"[?labels[?name=='ai-assisted']].pullRequestId"</span> <span class="f">--output</span> <span class="s">tsv</span> | wc -l</pre>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ Confidence signals ============ -->
+    <div class="section-label"><span class="dot"></span>Confidence signals</div>
+
+    <div class="claim">
+        <h3>Test-suite actionability — 62 %</h3>
+        <div class="claim-quote">"Ratio of failing tests that name the actual regression."</div>
+
+        <details class="evidence">
+            <summary><span class="tag ci">CI</span> Pipeline failure sample + Claude classification</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># 1. pull the last 200 failed pipeline runs</span>
+<span class="k">az</span> pipelines runs list <span class="f">--pipeline-name</span> <span class="s">"claims-ci"</span> \
+  <span class="f">--result</span> <span class="s">failed</span> <span class="f">--top</span> <span class="s">200</span> <span class="f">--output</span> <span class="s">json</span> <span class="f">&gt;</span> failed_runs.json
+
+<span class="c"># 2. for each run, grab the failing test names and the fix-PR title</span>
+<span class="k">for</span> id in $(jq <span class="f">-r</span> <span class="s">'.[].id'</span> failed_runs.json); do
+    <span class="k">az</span> pipelines runs test-result list <span class="f">--run-id</span> <span class="v">$id</span> \
+      <span class="f">--outcomes</span> <span class="s">Failed</span> <span class="f">--query</span> <span class="s">"[].{name:testCaseTitle, msg:errorMessage}"</span>
+done
+
+<span class="c"># 3. Claude classifies: did the failing-test name match the regression?</span>
+<span class="c">#    actionability = matched / total</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="claim">
+        <h3>Observability coverage on hot paths — 3 of 11</h3>
+        <details class="evidence">
+            <summary><span class="tag scan">SCAN</span> Middleware / header presence per endpoint</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># hot-path endpoints from the service catalog</span>
+<span class="k">cat</span> service-catalog.yaml <span class="f">|</span> yq <span class="s">'.services.claims.hot_paths[]'</span>
+
+<span class="c"># for each endpoint, confirm correlation-ID middleware is applied</span>
+<span class="k">rg</span> <span class="s">'CorrelationIdMiddleware|x-correlation-id'</span> src/ <span class="f">--files-with-matches</span>
+
+<span class="c"># coverage = endpoints instrumented / endpoints total</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="claim">
+        <h3>Review-rigor parity — 100 %</h3>
+        <details class="evidence">
+            <summary><span class="tag ado">ADO</span> PR reviewer count and comment depth on ai-assisted vs unlabeled PRs</summary>
+            <div class="body">
+<pre class="cmd"><span class="k">az</span> repos pr list <span class="f">--status</span> <span class="s">completed</span> <span class="f">--target-branch</span> <span class="s">main</span> <span class="f">--top</span> <span class="s">500</span> \
+  <span class="f">--query</span> <span class="s">"[].{id:pullRequestId,
+                    labels:labels[].name,
+                    reviewers:length(reviewers),
+                    comments:threadCount}"</span> \
+  <span class="f">--output</span> <span class="s">json</span> <span class="f">|</span> jq <span class="s">'
+    group_by(any(.labels[]; . == "ai-assisted")) |
+    map({ai_assisted: (.[0].labels | index("ai-assisted") != null),
+         n: length,
+         avg_reviewers: (map(.reviewers) | add/length),
+         avg_comments:  (map(.comments)  | add/length)})
+  '</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="claim">
+        <h3>Lockdown-test coverage on refactor targets — 8 of 9</h3>
+        <details class="evidence">
+            <summary><span class="tag ci">CI</span> Pre-merge check: refactor PRs must include characterization tests</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># branch-policy query: refactor PRs require the lockdown-tests check</span>
+<span class="k">az</span> repos policy list <span class="f">--repository-id</span> <span class="v">$REPO_ID</span> <span class="f">--branch</span> <span class="s">main</span> \
+  <span class="f">--query</span> <span class="s">"[?contains(type.displayName, 'Build validation')]"</span>
+
+<span class="c"># refactor PRs that landed without a lockdown-test signal</span>
+<span class="k">az</span> repos pr list <span class="f">--status</span> <span class="s">completed</span> <span class="f">--target-branch</span> <span class="s">main</span> \
+  <span class="f">--query</span> <span class="s">"[?labels[?name=='refactor'] &amp;&amp; !labels[?name=='lockdown-tests']].pullRequestId"</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ Before/after ============ -->
+    <div class="section-label"><span class="dot"></span>30-day before / after delta</div>
+
+    <div class="claim">
+        <h3>Eligibility Pipeline — scorecard delta after 30 days</h3>
+        <details class="evidence">
+            <summary><span class="tag scan">SCAN</span> Scorecard snapshots stored as JSON and diffed</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># store a scorecard snapshot with today's date</span>
+<span class="k">claude</span> run <span class="s">"run the Repository-Health-Scorecard skill"</span> \
+  <span class="f">&gt;</span> snapshots/eligibility/<span class="v">$(date +%F)</span>.json
+
+<span class="c"># diff this month vs last month</span>
+<span class="k">diff</span> <span class="f">&lt;(</span>jq <span class="s">'.categories'</span> snapshots/eligibility/2026-03-22.json<span class="f">)</span> \
+     <span class="f">&lt;(</span>jq <span class="s">'.categories'</span> snapshots/eligibility/2026-04-22.json<span class="f">)</span></pre>
+            </div>
+        </details>
+
+        <details class="evidence">
+            <summary><span class="tag ado">ADO</span> Cycle time on eligibility work items — before vs after</summary>
+            <div class="body">
+<pre class="cmd"><span class="k">az</span> boards query <span class="f">--wiql</span> <span class="s">"SELECT [System.Id], [System.CreatedDate],
+       [Microsoft.VSTS.Common.ClosedDate]
+       FROM WorkItems
+       WHERE [System.AreaPath] UNDER 'ClaimsAdjudication\\Eligibility'
+         AND [System.State] = 'Closed'
+         AND [Microsoft.VSTS.Common.ClosedDate] BETWEEN @today-60 AND @today"</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ Watching next ============ -->
+    <div class="section-label"><span class="dot"></span>Watching next</div>
+
+    <div class="claim">
+        <h3>Payer integration library is drifting from its consumer services</h3>
+        <details class="evidence">
+            <summary><span class="tag git">GIT</span> Diff the PayerAdapter interface across consumers</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># all files named PayerAdapter.* across the repo, by service</span>
+<span class="k">rg</span> <span class="f">--files</span> <span class="f">-g</span> <span class="s">'PayerAdapter.*'</span>
+
+<span class="c"># diff each copy against the canonical one</span>
+<span class="k">for</span> f in $(rg <span class="f">--files</span> <span class="f">-g</span> <span class="s">'PayerAdapter.*'</span> | grep -v <span class="s">'src/lib/'</span>); do
+    diff src/lib/PayerAdapter.ts <span class="s">"$f"</span> <span class="f">&&</span> echo <span class="s">"$f: matches canonical"</span>
+done</pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="claim">
+        <h3>Denial-letter template system is a candidate for extraction</h3>
+        <details class="evidence">
+            <summary><span class="tag ado">ADO</span> Annualized cost signal from the hotspot data</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># legal-copy tickets over a year</span>
+<span class="k">az</span> boards query <span class="f">--wiql</span> <span class="s">"SELECT [System.Id]
+       FROM WorkItems
+       WHERE [System.Tags] CONTAINS 'legal-copy-change'
+         AND [System.CreatedDate] &gt;= @today-365"</span> \
+  <span class="f">--output</span> <span class="s">json</span> | jq <span class="s">'length'</span>
+
+<span class="c"># cost signal: tickets/year × avg cycle time</span></pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="claim">
+        <h3>The oldest two services have no trace correlation at all</h3>
+        <details class="evidence">
+            <summary><span class="tag scan">SCAN</span> <span class="tag git">GIT</span> Same observability scan, filtered by service age</summary>
+            <div class="body">
+<pre class="cmd"><span class="c"># service age = first commit in its path</span>
+<span class="k">for</span> svc in services/*; do
+    first=$(git log <span class="f">--reverse</span> <span class="f">--format=</span><span class="s">"%ci"</span> <span class="s">"$svc"</span> | head -1)
+    echo <span class="s">"$svc $first"</span>
+done | sort -k2
+
+<span class="c"># combine with the observability scan — oldest services tend to have 0 coverage</span>
+<span class="k">rg</span> <span class="s">'CorrelationIdMiddleware'</span> services/ <span class="f">-l</span> | sort -u</pre>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ footer ============ -->
+    <div class="footer">
+        <div class="tag-f">Reasoning layer · Generated by Claude for Integral Dragon</div>
+        <div>Commands are illustrative — substitute your org / project / area-path / label scheme.</div>
+    </div>
+
+</div>
+</body>
+</html>

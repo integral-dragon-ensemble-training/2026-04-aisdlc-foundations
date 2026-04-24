@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1400, initial-scale=1">
+<title>Engineering Insight Dashboard — Integral Dragon / Claude Advisor</title>
+<style>
+:root {
+    --bg:          #f7f9fc;
+    --panel:       #ffffff;
+    --panel-2:     #f1f5f9;
+    --ink:         #0b1429;
+    --ink-2:       #1e293b;
+    --muted:       #475569;
+    --soft:        #64748b;
+    --line:        #e2e8f0;
+    --navy:        #1e3a5f;
+    --navy-2:      #1e40af;
+    --accent:      #3ab5cc;
+    --accent-2:    #0891b2;
+    --good:        #059669;
+    --good-soft:   #d1fae5;
+    --warn:        #d97706;
+    --warn-soft:   #fed7aa;
+    --danger:      #dc2626;
+    --danger-soft: #fee2e2;
+    --neutral:     #cbd5e1;
+}
+* { box-sizing: border-box; }
+html, body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--ink);
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    line-height: 1.45;
+}
+
+.page {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 28px 32px 64px;
+}
+
+/* ---- header ---- */
+.header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 32px;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+}
+.wordmark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--navy);
+    text-transform: uppercase;
+}
+.wordmark .sep { color: var(--accent); margin: 0 6px; }
+.title h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+}
+.title .meta {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--soft);
+}
+.watermark {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    color: var(--soft);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 12px;
+}
+
+/* ---- hero insight ---- */
+.hero {
+    margin-top: 24px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+    box-shadow: 0 18px 40px rgba(30, 58, 95, 0.18);
+}
+.hero .eyebrow {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+.hero h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+}
+.hero .pull {
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--accent);
+    white-space: nowrap;
+}
+.hero .pull .unit {
+    font-size: 18px;
+    color: #cfd6e6;
+    font-weight: 500;
+    margin-left: 6px;
+}
+
+/* ---- grid of insight cards ---- */
+.grid {
+    margin-top: 24px;
+    display: grid;
+    gap: 20px;
+}
+.row-3 { grid-template-columns: 1.15fr 1.45fr 1fr; }
+.row-2 { grid-template-columns: 1fr 1fr; }
+
+.card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 2px rgba(30, 41, 59, 0.04);
+}
+.card h3 {
+    margin: 0 0 4px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+}
+.card .sub {
+    font-size: 12px;
+    color: var(--soft);
+    margin-bottom: 18px;
+}
+.card .label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.card .label-row .label { font-size: 13px; color: var(--ink-2); }
+.card .label-row .value {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    color: var(--soft);
+    letter-spacing: 0.02em;
+}
+
+/* ---- health scorecard ---- */
+.score-row {
+    display: grid;
+    grid-template-columns: 1.1fr 2fr 0.7fr;
+    gap: 10px;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px dashed var(--line);
+}
+.score-row:last-child { border-bottom: none; }
+.score-row .cat {
+    font-size: 13px;
+    color: var(--ink-2);
+    font-weight: 500;
+}
+.score-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+}
+.score-pill {
+    height: 10px;
+    border-radius: 3px;
+    background: var(--line);
+}
+.score-pill.on-1 { background: var(--danger); }
+.score-pill.on-2 { background: var(--warn); }
+.score-pill.on-3 { background: #eab308; }
+.score-pill.on-4 { background: var(--good); }
+.score-pill.on-5 { background: var(--good); }
+.score-row .score-val {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: right;
+    color: var(--muted);
+}
+
+/* ---- friction hotspots ---- */
+.friction-item {
+    padding: 14px 16px;
+    border-left: 3px solid var(--accent);
+    background: var(--panel-2);
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+.friction-item:last-child { margin-bottom: 0; }
+.friction-item .headline {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-2);
+    margin-bottom: 4px;
+}
+.friction-item .cost {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 11px;
+    color: var(--danger);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+}
+.friction-item .body {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.friction-item.h-high { border-left-color: var(--danger); }
+.friction-item.h-med { border-left-color: var(--warn); }
+.friction-item.h-low { border-left-color: var(--accent); }
+
+/* ---- AI change pipeline (horizontal funnel) ---- */
+.pipeline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 4px;
+}
+.pipe-step {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px 10px;
+    text-align: center;
+    position: relative;
+}
+.pipe-step .count {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    line-height: 1;
+}
+.pipe-step .name {
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+.pipe-step.final .count { color: var(--good); }
+
+/* ---- delta chart ---- */
+.delta-chart {
+    display: grid;
+    grid-template-columns: 1.1fr 1.7fr;
+    gap: 28px;
+    align-items: start;
+}
+.delta-chart .numbers {
+    display: grid;
+    gap: 14px;
+}
+.delta-chart .stat {
+    padding: 14px 16px;
+    background: var(--panel-2);
+    border-radius: 10px;
+}
+.delta-chart .stat .key {
+    font-size: 11px;
+    color: var(--soft);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+}
+.delta-chart .stat .num {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-top: 2px;
+}
+.delta-chart .stat .num .u {
+    font-size: 14px;
+    color: var(--soft);
+    font-weight: 500;
+    margin-left: 4px;
+}
+.delta-chart .stat.good .num { color: var(--good); }
+
+.bars { display: grid; gap: 10px; }
+.bar-row {
+    display: grid;
+    grid-template-columns: 1.3fr 3fr 0.6fr;
+    gap: 10px;
+    align-items: center;
+    font-size: 12.5px;
+}
+.bar-row .cat { color: var(--ink-2); }
+.bar-track {
+    position: relative;
+    height: 18px;
+    background: var(--panel-2);
+    border-radius: 3px;
+    border: 1px solid var(--line);
+}
+.bar-before, .bar-after {
+    position: absolute; top: 0; left: 0; bottom: 0;
+    border-radius: 3px;
+}
+.bar-before { background: var(--neutral); }
+.bar-after  { background: var(--accent); }
+.bar-row .delta {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 11px;
+    color: var(--good);
+    font-weight: 700;
+    text-align: right;
+}
+
+/* ---- confidence signals ---- */
+.signal-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+    gap: 16px;
+}
+.signal-row:last-child { border-bottom: none; }
+.signal-row .key { font-size: 13.5px; color: var(--ink-2); font-weight: 600; }
+.signal-row .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.signal-row .val {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 14px;
+    font-weight: 700;
+}
+.signal-row .val.good { color: var(--good); }
+.signal-row .val.warn { color: var(--warn); }
+.signal-row .val.danger { color: var(--danger); }
+.signal-row .val .tag {
+    display: inline-block;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.1em;
+    margin-left: 6px;
+    font-weight: 700;
+}
+.signal-row .val.good .tag { background: var(--good-soft); color: var(--good); }
+.signal-row .val.warn .tag { background: var(--warn-soft); color: var(--warn); }
+.signal-row .val.danger .tag { background: var(--danger-soft); color: var(--danger); }
+
+/* ---- watching next ---- */
+.watch-item {
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: var(--panel-2);
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+}
+.watch-item:last-child { margin-bottom: 0; }
+.watch-item .ord {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+}
+.watch-item .head {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-2);
+    margin-bottom: 4px;
+}
+.watch-item .why {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+/* ---- footer ---- */
+.footer {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--soft);
+}
+.footer .tag {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+/* ---- headline for sections ---- */
+.section-label {
+    margin: 28px 0 8px 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--navy);
+}
+.section-label .dot {
+    width: 8px; height: 8px; border-radius: 99px; background: var(--accent);
+    display: inline-block;
+}
+
+/* ---- callout quote ---- */
+.callout {
+    margin-top: 20px;
+    padding: 18px 22px;
+    background: #eef6f8;
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--navy);
+    line-height: 1.55;
+}
+.callout strong { color: var(--navy-2); }
+</style>
+</head>
+<body>
+<div class="page">
+
+    <!-- ============ header ============ -->
+    <div class="header">
+        <div class="wordmark">INTEGRAL DRAGON<span class="sep">·</span>CLAUDE ADVISOR</div>
+        <div class="title">
+            <h1>Engineering Insight Dashboard</h1>
+            <div class="meta">Ensemble Health Partners · Hypothetical preview · Week of 22 April 2026 · Not real data</div>
+        </div>
+        <div class="watermark">Mockup · Insights, not metrics</div>
+    </div>
+
+    <!-- ============ hero insight ============ -->
+    <div class="hero">
+        <div>
+            <div class="eyebrow">Insight of the week · Claims Adjudication Service</div>
+            <h2>Onboarding friction is the biggest tax this codebase is paying — and most of it is fixable in two working days with targeted cleanup, not a rewrite.</h2>
+        </div>
+        <div class="pull">42<span class="unit">engineer-hours / month</span></div>
+    </div>
+
+    <div class="callout">
+        <strong>What this means for executives.</strong> We are not measuring "lines of code" or "AI completions accepted." We are measuring where your teams lose time that never shows up in a status report — and where small, disciplined improvements would pay it back, fast.
+    </div>
+
+    <!-- ============ row 1: health + friction + pipeline ============ -->
+    <div class="section-label"><span class="dot"></span>This week's engineering picture</div>
+    <div class="grid row-3">
+
+        <!-- Project health scorecard -->
+        <div class="card">
+            <h3>Project health — Claims Adjudication Service</h3>
+            <div class="sub">Nine categories, scored 1–5 from codebase evidence Claude gathered across 217 files over 4 hours.</div>
+
+            <div class="score-row">
+                <span class="cat">Documentation</span>
+                <div class="score-bar">
+                    <span class="score-pill on-1"></span><span class="score-pill on-1"></span><span class="score-pill"></span><span class="score-pill"></span><span class="score-pill"></span>
+                </div>
+                <span class="score-val">2 / 5</span>
+            </div>
+            <div class="score-row">
+                <span class="cat">Architecture clarity</span>
+                <div class="score-bar">
+                    <span class="score-pill on-3"></span><span class="score-pill on-3"></span><span class="score-pill on-3"></span><span class="score-pill"></span><span class="score-pill"></span>
+                </div>
+                <span class="score-val">3 / 5</span>
+            </div>
+            <div class="score-row">
+                <span class="cat">Reproducible setup</span>
+                <div class="score-bar">
+                    <span class="score-pill on-1"></span><span class="score-pill on-1"></span><span class="score-pill"></span><span class="score-pill"></span><span class="score-pill"></span>
+                </div>
+                <span class="score-val">2 / 5</span>
+            </div>
+            <div class="score-row">
+                <span class="cat">Testability / confidence</span>
+                <div class="score-bar">
+                    <span class="score-pill on-2"></span><span class="score-pill on-2"></span><span class="score-pill"></span><span class="score-pill"></span><span class="score-pill"></span>
+                </div>
+                <span class="score-val">2 / 5</span>
+            </div>
+            <div class="score-row">
+                <span class="cat">Release discipline</span>
+                <div class="score-bar">
+                    <span class="score-pill on-4"></span><span class="score-pill on-4"></span><span class="score-pill on-4"></span><span class="score-pill on-4"></span><span class="score-pill"></span>
+                </div>
+                <span class="score-val">4 / 5</span>
+            </div>
+            <div class="score-row">
+                <span class="cat">Data / schema</span>
+                <div class="score-bar">
+                    <span class="score-pill on-3"></span><span class="score-pill on-3"></span><span class="score-pill on-3"></span><span class="score-pill"></span><span class="score-pill"></span>
+                </div>
+                <span class="score-val">3 / 5</span>
+            </div>
+            <div class="score-row">
+                <span class="cat">Observability</span>
+                <div class="score-bar">
+                    <span class="score-pill on-2"></span><span class="score-pill on-2"></span><span class="score-pill"></span><span class="score-pill"></span><span class="score-pill"></span>
+                </div>
+                <span class="score-val">2 / 5</span>
+            </div>
+            <div class="score-row">
+                <span class="cat">Security / secrets</span>
+                <div class="score-bar">
+                    <span class="score-pill on-4"></span><span class="score-pill on-4"></span><span class="score-pill on-4"></span><span class="score-pill on-4"></span><span class="score-pill"></span>
+                </div>
+                <span class="score-val">4 / 5</span>
+            </div>
+            <div class="score-row">
+                <span class="cat">Workflow discipline</span>
+                <div class="score-bar">
+                    <span class="score-pill on-3"></span><span class="score-pill on-3"></span><span class="score-pill on-3"></span><span class="score-pill"></span><span class="score-pill"></span>
+                </div>
+                <span class="score-val">3 / 5</span>
+            </div>
+        </div>
+
+        <!-- Friction hotspots -->
+        <div class="card">
+            <h3>Where the friction lives — top three hotspots</h3>
+            <div class="sub">Observable friction, not opinions. Each item names who pays, how often, and what change is slowed.</div>
+
+            <div class="friction-item h-high">
+                <div class="headline">Claims submission API · validation logic is entangled with persistence</div>
+                <div class="cost">Every new feature ~1.5× estimate · est. 18 engineer-hours / month</div>
+                <div class="body">Claude found duplicated validation rules across <code>SubmissionService</code>, <code>PayerMapper</code>, and the controller layer. New feature work consistently pulls in changes to all three. Interest shows up as missed story-point commitments on the submission team.</div>
+            </div>
+
+            <div class="friction-item h-high">
+                <div class="headline">Eligibility data pipeline · undocumented Oracle seed requirements</div>
+                <div class="cost">~6 hours per new engineer setup · est. 14 engineer-hours / month</div>
+                <div class="body">Local setup passes but produces empty responses for 30% of eligibility codes. The required seed scripts live in an engineer's private Bitbucket fork. Interest shows up as new hires blocked for a day and a half before their first real ticket.</div>
+            </div>
+
+            <div class="friction-item h-med">
+                <div class="headline">Denial-letter templates · release required for every legal copy change</div>
+                <div class="cost">3 legal changes / month · est. 10 engineer-hours / month</div>
+                <div class="body">Templates are compiled into the binary. Legal routinely requests small copy edits. Each one becomes an engineering ticket, a release, and a deployment check. Interest shows up on both the engineering and compliance backlogs.</div>
+            </div>
+        </div>
+
+        <!-- AI-assisted pipeline -->
+        <div class="card">
+            <h3>AI-assisted change pipeline</h3>
+            <div class="sub">Where Claude's work turned into reviewable engineering outputs this week.</div>
+
+            <div class="pipeline" style="margin-top:12px;">
+                <div class="pipe-step"><div class="count">127</div><div class="name">Inspection<br>questions</div></div>
+                <div class="pipe-step"><div class="count">34</div><div class="name">Evidence<br>packets</div></div>
+                <div class="pipe-step"><div class="count">22</div><div class="name">Candidate<br>changes</div></div>
+                <div class="pipe-step"><div class="count">14</div><div class="name">Validated<br>on branch</div></div>
+                <div class="pipe-step final"><div class="count">9</div><div class="name">Merged after<br>group review</div></div>
+            </div>
+
+            <div style="margin-top:22px;padding-top:14px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted);line-height:1.55;">
+                <strong style="color:var(--ink-2);">Read-out.</strong> Claude asked a lot of questions; the team ran them down to 34 packets of evidence; only 9 changes got merged. This ratio is the point — not how much AI wrote, but how much got validated by a human and accepted by the team.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============ row 2: delta + signals + watching ============ -->
+    <div class="section-label"><span class="dot"></span>What changed and what we're watching</div>
+
+    <div class="grid" style="grid-template-columns: 1.6fr 1fr;">
+
+        <!-- before / after delta -->
+        <div class="card">
+            <h3>30-day before / after — Eligibility Pipeline work-stream</h3>
+            <div class="sub">Three categories we chose to improve. Scores from repeated scorecard runs, not self-report.</div>
+
+            <div class="delta-chart">
+                <div class="numbers">
+                    <div class="stat good">
+                        <div class="key">Friction eliminated</div>
+                        <div class="num">14 <span class="u">engineer-hours / mo</span></div>
+                    </div>
+                    <div class="stat good">
+                        <div class="key">Onboarding time</div>
+                        <div class="num">6h → 40m</div>
+                    </div>
+                    <div class="stat">
+                        <div class="key">New-hire unblocked in first day</div>
+                        <div class="num">22% → 88%</div>
+                    </div>
+                    <div class="stat">
+                        <div class="key">Engineer hours spent in cycle</div>
+                        <div class="num">18 <span class="u">hours</span></div>
+                    </div>
+                </div>
+
+                <div class="bars">
+                    <div class="bar-row">
+                        <span class="cat">Reproducible setup</span>
+                        <div class="bar-track">
+                            <div class="bar-before" style="width: 30%;"></div>
+                            <div class="bar-after" style="width: 80%;"></div>
+                        </div>
+                        <span class="delta">+2</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="cat">Documentation</span>
+                        <div class="bar-track">
+                            <div class="bar-before" style="width: 30%;"></div>
+                            <div class="bar-after" style="width: 70%;"></div>
+                        </div>
+                        <span class="delta">+2</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="cat">Testability / confidence</span>
+                        <div class="bar-track">
+                            <div class="bar-before" style="width: 35%;"></div>
+                            <div class="bar-after" style="width: 60%;"></div>
+                        </div>
+                        <span class="delta">+1</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="cat">Observability</span>
+                        <div class="bar-track">
+                            <div class="bar-before" style="width: 40%;"></div>
+                            <div class="bar-after" style="width: 55%;"></div>
+                        </div>
+                        <span class="delta">+1</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="cat">Release discipline</span>
+                        <div class="bar-track">
+                            <div class="bar-before" style="width: 75%;"></div>
+                            <div class="bar-after" style="width: 75%;"></div>
+                        </div>
+                        <span class="delta" style="color: var(--muted);">±0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout" style="margin-top:22px;">
+                <strong>What to notice.</strong> We didn't do everything. We picked three categories, made measurable improvements, and skipped the rest on purpose. The release discipline score stayed flat — it wasn't a bottleneck. That's not a failure of the work; it's evidence the team is focusing where the interest is highest.
+            </div>
+        </div>
+
+        <!-- signals + watching next -->
+        <div style="display:grid;gap:20px;">
+
+            <div class="card">
+                <h3>Confidence signals</h3>
+                <div class="sub">Quality readiness for AI-assisted change to land safely.</div>
+
+                <div class="signal-row">
+                    <div>
+                        <div class="key">Test-suite actionability</div>
+                        <div class="sub">Ratio of failing tests that name the actual regression.</div>
+                    </div>
+                    <div class="val warn">62%<span class="tag">improving</span></div>
+                </div>
+                <div class="signal-row">
+                    <div>
+                        <div class="key">Observability coverage on hot paths</div>
+                        <div class="sub">Critical workflows with correlation IDs and traces.</div>
+                    </div>
+                    <div class="val danger">3 of 11<span class="tag">gap</span></div>
+                </div>
+                <div class="signal-row">
+                    <div>
+                        <div class="key">Review-rigor parity</div>
+                        <div class="sub">AI-authored diffs reviewed at same depth as human diffs.</div>
+                    </div>
+                    <div class="val good">100%<span class="tag">ok</span></div>
+                </div>
+                <div class="signal-row">
+                    <div>
+                        <div class="key">Lockdown-test coverage on refactor targets</div>
+                        <div class="sub">Characterization tests in place before any AI-assisted refactor.</div>
+                    </div>
+                    <div class="val good">On track<span class="tag">8 of 9</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>What Claude is watching next</h3>
+                <div class="sub">Forward-looking insights the team should act on before they become fires.</div>
+
+                <div class="watch-item">
+                    <div class="ord">01</div>
+                    <div>
+                        <div class="head">Payer integration library is drifting from its consumer services</div>
+                        <div class="why">Three downstream services have forked the <code>PayerAdapter</code> interface over the last six weeks. Each fork represents hidden friction that will compound when the next payer onboards.</div>
+                    </div>
+                </div>
+                <div class="watch-item">
+                    <div class="ord">02</div>
+                    <div>
+                        <div class="head">Denial-letter template system is a candidate for extraction</div>
+                        <div class="why">Legal requested three copy changes last month; each one triggered an engineering cycle. Moving templates out of the binary would remove this loop entirely.</div>
+                    </div>
+                </div>
+                <div class="watch-item">
+                    <div class="ord">03</div>
+                    <div>
+                        <div class="head">The oldest two services have no trace correlation at all</div>
+                        <div class="why">When these services fail in production, the team debugs by intuition. If incident volume rises, the time-to-resolve on these two services will balloon first.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ closing panel ============ -->
+    <div class="section-label"><span class="dot"></span>How to read this dashboard</div>
+    <div class="card" style="margin-top:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;font-size:13px;line-height:1.55;color:var(--muted);">
+            <div>
+                <div style="font-weight:700;color:var(--ink-2);margin-bottom:6px;">Insights, not metrics.</div>
+                We are not counting lines of AI-written code or completion-acceptance rates. Every tile on this dashboard reflects where engineering time is being spent, where confidence is weak, and what the team chose to improve.
+            </div>
+            <div>
+                <div style="font-weight:700;color:var(--ink-2);margin-bottom:6px;">Evidence from the codebase, judgment from the team.</div>
+                Claude reads the repository, gathers evidence, and frames questions. Humans score, prioritize, and decide what to change. Every number on this page is defensible against the code it came from.
+            </div>
+            <div>
+                <div style="font-weight:700;color:var(--ink-2);margin-bottom:6px;">Designed to be re-runnable.</div>
+                The same scorecard can be run monthly. Deltas are visible, not promised. If the team's investment in engineering health is paying off, this dashboard will show it — and if it isn't, it will show that too.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="tag">Hypothetical preview · Generated by Claude for Integral Dragon</div>
+        <div>All values are illustrative. Produced from Applied Practice methodology applied to a Claims Adjudication Service example.</div>
+    </div>
+
+</div>
+</body>
+</html>

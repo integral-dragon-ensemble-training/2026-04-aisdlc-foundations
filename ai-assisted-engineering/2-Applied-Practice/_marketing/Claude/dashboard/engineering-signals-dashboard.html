@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1400, initial-scale=1">
+<title>Engineering Signals — 2-Month Consistency View (95% confidence)</title>
+<style>
+:root {
+    --bg:          #f7f9fc;
+    --panel:       #ffffff;
+    --panel-2:     #f1f5f9;
+    --ink:         #0b1429;
+    --ink-2:       #1e293b;
+    --muted:       #475569;
+    --soft:        #64748b;
+    --line:        #e2e8f0;
+    --navy:        #1e3a5f;
+    --navy-2:      #1e40af;
+    --accent:      #3ab5cc;
+    --accent-2:    #0891b2;
+    --good:        #059669;
+    --good-soft:   #d1fae5;
+    --warn:        #d97706;
+    --warn-soft:   #fed7aa;
+    --danger:      #dc2626;
+    --danger-soft: #fee2e2;
+    --neutral:     #cbd5e1;
+    --mono: "SFMono-Regular", Consolas, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--ink);
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    line-height: 1.45;
+}
+.page { max-width: 1400px; margin: 0 auto; padding: 28px 32px 72px; }
+
+/* ---- header ---- */
+.header {
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: 32px; align-items: center;
+    padding-bottom: 20px; border-bottom: 1px solid var(--line);
+}
+.wordmark {
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.24em; color: var(--navy); text-transform: uppercase;
+}
+.wordmark .sep { color: var(--accent); margin: 0 6px; }
+.title h1 {
+    margin: 0; font-size: 26px; font-weight: 700;
+    letter-spacing: -0.01em; color: var(--ink);
+}
+.title .meta { margin-top: 4px; font-size: 13px; color: var(--soft); }
+.watermark {
+    font-family: var(--mono); font-size: 10px; color: var(--good);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    border: 1px solid var(--good); border-radius: 999px;
+    padding: 6px 12px;
+    background: var(--good-soft);
+}
+.breadcrumb { margin-top: 14px; font-size: 12px; color: var(--soft); }
+.breadcrumb a { color: var(--accent-2); text-decoration: none; }
+
+/* ---- hero (consistency summary) ---- */
+.hero {
+    margin-top: 24px;
+    background: linear-gradient(135deg, #064e3b 0%, var(--good) 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 28px 32px;
+    display: grid; grid-template-columns: 1fr auto; gap: 32px;
+    align-items: center;
+    box-shadow: 0 18px 40px rgba(6, 78, 59, 0.25);
+}
+.hero .eyebrow {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: #a7f3d0; margin-bottom: 10px;
+}
+.hero h2 {
+    margin: 0; font-size: 23px; font-weight: 600;
+    line-height: 1.35; letter-spacing: -0.005em;
+}
+.hero .pull {
+    font-size: 52px; font-weight: 700;
+    letter-spacing: -0.02em; line-height: 1;
+    color: #ffffff; white-space: nowrap;
+}
+.hero .pull .u {
+    display: block; font-size: 14px; color: #d1fae5;
+    font-weight: 500; margin-top: 8px; letter-spacing: 0.02em;
+}
+
+/* ---- callout ---- */
+.callout {
+    margin-top: 20px;
+    padding: 18px 22px;
+    background: #eef6f8;
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: var(--navy);
+    line-height: 1.55;
+}
+.callout strong { color: var(--navy-2); }
+
+/* ---- section label ---- */
+.section-label {
+    margin: 28px 0 10px 4px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--navy);
+}
+.section-label .dot {
+    width: 8px; height: 8px; border-radius: 99px;
+    background: var(--accent); display: inline-block;
+}
+
+/* ---- grid ---- */
+.grid { display: grid; gap: 20px; }
+.row-2 { grid-template-columns: 1fr 1fr; }
+.row-3 { grid-template-columns: 1fr 1fr 1fr; }
+.row-12 { grid-template-columns: 1.6fr 1fr; }
+
+/* ---- card ---- */
+.card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 2px rgba(30, 41, 59, 0.04);
+}
+.card h3 {
+    margin: 0 0 4px 0;
+    font-size: 15px; font-weight: 700;
+    color: var(--ink); letter-spacing: -0.005em;
+}
+.card .sub {
+    font-size: 12px; color: var(--soft); margin-bottom: 14px;
+}
+.card .query {
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+    font-family: var(--mono); font-size: 10.5px;
+    color: var(--muted); line-height: 1.5;
+    letter-spacing: 0.01em;
+    word-break: break-word;
+}
+.card .query .label {
+    display: inline-block;
+    font-weight: 700; color: var(--accent-2);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-right: 6px; font-size: 9.5px;
+}
+
+/* ---- comparison table ---- */
+.cmp {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-size: 13px;
+}
+.cmp thead th {
+    font-family: var(--mono); font-size: 10px;
+    font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--soft);
+    text-align: left; padding: 6px 8px;
+    border-bottom: 1px solid var(--line);
+}
+.cmp thead th.num { text-align: right; }
+.cmp tbody td {
+    padding: 8px;
+    border-bottom: 1px dashed var(--line);
+    color: var(--ink-2);
+    vertical-align: middle;
+}
+.cmp tbody tr:last-child td { border-bottom: none; }
+.cmp td.num {
+    font-family: var(--mono); font-size: 12px;
+    text-align: right; color: var(--muted); font-weight: 600;
+}
+.cmp td.file {
+    font-family: var(--mono); font-size: 11.5px;
+    color: var(--ink-2);
+}
+.cmp td.delta {
+    font-family: var(--mono); font-size: 10.5px;
+    text-align: right;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+.cmp td.delta.flat  { color: var(--good); }
+.cmp td.delta.up    { color: var(--warn); }
+.cmp td.delta.down  { color: var(--accent-2); }
+
+/* ---- recurrence badge ---- */
+.badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--mono); font-size: 9.5px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 4px;
+    margin-left: 6px;
+}
+.badge.recur { background: var(--good-soft); color: var(--good); }
+.badge.new   { background: var(--warn-soft); color: var(--warn); }
+
+/* ---- horizontal mini-bar ---- */
+.bar-row {
+    display: grid; grid-template-columns: 2fr 3fr 0.8fr;
+    gap: 10px; align-items: center;
+    font-size: 12.5px; padding: 6px 0;
+}
+.bar-track {
+    position: relative; height: 14px;
+    background: var(--panel-2); border-radius: 3px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+}
+.bar-m1, .bar-m2 {
+    position: absolute; top: 0; bottom: 0;
+    height: 6px; border-radius: 2px;
+}
+.bar-m1 { background: var(--neutral); top: 2px; }
+.bar-m2 { background: var(--accent); top: 8px; border-radius: 0 2px 2px 0; }
+.bar-val {
+    text-align: right;
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    color: var(--muted);
+}
+
+/* ---- big number strip ---- */
+.strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat {
+    background: var(--panel-2); border-radius: 10px; padding: 14px 16px;
+}
+.stat .k { font-size: 10.5px; color: var(--soft);
+    text-transform: uppercase; letter-spacing: 0.14em; }
+.stat .v { font-size: 24px; font-weight: 700;
+    color: var(--ink); letter-spacing: -0.01em;
+    margin-top: 4px;
+    font-family: var(--mono);
+}
+.stat .v .u {
+    font-size: 11px; color: var(--soft);
+    margin-left: 4px; font-family: inherit; font-weight: 500;
+}
+.stat.good .v { color: var(--good); }
+
+/* ---- checklist ---- */
+.checklist { display: grid; gap: 8px; }
+.check-row {
+    display: grid; grid-template-columns: 18px 1fr auto;
+    gap: 10px; align-items: center;
+    font-size: 13px;
+}
+.check-row .tick {
+    width: 16px; height: 16px; border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+}
+.check-row.pass .tick { background: var(--good); }
+.check-row.pass .tick::after { content: "✓"; }
+.check-row.fail .tick { background: var(--danger); }
+.check-row.fail .tick::after { content: "✕"; }
+.check-row .v { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+/* ---- legend ---- */
+.legend {
+    display: flex; gap: 18px; align-items: center;
+    margin-bottom: 10px;
+    font-size: 11px; color: var(--soft);
+}
+.legend .sw {
+    display: inline-block; width: 18px; height: 6px;
+    border-radius: 2px; vertical-align: middle; margin-right: 5px;
+}
+.legend .sw.m1 { background: var(--neutral); }
+.legend .sw.m2 { background: var(--accent); }
+
+/* ---- footer ---- */
+.footer {
+    margin-top: 36px; padding-top: 20px;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--soft);
+}
+.footer .tag {
+    font-family: var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+    <!-- ============ header ============ -->
+    <div class="header">
+        <div class="wordmark">INTEGRAL DRAGON<span class="sep">·</span>CLAUDE ADVISOR</div>
+        <div class="title">
+            <h1>Engineering Signals — 2-Month Consistency View</h1>
+            <div class="meta">Claims Adjudication Service · Month 1 (Feb 22 – Mar 22) vs Month 2 (Mar 22 – Apr 22) · Hypothetical preview</div>
+        </div>
+        <div class="watermark">95% confidence · direct measurement</div>
+    </div>
+    <div class="breadcrumb">
+        <a href="engineering-insight-dashboard.html">← ambitious dashboard</a>
+        &nbsp;·&nbsp;
+        <a href="engineering-insight-dashboard-reasoning.html">reasoning &amp; queries</a>
+        &nbsp;·&nbsp;
+        <a href="historic-analysis-project-plan.md">project plan</a>
+    </div>
+
+    <!-- ============ hero: consistency ============ -->
+    <div class="hero">
+        <div>
+            <div class="eyebrow">Consistency signal · the headline finding</div>
+            <h2>The same files, the same cycle-time drag, and the same PR-behavior patterns appeared in both months. This is signal, not noise.</h2>
+        </div>
+        <div class="pull">
+            8 of 10
+            <span class="u">top findings recurred across both months</span>
+        </div>
+    </div>
+
+    <div class="callout">
+        <strong>Why this matters.</strong> Any single month of data can be explained by a bad week. A second month that shows the same top files, the same cycle-time variance, and the same PR-review patterns means the findings are structural — they're what your team is <em>actually</em> dealing with, not one-off noise. This dashboard contains only measurements that come directly out of git and ADO. Every number links to a query.
+    </div>
+
+    <!-- ============ strip: headline counts ============ -->
+    <div class="section-label"><span class="dot"></span>At-a-glance counts</div>
+    <div class="card">
+        <div class="strip">
+            <div class="stat">
+                <div class="k">PRs merged</div>
+                <div class="v">41 <span class="u">/ 44</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Work items closed</div>
+                <div class="v">62 <span class="u">/ 58</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Production deploys</div>
+                <div class="v">18 <span class="u">/ 21</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Rollbacks</div>
+                <div class="v">2 <span class="u">/ 2</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Unique authors</div>
+                <div class="v">14 <span class="u">/ 13</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Commits to main</div>
+                <div class="v">196 <span class="u">/ 183</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">CI failure rate</div>
+                <div class="v">9% <span class="u">/ 11%</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">PRs tagged ai-assisted</div>
+                <div class="v">7 <span class="u">/ 11</span></div>
+            </div>
+        </div>
+        <div class="query">
+            <span class="label">Source</span>
+            <code>az repos pr list</code>, <code>az boards query</code>, <code>az pipelines runs list</code>, <code>git log --since=2.months --all --pretty=format:%ae</code>. Every figure is a row count or aggregate from one of those queries — no inference.
+        </div>
+    </div>
+
+    <!-- ============ file churn leaders ============ -->
+    <div class="section-label"><span class="dot"></span>File churn leaders — top 10 most-changed files</div>
+    <div class="card">
+        <div class="sub">Same file appearing in both months' top-10 is a strong signal. Delta column shows change in commit count, not derived interpretation.</div>
+        <table class="cmp">
+            <thead>
+                <tr>
+                    <th>File</th>
+                    <th class="num">M1 commits</th>
+                    <th class="num">M2 commits</th>
+                    <th class="num">Δ</th>
+                    <th class="num">Recur</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="file">src/submission/SubmissionService.ts</td>
+                    <td class="num">22</td><td class="num">24</td>
+                    <td class="delta flat">+2</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">src/submission/PayerMapper.ts</td>
+                    <td class="num">18</td><td class="num">17</td>
+                    <td class="delta flat">−1</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">src/submission/controllers/SubmitController.ts</td>
+                    <td class="num">15</td><td class="num">14</td>
+                    <td class="delta flat">−1</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">src/eligibility/EligibilityPipeline.ts</td>
+                    <td class="num">12</td><td class="num">13</td>
+                    <td class="delta flat">+1</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">db/migrations/</td>
+                    <td class="num">9</td><td class="num">11</td>
+                    <td class="delta up">+2</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">src/adjudication/DenialLetterBuilder.ts</td>
+                    <td class="num">8</td><td class="num">9</td>
+                    <td class="delta flat">+1</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">src/adjudication/TemplateLoader.ts</td>
+                    <td class="num">7</td><td class="num">8</td>
+                    <td class="delta flat">+1</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">src/integration/PayerAdapter.ts</td>
+                    <td class="num">6</td><td class="num">7</td>
+                    <td class="delta flat">+1</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">src/claims/ClaimRouter.ts</td>
+                    <td class="num">5</td><td class="num">—</td>
+                    <td class="delta down">—</td>
+                    <td class="num"><span class="badge new">m1 only</span></td></tr>
+                <tr><td class="file">src/notifications/EmailService.ts</td>
+                    <td class="num">—</td><td class="num">6</td>
+                    <td class="delta up">—</td>
+                    <td class="num"><span class="badge new">m2 only</span></td></tr>
+            </tbody>
+        </table>
+        <div class="query">
+            <span class="label">Query</span>
+            <code>git log --since=&lt;month-start&gt; --until=&lt;month-end&gt; --name-only --pretty= | sort | uniq -c | sort -rn | head -10</code>
+        </div>
+    </div>
+
+    <!-- ============ co-change pairs ============ -->
+    <div class="section-label"><span class="dot"></span>Co-change pairs — files that changed together</div>
+    <div class="card">
+        <div class="sub">A co-change pair appearing in both months means the coupling is habitual, not coincidental. Lower is better.</div>
+        <table class="cmp">
+            <thead>
+                <tr>
+                    <th>File pair</th>
+                    <th class="num">M1 co-changes</th>
+                    <th class="num">M2 co-changes</th>
+                    <th class="num">Recur</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="file">SubmissionService &amp; PayerMapper</td>
+                    <td class="num">14</td><td class="num">16</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">SubmissionService &amp; SubmitController</td>
+                    <td class="num">11</td><td class="num">12</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">EligibilityPipeline &amp; db/migrations</td>
+                    <td class="num">6</td><td class="num">7</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">DenialLetterBuilder &amp; TemplateLoader</td>
+                    <td class="num">5</td><td class="num">6</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+                <tr><td class="file">PayerMapper &amp; PayerAdapter</td>
+                    <td class="num">4</td><td class="num">5</td>
+                    <td class="num"><span class="badge recur">recurring</span></td></tr>
+            </tbody>
+        </table>
+        <div class="query">
+            <span class="label">Query</span>
+            <code>git log --since=&lt;m&gt; --name-only --pretty=format:"---%h" | awk '/^---/{for(i in f)for(j in f)if(i&lt;j)print f[i],f[j]; delete f; next}{f[++n]=$0}' | sort | uniq -c | sort -rn</code>
+        </div>
+    </div>
+
+    <!-- ============ PR behavior ============ -->
+    <div class="section-label"><span class="dot"></span>PR behavior — size, review depth, cycle time</div>
+    <div class="grid row-2">
+
+        <div class="card">
+            <h3>PR size distribution</h3>
+            <div class="sub">Lines changed per merged PR, bucketed. Legend: light = month 1, cyan = month 2.</div>
+            <div class="legend">
+                <span><span class="sw m1"></span>Month 1</span>
+                <span><span class="sw m2"></span>Month 2</span>
+            </div>
+            <div class="bar-row">
+                <span>&lt; 50 lines</span>
+                <div class="bar-track">
+                    <div class="bar-m1" style="width: 24%;"></div>
+                    <div class="bar-m2" style="width: 27%;"></div>
+                </div>
+                <span class="bar-val">10 / 12</span>
+            </div>
+            <div class="bar-row">
+                <span>50 – 200 lines</span>
+                <div class="bar-track">
+                    <div class="bar-m1" style="width: 42%;"></div>
+                    <div class="bar-m2" style="width: 39%;"></div>
+                </div>
+                <span class="bar-val">17 / 17</span>
+            </div>
+            <div class="bar-row">
+                <span>200 – 500 lines</span>
+                <div class="bar-track">
+                    <div class="bar-m1" style="width: 25%;"></div>
+                    <div class="bar-m2" style="width: 24%;"></div>
+                </div>
+                <span class="bar-val">10 / 11</span>
+            </div>
+            <div class="bar-row">
+                <span>&gt; 500 lines</span>
+                <div class="bar-track">
+                    <div class="bar-m1" style="width: 9%;"></div>
+                    <div class="bar-m2" style="width: 10%;"></div>
+                </div>
+                <span class="bar-val">4 / 4</span>
+            </div>
+            <div class="query">
+                <span class="label">Query</span>
+                <code>az repos pr list --status completed --top 500 --query "[].pullRequestId"</code>, then <code>az repos pr show --id $id --query "{adds:mergeStatus.addedLines,dels:mergeStatus.deletedLines}"</code>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Review depth</h3>
+            <div class="sub">Average reviewers and comment threads per merged PR.</div>
+            <div class="strip" style="grid-template-columns: 1fr 1fr;">
+                <div class="stat">
+                    <div class="k">Avg reviewers / PR</div>
+                    <div class="v">1.8 <span class="u">/ 1.9</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">Avg comment threads</div>
+                    <div class="v">3.2 <span class="u">/ 3.4</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">PRs merged w/ 1 reviewer</div>
+                    <div class="v">12 <span class="u">/ 10</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">PRs merged w/ 0 comments</div>
+                    <div class="v">6 <span class="u">/ 4</span></div>
+                </div>
+            </div>
+            <div class="query">
+                <span class="label">Query</span>
+                <code>az repos pr list ... --query "[].{id, reviewers:length(reviewers), threadCount}"</code>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Cycle time — PR open to merge</h3>
+            <div class="sub">Median hours from PR creation to merge. Recurrence: same distribution shape in both months.</div>
+            <div class="strip" style="grid-template-columns: 1fr 1fr;">
+                <div class="stat">
+                    <div class="k">Median (hours)</div>
+                    <div class="v">18 <span class="u">/ 21</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">90th percentile</div>
+                    <div class="v">72 <span class="u">/ 78</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">PRs open &gt; 5 days</div>
+                    <div class="v">6 <span class="u">/ 8</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">PRs merged same-day</div>
+                    <div class="v">14 <span class="u">/ 13</span></div>
+                </div>
+            </div>
+            <div class="query">
+                <span class="label">Query</span>
+                <code>az repos pr list --status completed --query "[].{created:creationDate, closed:closedDate}"</code>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Work-item cycle time — Submission area path</h3>
+            <div class="sub">Days from work item created → closed, by priority.</div>
+            <div class="strip" style="grid-template-columns: 1fr 1fr;">
+                <div class="stat">
+                    <div class="k">P1 median (days)</div>
+                    <div class="v">1.4 <span class="u">/ 1.6</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">P2 median (days)</div>
+                    <div class="v">5.8 <span class="u">/ 6.2</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">P3 median (days)</div>
+                    <div class="v">14.0 <span class="u">/ 13.5</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">Items closed w/ estimate &gt; 1.5× actual</div>
+                    <div class="v">9 <span class="u">/ 11</span></div>
+                </div>
+            </div>
+            <div class="query">
+                <span class="label">Query</span>
+                <code>az boards query --wiql "SELECT [System.Id], [System.CreatedDate], [Microsoft.VSTS.Common.ClosedDate] FROM WorkItems WHERE [System.AreaPath] UNDER 'ClaimsAdjudication\Submission' AND [System.State] = 'Closed'"</code>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============ pipeline health ============ -->
+    <div class="section-label"><span class="dot"></span>Pipeline health</div>
+    <div class="card">
+        <div class="sub">Build, test, and deploy signals directly from ADO Pipelines.</div>
+        <div class="strip">
+            <div class="stat">
+                <div class="k">CI pass rate</div>
+                <div class="v">91% <span class="u">/ 89%</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Mean build duration (min)</div>
+                <div class="v">12 <span class="u">/ 13</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Flaky-test reruns</div>
+                <div class="v">17 <span class="u">/ 21</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Longest run (min)</div>
+                <div class="v">42 <span class="u">/ 48</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Prod deploys</div>
+                <div class="v">18 <span class="u">/ 21</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Prod rollbacks</div>
+                <div class="v">2 <span class="u">/ 2</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Mean merge-to-prod (hrs)</div>
+                <div class="v">9 <span class="u">/ 10</span></div>
+            </div>
+            <div class="stat">
+                <div class="k">Deploys outside hours</div>
+                <div class="v">0 <span class="u">/ 1</span></div>
+            </div>
+        </div>
+        <div class="query">
+            <span class="label">Query</span>
+            <code>az pipelines runs list --pipeline-name "claims-ci" --top 200</code> · <code>az pipelines runs list --pipeline-name "claims-prod-release" --top 100</code>
+        </div>
+    </div>
+
+    <!-- ============ repo structure ============ -->
+    <div class="section-label"><span class="dot"></span>Repository structure — binary checks</div>
+    <div class="grid row-2">
+        <div class="card">
+            <h3>Present and correct</h3>
+            <div class="sub">Files / configs that either exist or don't. No interpretation.</div>
+            <div class="checklist">
+                <div class="check-row pass"><span class="tick"></span>
+                    <span>README.md exists, last updated &lt; 30 days</span>
+                    <span class="v">m1 ✓ · m2 ✓</span></div>
+                <div class="check-row pass"><span class="tick"></span>
+                    <span>Setup script (scripts/setup.sh)</span>
+                    <span class="v">m1 ✓ · m2 ✓</span></div>
+                <div class="check-row pass"><span class="tick"></span>
+                    <span>Lockfile present (package-lock.json)</span>
+                    <span class="v">m1 ✓ · m2 ✓</span></div>
+                <div class="check-row pass"><span class="tick"></span>
+                    <span>CI config present (azure-pipelines.yml)</span>
+                    <span class="v">m1 ✓ · m2 ✓</span></div>
+                <div class="check-row fail"><span class="tick"></span>
+                    <span>Devcontainer or Docker-based setup</span>
+                    <span class="v">m1 ✕ · m2 ✕</span></div>
+                <div class="check-row pass"><span class="tick"></span>
+                    <span>Migration framework (db/migrations/)</span>
+                    <span class="v">m1 ✓ · m2 ✓</span></div>
+                <div class="check-row fail"><span class="tick"></span>
+                    <span>Seed-data script discoverable from README</span>
+                    <span class="v">m1 ✕ · m2 ✕</span></div>
+                <div class="check-row pass"><span class="tick"></span>
+                    <span>Branch-protection enabled on main</span>
+                    <span class="v">m1 ✓ · m2 ✓</span></div>
+                <div class="check-row fail"><span class="tick"></span>
+                    <span>Correlation-ID middleware on hot paths</span>
+                    <span class="v">m1 3/11 · m2 3/11</span></div>
+                <div class="check-row pass"><span class="tick"></span>
+                    <span>Dependabot / Snyk configured</span>
+                    <span class="v">m1 ✓ · m2 ✓</span></div>
+            </div>
+            <div class="query">
+                <span class="label">Query</span>
+                <code>ls -la</code>, <code>rg -l 'CorrelationIdMiddleware'</code>, <code>az repos policy list --branch main</code>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Dependency / security posture</h3>
+            <div class="sub">Open findings and time-to-remediate from the scanner of record.</div>
+            <div class="strip" style="grid-template-columns: 1fr 1fr;">
+                <div class="stat">
+                    <div class="k">Open vulns (high)</div>
+                    <div class="v">3 <span class="u">/ 2</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">Open vulns (critical)</div>
+                    <div class="v">0 <span class="u">/ 0</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">Median remediation (days)</div>
+                    <div class="v">7 <span class="u">/ 6</span></div>
+                </div>
+                <div class="stat">
+                    <div class="k">Dependencies &gt; 12 months old</div>
+                    <div class="v">41 <span class="u">/ 39</span></div>
+                </div>
+            </div>
+            <div class="query">
+                <span class="label">Query</span>
+                <code>gh api /repos/&lt;org&gt;/&lt;repo&gt;/dependabot/alerts</code> or ADO Advanced Security alerts endpoint.
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ consistency summary ============ -->
+    <div class="section-label"><span class="dot"></span>Consistency summary — what recurred, what didn't</div>
+    <div class="card">
+        <div class="sub">Which findings appeared in both months. The recurring list is your actionable backlog.</div>
+        <table class="cmp">
+            <thead>
+                <tr>
+                    <th>Finding</th>
+                    <th>Month 1</th>
+                    <th>Month 2</th>
+                    <th>Verdict</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Top 3 file-churn leaders identical</td>
+                    <td>SubmissionService, PayerMapper, SubmitController</td>
+                    <td>Same three, same order</td>
+                    <td><span class="badge recur">recurring</span></td></tr>
+                <tr><td>Top co-change pair</td>
+                    <td>SubmissionService ↔ PayerMapper</td>
+                    <td>Same pair, similar frequency</td>
+                    <td><span class="badge recur">recurring</span></td></tr>
+                <tr><td>Median PR cycle time</td>
+                    <td>18 hrs</td>
+                    <td>21 hrs</td>
+                    <td><span class="badge recur">recurring (±17%)</span></td></tr>
+                <tr><td>PRs merged with 0 comments</td>
+                    <td>6 / 41</td>
+                    <td>4 / 44</td>
+                    <td><span class="badge recur">recurring</span></td></tr>
+                <tr><td>Prod rollbacks</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td><span class="badge recur">recurring</span></td></tr>
+                <tr><td>Correlation-ID coverage on hot paths</td>
+                    <td>3 of 11</td>
+                    <td>3 of 11</td>
+                    <td><span class="badge recur">no change</span></td></tr>
+                <tr><td>Seed-data discoverability</td>
+                    <td>not discoverable from README</td>
+                    <td>not discoverable from README</td>
+                    <td><span class="badge recur">recurring</span></td></tr>
+                <tr><td>P3 work-item median cycle</td>
+                    <td>14 days</td>
+                    <td>13.5 days</td>
+                    <td><span class="badge recur">recurring</span></td></tr>
+                <tr><td>Long-tail file changes</td>
+                    <td>ClaimRouter appeared</td>
+                    <td>EmailService appeared instead</td>
+                    <td><span class="badge new">one-off</span></td></tr>
+                <tr><td>AI-assisted PR count</td>
+                    <td>7</td>
+                    <td>11</td>
+                    <td><span class="badge new">trending up</span></td></tr>
+            </tbody>
+        </table>
+        <div class="callout" style="margin-top:18px;">
+            <strong>Read-out.</strong> Eight of the top ten findings repeated across both months. That's the headline. It means the team's improvement backlog is clear and stable: if the same three files top the churn leaderboard two months running, those files are where to look — not wherever this week's fire happens to be.
+        </div>
+    </div>
+
+    <!-- ============ what this doesn't show ============ -->
+    <div class="section-label"><span class="dot"></span>What this dashboard intentionally does not do</div>
+    <div class="card">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;font-size:13px;line-height:1.55;color:var(--muted);">
+            <div>
+                <div style="font-weight:700;color:var(--ink-2);margin-bottom:6px;">No cost conversions.</div>
+                We did not multiply cycle time by engineer rate to produce a dollar number. Those numbers are defensible only when an executive accepts a range, and they are not 95%-confidence outputs. If you want them, request them — we'll show them as "32–50 engineer-hours" not "42."
+            </div>
+            <div>
+                <div style="font-weight:700;color:var(--ink-2);margin-bottom:6px;">No qualitative friction narrative.</div>
+                "Claims submission validation is entangled with persistence" requires reading the code and making a judgment. That judgment is valuable — it just isn't in this dashboard. It belongs in the memo that accompanies it.
+            </div>
+            <div>
+                <div style="font-weight:700;color:var(--ink-2);margin-bottom:6px;">No per-engineer attribution.</div>
+                Author names appear in aggregate (unique-author count) and nowhere else. This dashboard is about the system, not the people.
+            </div>
+            <div>
+                <div style="font-weight:700;color:var(--ink-2);margin-bottom:6px;">No forward-looking forecasts.</div>
+                "Payer integration drift" belongs in the narrative memo, not here. This page reports what happened, not what's about to.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="tag">95% confidence dashboard · all values illustrative</div>
+        <div>Every tile links to an ADO or git query. No inference. No opinion. This is the minimum we commit to delivering.</div>
+    </div>
+
+</div>
+</body>
+</html>
